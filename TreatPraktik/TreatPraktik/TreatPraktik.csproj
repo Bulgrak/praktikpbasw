@@ -54,7 +54,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ItemFilter.xaml.cs">
+      <DependentUpon>ItemFilter.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModel\ImportExcel.cs" />
+    <Compile Include="ViewModel\ItemFilterViewModel.cs" />
+    <Page Include="ItemFilter.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
