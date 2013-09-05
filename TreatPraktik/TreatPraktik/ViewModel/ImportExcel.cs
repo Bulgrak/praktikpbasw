@@ -29,12 +29,12 @@ namespace TreatPraktik.ViewModel
         string ktUIGroupID;
         string ktUIOrderID;
         string ktUIPageID;
-        List<ktExaminedGroup> examinedGroupList;
-        List<ktUIDesign> uiDesignList;
-        List<ktUIFieldIncludedType> uiFieldIncludedList;
-        List<ktUiGroupOrder> uiGroupOrderList;
-        List<ktUIOrder> uiOrderList;
-        List<ktUIPageType> uiPageTypeList;
+        List<ktExaminedGroup> ExaminedGroupList;
+        List<ktUIDesign> UIDesignList;
+        List<ktUIFieldIncludedType> UIFieldList;
+        List<ktUiGroupOrder> UIGroupList;
+        List<ktUIOrder> UIOrderList;
+        List<ktUIPageType> UIPageList;
 
         public ImportExcel()
         {
@@ -45,17 +45,15 @@ namespace TreatPraktik.ViewModel
                 //References to the workbook and Shared String Table.
                 workBook = document.WorkbookPart.Workbook;
                 workSheets = workBook.Descendants<Sheet>();
-                sharedStrings =
-                  document.WorkbookPart.SharedStringTablePart.SharedStringTable;
+                sharedStrings = document.WorkbookPart.SharedStringTablePart.SharedStringTable;
 
-                //Reference to Excel Worksheet with Customer data.
-                ktExaminedID =
-                  workSheets.First(s => s.Name == @"Customer").Id;
-                custSheet =
-                  (WorksheetPart)document.WorkbookPart.GetPartById(custID);
+                //Reference to Excel Worksheet with ktExaminedGroup data.
+                ktExaminedID = workSheets.First(s => s.Name == @"ktExaminedGroup").Id;
+                ktExaminedGroupSheet = (WorksheetPart)document.WorkbookPart.GetPartById(ktExaminedID);
 
+                //Load ktExaminedGroup data to business object.
+                ExaminedGroupList = ktExaminedGroup.Load(ktExaminedGroupSheet.Worksheet, sharedStrings);
             }
         }
-        
     }
 }
