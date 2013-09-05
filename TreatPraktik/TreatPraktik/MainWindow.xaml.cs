@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using TreatPraktik.ViewModel;
 
 namespace TreatPraktik
 {
@@ -22,6 +23,7 @@ namespace TreatPraktik
         public MainWindow()
         {
             InitializeComponent();
+            ImportExcel import = new ImportExcel();
         }
     }
 }

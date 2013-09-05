@@ -53,6 +53,8 @@ namespace TreatPraktik.ViewModel
 
                 //Load ktExaminedGroup data to business object.
                 ExaminedGroupList = ktExaminedGroup.Load(ktExaminedGroupSheet.Worksheet, sharedStrings);
+
+                int i = 4;
             }
         }
     }

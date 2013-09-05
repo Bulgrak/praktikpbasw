@@ -69,10 +69,10 @@ namespace TreatPraktik.Model
                     examined.GroupIdentifier = textArray[1];
                     examined.GroupType = textArray[2];
                     examined.GroupExpendable = Int32.Parse(textArray[3]);
-                    examined.Name = textArray[4];
-                    examined.Expanded = Int32.Parse(textArray[5]);
-                    examined.DataQualityScore = Int32.Parse(textArray[6]);
-                    examined.RequiredScore = Int32.Parse(textArray[7]);
+                    examined.Name = null; //textArray[4];
+                    examined.Expanded = Int32.Parse(textArray[4]);
+                    examined.DataQualityScore = Int32.Parse(textArray[5]);
+                    examined.RequiredScore = Int32.Parse(textArray[6]);
                     result.Add(examined);
                 }
                 else
