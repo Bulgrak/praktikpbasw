@@ -7,7 +7,10 @@ namespace TreatPraktik.Model
 {
     class ktUIPageType
     {
-        public int PageTypeID { get; set; }
+        //public int PageTypeID { get; set; }
+        //public string PageType { get; set; }
+
+        public string PageTypeID { get; set; }
         public string PageType { get; set; }
 
         public ktUIPageType()

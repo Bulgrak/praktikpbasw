@@ -57,6 +57,17 @@
     <Compile Include="ItemFilter.xaml.cs">
       <DependentUpon>ItemFilter.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Model\ktResources.cs" />
+    <Compile Include="Model\ktResourceTranslation.cs" />
+    <Compile Include="Model\ktResourceType.cs" />
+    <Compile Include="Model\WorkSheetktExaminedGroup.cs" />
+    <Compile Include="Model\WorkSheetktResources.cs" />
+    <Compile Include="Model\WorkSheetktResourceTranslation.cs" />
+    <Compile Include="Model\WorkSheetktUIDesign.cs" />
+    <Compile Include="Model\WorkSheetktUIFieldIncludedType.cs" />
+    <Compile Include="Model\WorkSheetktUIGroupOrder.cs" />
+    <Compile Include="Model\WorkSheetktUIOrder.cs" />
+    <Compile Include="Model\WorkSheetUIPageType.cs" />
     <Compile Include="ViewModel\ImportExcel.cs" />
     <Compile Include="ViewModel\ItemFilterViewModel.cs" />
     <Page Include="ItemFilter.xaml">
@@ -80,7 +91,7 @@
     <Compile Include="Model\ktExaminedGroup.cs" />
     <Compile Include="Model\ktUIDesign.cs" />
     <Compile Include="Model\ktUIFieldIncludedType.cs" />
-    <Compile Include="Model\ktUiGroupOrder.cs" />
+    <Compile Include="Model\ktUIGroupOrder.cs" />
     <Compile Include="Model\ktUIOrder.cs" />
     <Compile Include="Model\ktUIPageType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">

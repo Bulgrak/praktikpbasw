@@ -5,14 +5,19 @@ using System.Text;
 
 namespace TreatPraktik.Model
 {
-    class ktUiGroupOrder
+    class ktUIGroupOrder
     {
-        public int DepartmentID { get; set; }
-        public int PageTypeID { get; set; }
-        public int GroupTypeID { get; set; }
-        public int GroupOrder { get; set; }
+        //public int DepartmentID { get; set; }
+        //public int PageTypeID { get; set; }
+        //public int GroupTypeID { get; set; }
+        //public int GroupOrder { get; set; }
 
-        public ktUiGroupOrder()
+        public string DepartmentID { get; set; }
+        public string PageTypeID { get; set; }
+        public string GroupTypeID { get; set; }
+        public string GroupOrder { get; set; }
+
+        public ktUIGroupOrder()
         {
 
         }

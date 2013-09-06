@@ -7,7 +7,10 @@ namespace TreatPraktik.Model
 {
     class ktUIFieldIncludedType
     {
-        public int IncludedTypeID { get; set; }
+        //public int IncludedTypeID { get; set; }
+        //public string IncludedType { get; set; }
+
+        public string IncludedTypeID { get; set; }
         public string IncludedType { get; set; }
 
         public ktUIFieldIncludedType()

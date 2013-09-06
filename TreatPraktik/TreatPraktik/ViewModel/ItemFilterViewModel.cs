@@ -12,7 +12,7 @@ namespace TreatPraktik.ViewModel
     {
         private ICollectionView designItemsView;
         private string filterString;
-        public string TaskName { get; set; }
+        public string Language { get; set; }
 
         public ICollectionView DesignItemsView
         {
@@ -37,8 +37,29 @@ namespace TreatPraktik.ViewModel
         {
             //IList<ktUIDesign> ktUIDesignItems = ktUIDesignItems();
             ImportExcel ie = new ImportExcel();
-            IList<ktUIDesign> ktUIDesignItems = ie.UIDesignList;
-            TaskName = "Hej med dig!";
+            Language = "English";
+            IList<ktUIDesign> ktUIDesignItems = ie.WorkSheetUIDesign.ktUIDesignList;
+            IList<ktResources> ktResources = ie.WorkSheetktResources.ktResourceList;
+            IList<ktResourceTranslation> ktResourceTranslations = ie.WorkSheetktResourceTranslation.ktResourceTranslationList;
+            IList<ktResourceTranslation> ListBoxItems = new List<ktResourceTranslation>();
+            //if (Language.Equals("English"))
+            //{
+            //    foreach(ktUIDesign design in ktUIDesignItems)
+            //    {
+            //        bool found = false;
+            //        int i = 0;
+            //        while (i < ktResources.Count)
+            //        {
+            //            if (design.ResxID.Equals(ktResources[i].ResourceResxID))
+            //            {
+            //                found = true;
+                            
+            //            }
+            //        }
+            //    }
+            //    IList<ktResourceTranslation> ktUIResourceTranslations = ie.WorkSheetktResourceTranslation.ktResourceTranslationList;
+            //}
+            //IList<ktResources> ktResources
             //List<ktUIDesign> uiDesignItems = LoadTestDesignItems();
             filterString = "";
             designItemsView = CollectionViewSource.GetDefaultView(ktUIDesignItems);
