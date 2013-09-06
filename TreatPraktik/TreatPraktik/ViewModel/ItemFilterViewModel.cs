@@ -36,29 +36,32 @@ namespace TreatPraktik.ViewModel
         public ItemFilterViewModel()
         {
             //IList<ktUIDesign> ktUIDesignItems = ktUIDesignItems();
+            ImportExcel ie = new ImportExcel();
+            IList<ktUIDesign> ktUIDesignItems = ie.UIDesignList;
             TaskName = "Hej med dig!";
-            List<ktUIDesign> uiDesignItems = LoadTestDesignItems();
+            //List<ktUIDesign> uiDesignItems = LoadTestDesignItems();
             filterString = "";
-            designItemsView = CollectionViewSource.GetDefaultView(uiDesignItems);
+            designItemsView = CollectionViewSource.GetDefaultView(ktUIDesignItems);
             designItemsView.Filter = ItemFilter;
             //DesignItemsView.
         }
 
-        public List<ktUIDesign> LoadTestDesignItems() //Test - Bare udkommenter
-        {
-            List<ktUIDesign> itemsList = new List<ktUIDesign>();
-            int i = 0;
-            while (i < 5)
-            {
-                ktUIDesign d1 = new ktUIDesign();
-                d1.DatabaseFieldName = "Test" + i;
-                d1.DesignID = i;
-                itemsList.Add(d1);
-                i++;
-            }
 
-            return itemsList;
-        }
+        //public List<ktUIDesign> LoadTestDesignItems() //Test - Bare udkommenter
+        //{
+        //    List<ktUIDesign> itemsList = new List<ktUIDesign>();
+        //    int i = 0;
+        //    while (i < 5)
+        //    {
+        //        ktUIDesign d1 = new ktUIDesign();
+        //        d1.DatabaseFieldName = "Test" + i;
+        //        d1.DesignID = i;
+        //        itemsList.Add(d1);
+        //        i++;
+        //    }
+
+        //    return itemsList;
+        //}
 
         public List<ktUIDesign> LoadDesignItems()
         {
