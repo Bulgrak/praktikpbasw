@@ -9,7 +9,8 @@ namespace TreatPraktik.Model
     {
         public string DesignID { get; set; }
         public string ResourceID { get; set; }
-        public string TranslationText { get; set; }
+        public string ResxID { get; set; }
+        public string Header { get; set; }
         public string ToolTip { get; set; }
 
         public ToolboxItem()

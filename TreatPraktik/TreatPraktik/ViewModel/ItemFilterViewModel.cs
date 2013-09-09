@@ -10,15 +10,12 @@ namespace TreatPraktik.ViewModel
 {
     class ItemFilterViewModel
     {
-        private ICollectionView designItemsView;
+        //private ICollectionView designItemsView;
         private string filterString;
         public string Language { get; set; }
+        public List<ToolboxItem> ToolboxitemList { get; set; }
 
-        public ICollectionView DesignItemsView
-        {
-            get { return designItemsView; }
-            set { designItemsView = value; }
-        }
+        public ICollectionView DesignItemsView { get; set;}
 
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
@@ -35,49 +32,39 @@ namespace TreatPraktik.ViewModel
 
         public ItemFilterViewModel()
         {
-            //IList<ktUIDesign> ktUIDesignItems = ktUIDesignItems();
-            ImportExcel ie = new ImportExcel();
             Language = "English";
-            IList<ktUIDesign> ktUIDesignItems = ie.WorkSheetUIDesign.ktUIDesignList;
-            IList<ktResources> ktResources = ie.WorkSheetktResources.ktResourceList;
-            IList<ktResourceTranslation> ktResourceTranslations = ie.WorkSheetktResourceTranslation.ktResourceTranslationList;
-            IList<ktResourceTranslation> ListBoxItems = new List<ktResourceTranslation>();
-
             filterString = "";
-            //designItemsView = CollectionViewSource.GetDefaultView(ktUIDesignItems);
-            //designItemsView.Filter = ItemFilter;
-            CreateToolboxItems();
+            PopulateToolbox();
         }
 
-        public void CreateToolboxItems()
+        public void PopulateToolbox()
         {
             ImportExcel ie = ImportExcel.Instance;
             List<ktUIDesign> designList = ie.WorkSheetUIDesign.ktUIDesignList;
             List<ktResources> resourceList = ie.WorkSheetktResources.ktResourceList;
             List<ktResourceTranslation> resourceTranslationList = ie.WorkSheetktResourceTranslation.ktResourceTranslationList;
             List<ktResourceType> resourceTypeList = ie.WorkSheetktResourceType.ktResourceTypeList;
-            List<ToolboxItem> toolboxitemList = (
+            ToolboxitemList = (
+                //joiner tabeller, der vedrører header
                 from a in designList
                 join b in resourceList on a.ResxID equals b.ResourceResxID
                 join c in resourceTranslationList.Where(d => d.LanguageID.Equals("1")) on b.ResourceID equals c.ResourceID
                 join d in resourceTypeList.Where(d => d.ResourceTypeID.Equals("2")) on b.ResourceTypeID equals d.ResourceTypeID
+                //joiner tabeller, der vedrører tooltips
+                join f in resourceList on a.ResxID equals f.ResourceResxID
+                join g in resourceTranslationList.Where(d => d.LanguageID.Equals("1")) on f.ResourceID equals g.ResourceID
+                join h in resourceTypeList.Where(d => d.ResourceTypeID.Equals("3")) on f.ResourceTypeID equals h.ResourceTypeID
 
                 select new ToolboxItem
                 {
                     DesignID = a.DesignID,
                     ResourceID = b.ResourceID,
-                    TranslationText = c.TranslationText
+                    ResxID = a.ResxID,
+                    Header = c.TranslationText,
+                    ToolTip = g.TranslationText
                 }).ToList();
-            designItemsView = CollectionViewSource.GetDefaultView(toolboxitemList);
-            designItemsView.Filter = ItemFilter;
-        }
-
-
-
-
-        public List<ktUIDesign> LoadDesignItems()
-        {
-            return null;
+            DesignItemsView = CollectionViewSource.GetDefaultView(ToolboxitemList);
+            DesignItemsView.Filter = ItemFilter;
         }
 
         public string FilterString
@@ -87,56 +74,14 @@ namespace TreatPraktik.ViewModel
             {
                 filterString = value;
                 OnPropertyChanged("FilterString");
-                designItemsView.Refresh();
+                DesignItemsView.Refresh();
             }
         }
 
         private bool ItemFilter(object item)
         {
             ToolboxItem toolboxItem = item as ToolboxItem;
-            return toolboxItem.TranslationText.ToLower().Contains(filterString.ToLower()); //Case-insensitive
+            return toolboxItem.Header.ToLower().Contains(filterString.ToLower()); //Case-insensitive
         }
-
-        ///////////////////////////TEST KODE///////////////////////////////////
-
-        //public List<ktUIDesign> LoadTestDesignItems() //Test - Bare udkommenter
-        //{
-        //    List<ktUIDesign> itemsList = new List<ktUIDesign>();
-        //    int i = 0;
-        //    while (i < 5)
-        //    {
-        //        ktUIDesign d1 = new ktUIDesign();
-        //        d1.DatabaseFieldName = "Test" + i;
-        //        d1.DesignID = i;
-        //        itemsList.Add(d1);
-        //        i++;
-        //    }
-
-        //    return itemsList;
-        //}
-
-
-        //public void MereTest()
-        //{
-        //    //if (Language.Equals("English"))
-        //    //{
-        //    //    foreach(ktUIDesign design in ktUIDesignItems)
-        //    //    {
-        //    //        bool found = false;
-        //    //        int i = 0;
-        //    //        while (i < ktResources.Count)
-        //    //        {
-        //    //            if (design.ResxID.Equals(ktResources[i].ResourceResxID))
-        //    //            {
-        //    //                found = true;
-
-        //    //            }
-        //    //        }
-        //    //    }
-        //    //    IList<ktResourceTranslation> ktUIResourceTranslations = ie.WorkSheetktResourceTranslation.ktResourceTranslationList;
-        //    //}
-        //    //IList<ktResources> ktResources
-        //    //List<ktUIDesign> uiDesignItems = LoadTestDesignItems();
-        //}
     }
 }

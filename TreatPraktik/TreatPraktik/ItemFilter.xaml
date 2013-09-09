@@ -6,14 +6,32 @@
              mc:Ignorable="d" 
              d:DesignHeight="439.254" d:DesignWidth="398.507">
     <Grid>
-        <ListBox x:Name="lstItems" ItemsSource="{Binding Path=DesignItemsView}" HorizontalContentAlignment="Stretch" HorizontalAlignment="Left" Height="391" Margin="10,38,0,0" VerticalAlignment="Top" Width="275">
+        <ListBox x:Name="lstItems" ItemsSource="{Binding Path=DesignItemsView}" MinHeight="100" HorizontalContentAlignment="Stretch" HorizontalAlignment="Left" Margin="10,38,0,0" Width="335">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding Path=TranslationText}"/>
+                    <TextBlock Text="{Binding Path=Header}" ToolTip="{Binding Path=ToolTip}"/>
                 </DataTemplate>
             </ListBox.ItemTemplate>
+            <ListBox.Style>
+            <Style TargetType="ListBox" BasedOn="{StaticResource {x:Type ListBox}}">
+                <Style.Triggers>
+                    <DataTrigger 
+            Binding="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=Items.Count}" 
+            Value="0"
+            >
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate>
+                                    <TextBlock>No items to display</TextBlock>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+            </ListBox.Style>
         </ListBox>
-        <TextBox x:Name="tbxFilter" Text="{Binding Path=FilterString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Height="23" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="275">
+        <TextBox x:Name="tbxFilter" Text="{Binding Path=FilterString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Height="23" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="335">
             <TextBox.Style>
                 <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
                     <Style.Resources>
