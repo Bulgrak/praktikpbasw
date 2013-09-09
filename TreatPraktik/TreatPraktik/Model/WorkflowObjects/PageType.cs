@@ -1,0 +1,14 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace TreatPraktik.Model.WorkflowObjects
+{
+    class PageType
+    {
+        public int PageTypeID { get; set; }             //The page ID
+        public string PageName { get; set; }            //The page name
+        public List<GroupType> Groups { get; set; }     //List of groups on the page
+    }
+}
