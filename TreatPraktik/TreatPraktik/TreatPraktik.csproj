@@ -60,9 +60,11 @@
     <Compile Include="Model\ktResources.cs" />
     <Compile Include="Model\ktResourceTranslation.cs" />
     <Compile Include="Model\ktResourceType.cs" />
+    <Compile Include="Model\ToolboxItem.cs" />
     <Compile Include="Model\WorkSheetktExaminedGroup.cs" />
     <Compile Include="Model\WorkSheetktResources.cs" />
     <Compile Include="Model\WorkSheetktResourceTranslation.cs" />
+    <Compile Include="Model\WorkSheetktResourceType.cs" />
     <Compile Include="Model\WorkSheetktUIDesign.cs" />
     <Compile Include="Model\WorkSheetktUIFieldIncludedType.cs" />
     <Compile Include="Model\WorkSheetktUIGroupOrder.cs" />
