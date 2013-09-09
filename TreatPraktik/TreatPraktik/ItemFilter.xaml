@@ -9,7 +9,7 @@
         <ListBox x:Name="lstItems" ItemsSource="{Binding Path=DesignItemsView}" HorizontalContentAlignment="Stretch" HorizontalAlignment="Left" Height="391" Margin="10,38,0,0" VerticalAlignment="Top" Width="275">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding Path=DatabaseFieldName}" ToolTipService.ToolTip="{Binding Path=DatabaseFieldName}"/>
+                    <TextBlock Text="{Binding Path=TranslationText}"/>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>

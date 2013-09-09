@@ -42,47 +42,38 @@ namespace TreatPraktik.ViewModel
             IList<ktResources> ktResources = ie.WorkSheetktResources.ktResourceList;
             IList<ktResourceTranslation> ktResourceTranslations = ie.WorkSheetktResourceTranslation.ktResourceTranslationList;
             IList<ktResourceTranslation> ListBoxItems = new List<ktResourceTranslation>();
-            //if (Language.Equals("English"))
-            //{
-            //    foreach(ktUIDesign design in ktUIDesignItems)
-            //    {
-            //        bool found = false;
-            //        int i = 0;
-            //        while (i < ktResources.Count)
-            //        {
-            //            if (design.ResxID.Equals(ktResources[i].ResourceResxID))
-            //            {
-            //                found = true;
-                            
-            //            }
-            //        }
-            //    }
-            //    IList<ktResourceTranslation> ktUIResourceTranslations = ie.WorkSheetktResourceTranslation.ktResourceTranslationList;
-            //}
-            //IList<ktResources> ktResources
-            //List<ktUIDesign> uiDesignItems = LoadTestDesignItems();
+
             filterString = "";
-            designItemsView = CollectionViewSource.GetDefaultView(ktUIDesignItems);
+            //designItemsView = CollectionViewSource.GetDefaultView(ktUIDesignItems);
+            //designItemsView.Filter = ItemFilter;
+            CreateToolboxItems();
+        }
+
+        public void CreateToolboxItems()
+        {
+            ImportExcel ie = ImportExcel.Instance;
+            List<ktUIDesign> designList = ie.WorkSheetUIDesign.ktUIDesignList;
+            List<ktResources> resourceList = ie.WorkSheetktResources.ktResourceList;
+            List<ktResourceTranslation> resourceTranslationList = ie.WorkSheetktResourceTranslation.ktResourceTranslationList;
+            List<ktResourceType> resourceTypeList = ie.WorkSheetktResourceType.ktResourceTypeList;
+            List<ToolboxItem> toolboxitemList = (
+                from a in designList
+                join b in resourceList on a.ResxID equals b.ResourceResxID
+                join c in resourceTranslationList.Where(d => d.LanguageID.Equals("1")) on b.ResourceID equals c.ResourceID
+                join d in resourceTypeList.Where(d => d.ResourceTypeID.Equals("2")) on b.ResourceTypeID equals d.ResourceTypeID
+
+                select new ToolboxItem
+                {
+                    DesignID = a.DesignID,
+                    ResourceID = b.ResourceID,
+                    TranslationText = c.TranslationText
+                }).ToList();
+            designItemsView = CollectionViewSource.GetDefaultView(toolboxitemList);
             designItemsView.Filter = ItemFilter;
-            //DesignItemsView.
         }
 
 
-        //public List<ktUIDesign> LoadTestDesignItems() //Test - Bare udkommenter
-        //{
-        //    List<ktUIDesign> itemsList = new List<ktUIDesign>();
-        //    int i = 0;
-        //    while (i < 5)
-        //    {
-        //        ktUIDesign d1 = new ktUIDesign();
-        //        d1.DatabaseFieldName = "Test" + i;
-        //        d1.DesignID = i;
-        //        itemsList.Add(d1);
-        //        i++;
-        //    }
 
-        //    return itemsList;
-        //}
 
         public List<ktUIDesign> LoadDesignItems()
         {
@@ -102,8 +93,50 @@ namespace TreatPraktik.ViewModel
 
         private bool ItemFilter(object item)
         {
-            ktUIDesign ktUIDesign = item as ktUIDesign;
-            return ktUIDesign.DatabaseFieldName.ToLower().Contains(filterString.ToLower()); //Case-insensitive
+            ToolboxItem toolboxItem = item as ToolboxItem;
+            return toolboxItem.TranslationText.ToLower().Contains(filterString.ToLower()); //Case-insensitive
         }
+
+        ///////////////////////////TEST KODE///////////////////////////////////
+
+        //public List<ktUIDesign> LoadTestDesignItems() //Test - Bare udkommenter
+        //{
+        //    List<ktUIDesign> itemsList = new List<ktUIDesign>();
+        //    int i = 0;
+        //    while (i < 5)
+        //    {
+        //        ktUIDesign d1 = new ktUIDesign();
+        //        d1.DatabaseFieldName = "Test" + i;
+        //        d1.DesignID = i;
+        //        itemsList.Add(d1);
+        //        i++;
+        //    }
+
+        //    return itemsList;
+        //}
+
+
+        //public void MereTest()
+        //{
+        //    //if (Language.Equals("English"))
+        //    //{
+        //    //    foreach(ktUIDesign design in ktUIDesignItems)
+        //    //    {
+        //    //        bool found = false;
+        //    //        int i = 0;
+        //    //        while (i < ktResources.Count)
+        //    //        {
+        //    //            if (design.ResxID.Equals(ktResources[i].ResourceResxID))
+        //    //            {
+        //    //                found = true;
+
+        //    //            }
+        //    //        }
+        //    //    }
+        //    //    IList<ktResourceTranslation> ktUIResourceTranslations = ie.WorkSheetktResourceTranslation.ktResourceTranslationList;
+        //    //}
+        //    //IList<ktResources> ktResources
+        //    //List<ktUIDesign> uiDesignItems = LoadTestDesignItems();
+        //}
     }
 }
