@@ -61,6 +61,9 @@
     <Compile Include="Model\ktResourceTranslation.cs" />
     <Compile Include="Model\ktResourceType.cs" />
     <Compile Include="Model\ToolboxItem.cs" />
+    <Compile Include="Model\Workflow\GroupType.cs" />
+    <Compile Include="Model\Workflow\ItemType.cs" />
+    <Compile Include="Model\Workflow\PageType.cs" />
     <Compile Include="Model\WorkSheetktExaminedGroup.cs" />
     <Compile Include="Model\WorkSheetktResources.cs" />
     <Compile Include="Model\WorkSheetktResourceTranslation.cs" />
