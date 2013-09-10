@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using TreatPraktik.Model;
 using TreatPraktik.Model.WorkflowObjects;
 using TreatPraktik.ViewModel;
 
@@ -24,8 +25,12 @@ namespace TreatPraktik
         public MainWindow()
         {
             InitializeComponent();
-            WorkflowViewModel d = new WorkflowViewModel();
-            IEnumerable<PageType> hej = d.GetAllPages();
+            //WorkflowViewModel d = new WorkflowViewModel();
+            //IEnumerable<PageType> hej = d.GetAllPages();
+
+            //ImportExcel excel = ImportExcel.Instance;
+
+            //List<ktUIOrder> f = excel.WorkSheetktUIOrder.ktUIOrderList;
         }
     }
 }

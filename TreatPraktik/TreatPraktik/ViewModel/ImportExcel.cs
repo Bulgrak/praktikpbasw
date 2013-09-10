@@ -26,25 +26,17 @@ namespace TreatPraktik.ViewModel
         WorksheetPart ktResourcesSheet;
         WorksheetPart ktResourceTranslationSheet;
         WorksheetPart ktResourceTypeSheet;
-        WorksheetPart ktUIPageType;
 
         //Declare helper variables.
         string ktExaminedID;
         string ktUIDesignID;
         string ktUIFieldID;
-        string ktUIGroupID;
+        string ktUIGroupOrderID;
         string ktUIOrderID;
-        string ktUIPageID;
         string ktResourcesID;
         string ktResourceTranslationID;
         string ktResourceTypeID;
         string ktUIPageTypeID;
-        //List<ktExaminedGroup> ExaminedGroupList;
-        //public List<ktUIDesign> UIDesignList { get; set;}
-        //List<ktUIFieldIncludedType> UIFieldList;
-        //List<ktUIGroupOrder> UIGroupList;
-        //List<ktUIOrder> UIOrderList;
-        //List<ktUIPageType> UIPageList;
 
         public WorkSheetktExaminedGroup WorkSheetExaminedGroup { get; set; }
         public WorkSheetktUIDesign WorkSheetUIDesign { get; set; }
@@ -55,13 +47,6 @@ namespace TreatPraktik.ViewModel
         public WorkSheetktResourceTranslation WorkSheetktResourceTranslation { get; set; }
         public WorkSheetktResourceType WorkSheetktResourceType { get; set; }
         public WorkSheetUIPageType WorkSheetktUIPageType { get; set; }
-
-        //List<ktExaminedGroup> ExaminedGroupList;
-        //public List<ktUIDesign> UIDesignList { get; set; }
-        //List<ktUIFieldIncludedType> UIFieldList;
-        //List<ktUIGroupOrder> UIGroupList;
-        //List<ktUIOrder> UIOrderList;
-        //List<ktUIPageType> UIPageList;
 
         public ImportExcel()
         {
@@ -100,10 +85,24 @@ namespace TreatPraktik.ViewModel
 
                 //Reference to Excel Worksheet with ktUIFieldIncludedTypeSheet data.
                 ktUIFieldID = workSheets.First(s => s.Name == this.WorkSheetktUIFieldIncludedType.SheetName).Id;
-                ktUIFieldIncludedTypeSheet = (WorksheetPart)document.WorkbookPart.GetPartById(ktUIDesignID);
+                ktUIFieldIncludedTypeSheet = (WorksheetPart)document.WorkbookPart.GetPartById(ktUIFieldID);
 
                 //Load ktUIFieldIncludedType data to business object.
                 this.WorkSheetktUIFieldIncludedType.LoadUIFieldIncludedType(ktUIFieldIncludedTypeSheet.Worksheet, sharedStrings);
+
+                //Reference to Excel Worksheet with ktUIFieldIncludedTypeSheet data.
+                ktUIGroupOrderID = workSheets.First(s => s.Name == this.WorkSheetktUIGroupOrder.SheetName).Id;
+                ktUIGroupOrderSheet = (WorksheetPart)document.WorkbookPart.GetPartById(ktUIGroupOrderID);
+                
+                //Load ktUIFieldIncludedType data to business object.
+                this.WorkSheetktUIGroupOrder.LoadUIGroupOrder(ktUIGroupOrderSheet.Worksheet, sharedStrings);
+
+                //Reference to Excel Worksheet with ktUIFieldIncludedTypeSheet data.
+                ktUIOrderID = workSheets.First(s => s.Name == this.WorkSheetktUIOrder.SheetName).Id;
+                ktUIOrderSheet = (WorksheetPart)document.WorkbookPart.GetPartById(ktUIOrderID);
+
+                //Load ktUIFieldIncludedType data to business object.
+                this.WorkSheetktUIOrder.LoadUIOrder(ktUIOrderSheet.Worksheet, sharedStrings);
 
                 //Reference to Excel Worksheet with ktResource data.
                 ktResourcesID = workSheets.First(s => s.Name == this.WorkSheetktResources.SheetName).Id;

@@ -9,7 +9,7 @@ namespace TreatPraktik.Model.WorkflowObjects
     {
         public string PageTypeID { get; set; }             //The page ID
         public string PageName { get; set; }            //The page name
-        public IEnumerable<GroupType> Groups { get; set; }     //List of groups on the page
+        public List<GroupType> Groups { get; set; }     //List of groups on the page
 
         public PageType()
         {
