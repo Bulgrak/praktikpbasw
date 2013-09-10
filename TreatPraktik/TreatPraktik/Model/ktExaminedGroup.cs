@@ -8,14 +8,14 @@ namespace TreatPraktik.Model
 {
     class ktExaminedGroup
     {
-        public int ID { get; set; }
+        public string ID { get; set; }
         public string GroupIdentifier { get; set; }
         public string GroupType { get; set; }
-        public int GroupExpendable { get; set; }
+        public string GroupExpendable { get; set; }
         public string Name { get; set; }
-        public int Expanded { get; set; }
-        public int DataQualityScore { get; set; }
-        public int RequiredScore { get; set; }
+        public string Expanded { get; set; }
+        public string DataQualityScore { get; set; }
+        public string RequiredScore { get; set; }
 
         public ktExaminedGroup()
         {
@@ -65,14 +65,14 @@ namespace TreatPraktik.Model
                     //Create a ktExaminedGroup and add it to the list.
                     var textArray = textValues.ToArray();
                     ktExaminedGroup examined = new ktExaminedGroup();
-                    examined.ID = Int32.Parse(textArray[0]);
+                    examined.ID = textArray[0];
                     examined.GroupIdentifier = textArray[1];
                     examined.GroupType = textArray[2];
-                    examined.GroupExpendable = Int32.Parse(textArray[3]);
+                    examined.GroupExpendable = textArray[3];
                     examined.Name = null; //textArray[4];
-                    examined.Expanded = Int32.Parse(textArray[4]);
-                    examined.DataQualityScore = Int32.Parse(textArray[5]);
-                    examined.RequiredScore = Int32.Parse(textArray[6]);
+                    examined.Expanded = textArray[4];
+                    examined.DataQualityScore = textArray[5];
+                    examined.RequiredScore = textArray[6];
                     result.Add(examined);
                 }
                 else

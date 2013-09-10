@@ -26,6 +26,7 @@ namespace TreatPraktik.ViewModel
         WorksheetPart ktResourcesSheet;
         WorksheetPart ktResourceTranslationSheet;
         WorksheetPart ktResourceTypeSheet;
+        WorksheetPart ktUIPageType;
 
         //Declare helper variables.
         string ktExaminedID;
@@ -37,6 +38,7 @@ namespace TreatPraktik.ViewModel
         string ktResourcesID;
         string ktResourceTranslationID;
         string ktResourceTypeID;
+        string ktUIPageTypeID;
         //List<ktExaminedGroup> ExaminedGroupList;
         //public List<ktUIDesign> UIDesignList { get; set;}
         //List<ktUIFieldIncludedType> UIFieldList;
@@ -52,6 +54,7 @@ namespace TreatPraktik.ViewModel
         public WorkSheetktResources WorkSheetktResources { get; set; }
         public WorkSheetktResourceTranslation WorkSheetktResourceTranslation { get; set; }
         public WorkSheetktResourceType WorkSheetktResourceType { get; set; }
+        public WorkSheetUIPageType WorkSheetktUIPageType { get; set; }
 
         //List<ktExaminedGroup> ExaminedGroupList;
         //public List<ktUIDesign> UIDesignList { get; set; }
@@ -70,6 +73,7 @@ namespace TreatPraktik.ViewModel
             this.WorkSheetktResources = new WorkSheetktResources();
             this.WorkSheetktResourceTranslation = new WorkSheetktResourceTranslation();
             this.WorkSheetktResourceType = new WorkSheetktResourceType();
+            this.WorkSheetktUIPageType = new WorkSheetUIPageType();
 
             //Open the Excel workbook.
             using (SpreadsheetDocument document =
@@ -122,6 +126,13 @@ namespace TreatPraktik.ViewModel
 
                 ////Load ktResource data to business object.
                 this.WorkSheetktResourceType.LoadktResourceType(ktResourceTypeSheet.Worksheet, sharedStrings);
+
+                ////Reference to Excel Worksheet with ktUIPageType data.
+                ktUIPageTypeID = workSheets.First(s => s.Name == this.WorkSheetktUIPageType.SheetName).Id;
+                ktUIPageTypeSheet = (WorksheetPart)document.WorkbookPart.GetPartById(ktUIPageTypeID);
+
+                ////Load ktResource data to business object.
+                this.WorkSheetktUIPageType.LoadUIPageType(ktUIPageTypeSheet.Worksheet, sharedStrings);
             }
         }
 

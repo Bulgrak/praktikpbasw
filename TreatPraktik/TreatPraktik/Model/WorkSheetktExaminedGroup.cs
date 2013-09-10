@@ -74,28 +74,28 @@ namespace TreatPraktik.Model
                         //Create a ktExaminedGroup and add it to the list.
                         var textArray = textValues.ToArray();
                         ktExaminedGroup examined = new ktExaminedGroup();
-                        examined.ID = Int32.Parse(textArray[0]);
+                        examined.ID = textArray[0];
                         examined.GroupIdentifier = textArray[1];
                         examined.GroupType = textArray[2];
-                        examined.GroupExpendable = Int32.Parse(textArray[3]);
+                        examined.GroupExpendable = textArray[3];
                         examined.Name = textArray[4];
-                        examined.Expanded = Int32.Parse(textArray[5]);
-                        examined.DataQualityScore = Int32.Parse(textArray[6]);
-                        examined.RequiredScore = Int32.Parse(textArray[7]);
+                        examined.Expanded = textArray[5];
+                        examined.DataQualityScore = textArray[6];
+                        examined.RequiredScore = textArray[7];
                         result.Add(examined);
                     }
                     else
                     {
                         var textArray = textValues.ToArray();
                         ktExaminedGroup examined = new ktExaminedGroup();
-                        examined.ID = Int32.Parse(textArray[0]);
+                        examined.ID = textArray[0];
                         examined.GroupIdentifier = textArray[1];
                         examined.GroupType = textArray[2];
-                        examined.GroupExpendable = Int32.Parse(textArray[3]);
+                        examined.GroupExpendable = textArray[3];
                         examined.Name = "";
-                        examined.Expanded = Int32.Parse(textArray[4]);
-                        examined.DataQualityScore = Int32.Parse(textArray[5]);
-                        examined.RequiredScore = Int32.Parse(textArray[6]);
+                        examined.Expanded = textArray[4];
+                        examined.DataQualityScore = textArray[5];
+                        examined.RequiredScore = textArray[6];
                         result.Add(examined);
                     }
                 }

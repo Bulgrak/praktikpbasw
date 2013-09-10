@@ -61,9 +61,9 @@
     <Compile Include="Model\ktResourceTranslation.cs" />
     <Compile Include="Model\ktResourceType.cs" />
     <Compile Include="Model\ToolboxItem.cs" />
-    <Compile Include="Model\Workflow\GroupType.cs" />
-    <Compile Include="Model\Workflow\ItemType.cs" />
-    <Compile Include="Model\Workflow\PageType.cs" />
+    <Compile Include="Model\WorkflowObjects\GroupType.cs" />
+    <Compile Include="Model\WorkflowObjects\ItemType.cs" />
+    <Compile Include="Model\WorkflowObjects\PageType.cs" />
     <Compile Include="Model\WorkSheetktExaminedGroup.cs" />
     <Compile Include="Model\WorkSheetktResources.cs" />
     <Compile Include="Model\WorkSheetktResourceTranslation.cs" />
@@ -75,6 +75,7 @@
     <Compile Include="Model\WorkSheetUIPageType.cs" />
     <Compile Include="ViewModel\ImportExcel.cs" />
     <Compile Include="ViewModel\ItemFilterViewModel.cs" />
+    <Compile Include="ViewModel\WorkflowViewModel.cs" />
     <Page Include="ItemFilter.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
