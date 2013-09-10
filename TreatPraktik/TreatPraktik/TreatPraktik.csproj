@@ -57,25 +57,28 @@
     <Compile Include="ItemFilter.xaml.cs">
       <DependentUpon>ItemFilter.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Model\ktResources.cs" />
-    <Compile Include="Model\ktResourceTranslation.cs" />
-    <Compile Include="Model\ktResourceType.cs" />
+    <Compile Include="Model\ExcelObjects\ktResources.cs" />
+    <Compile Include="Model\ExcelObjects\ktResourceTranslation.cs" />
+    <Compile Include="Model\ExcelObjects\ktResourceType.cs" />
     <Compile Include="Model\ToolboxItem.cs" />
-    <Compile Include="Model\WorkflowObjects\GroupType.cs" />
-    <Compile Include="Model\WorkflowObjects\ItemType.cs" />
-    <Compile Include="Model\WorkflowObjects\PageType.cs" />
-    <Compile Include="Model\WorkSheetktExaminedGroup.cs" />
-    <Compile Include="Model\WorkSheetktResources.cs" />
-    <Compile Include="Model\WorkSheetktResourceTranslation.cs" />
-    <Compile Include="Model\WorkSheetktResourceType.cs" />
-    <Compile Include="Model\WorkSheetktUIDesign.cs" />
-    <Compile Include="Model\WorkSheetktUIFieldIncludedType.cs" />
-    <Compile Include="Model\WorkSheetktUIGroupOrder.cs" />
-    <Compile Include="Model\WorkSheetktUIOrder.cs" />
-    <Compile Include="Model\WorkSheetUIPageType.cs" />
+    <Compile Include="Model\WorkspaceObjects\GroupType.cs" />
+    <Compile Include="Model\WorkspaceObjects\ItemType.cs" />
+    <Compile Include="Model\WorkspaceObjects\PageType.cs" />
+    <Compile Include="Model\WorkSheets\WorkSheetktExaminedGroup.cs" />
+    <Compile Include="Model\WorkSheets\WorkSheetktResources.cs" />
+    <Compile Include="Model\WorkSheets\WorkSheetktResourceTranslation.cs" />
+    <Compile Include="Model\WorkSheets\WorkSheetktResourceType.cs" />
+    <Compile Include="Model\WorkSheets\WorkSheetktUIDesign.cs" />
+    <Compile Include="Model\WorkSheets\WorkSheetktUIFieldIncludedType.cs" />
+    <Compile Include="Model\WorkSheets\WorkSheetktUIGroupOrder.cs" />
+    <Compile Include="Model\WorkSheets\WorkSheetktUIOrder.cs" />
+    <Compile Include="Model\WorkSheets\WorkSheetUIPageType.cs" />
     <Compile Include="ViewModel\ImportExcel.cs" />
     <Compile Include="ViewModel\ItemFilterViewModel.cs" />
-    <Compile Include="ViewModel\WorkflowViewModel.cs" />
+    <Compile Include="ViewModel\WorkspaceViewModel.cs" />
+    <Compile Include="View\WorkspaceUserControl.xaml.cs">
+      <DependentUpon>WorkspaceUserControl.xaml</DependentUpon>
+    </Compile>
     <Page Include="ItemFilter.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -92,14 +95,18 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="View\WorkspaceUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Model\ktExaminedGroup.cs" />
-    <Compile Include="Model\ktUIDesign.cs" />
-    <Compile Include="Model\ktUIFieldIncludedType.cs" />
-    <Compile Include="Model\ktUIGroupOrder.cs" />
-    <Compile Include="Model\ktUIOrder.cs" />
-    <Compile Include="Model\ktUIPageType.cs" />
+    <Compile Include="Model\ExcelObjects\ktExaminedGroup.cs" />
+    <Compile Include="Model\ExcelObjects\ktUIDesign.cs" />
+    <Compile Include="Model\ExcelObjects\ktUIFieldIncludedType.cs" />
+    <Compile Include="Model\ExcelObjects\ktUIGroupOrder.cs" />
+    <Compile Include="Model\ExcelObjects\ktUIOrder.cs" />
+    <Compile Include="Model\ExcelObjects\ktUIPageType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -123,9 +130,7 @@
     </None>
     <AppDesigner Include="Properties\" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="View\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

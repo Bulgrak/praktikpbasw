@@ -12,7 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using TreatPraktik.Model;
-using TreatPraktik.Model.WorkflowObjects;
+using TreatPraktik.Model.WorkspaceObjects;
 using TreatPraktik.ViewModel;
 
 namespace TreatPraktik

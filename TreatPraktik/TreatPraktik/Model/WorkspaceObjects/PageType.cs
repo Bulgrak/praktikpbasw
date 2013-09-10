@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace TreatPraktik.Model.WorkflowObjects
+namespace TreatPraktik.Model.WorkspaceObjects
 {
     class PageType
     {
