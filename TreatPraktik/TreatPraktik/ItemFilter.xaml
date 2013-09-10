@@ -6,7 +6,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="439.254" d:DesignWidth="398.507">
     <Grid>
-        <ListBox x:Name="lstItems" ItemsSource="{Binding Path=DesignItemsView}" MinHeight="100" HorizontalContentAlignment="Stretch" HorizontalAlignment="Left" Margin="10,38,0,0" Width="335">
+        <ListBox x:Name="lstItems" ItemsSource="{Binding Path=DesignItemsView}" HorizontalContentAlignment="Stretch" HorizontalAlignment="Left" Margin="10,38,0,10" Width="335">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Path=Header}" ToolTip="{Binding Path=ToolTip}"/>
@@ -22,7 +22,7 @@
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate>
-                                    <TextBlock>No items to display</TextBlock>
+                                        <TextBlock Text="{Binding Path=TextNoToolboxItemsFound}"></TextBlock>
                                 </ControlTemplate>
                             </Setter.Value>
                         </Setter>
@@ -37,7 +37,7 @@
                     <Style.Resources>
                         <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
                             <VisualBrush.Visual>
-                                <Label Content="Search" Foreground="Gray" />
+                                <Label Content="Search for item or text in tooltip" Foreground="Gray" />
                             </VisualBrush.Visual>
                         </VisualBrush>
                     </Style.Resources>
@@ -55,6 +55,5 @@
                 </Style>
             </TextBox.Style>
         </TextBox>
-
     </Grid>
 </UserControl>

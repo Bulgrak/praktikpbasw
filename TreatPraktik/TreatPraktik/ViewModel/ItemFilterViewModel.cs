@@ -12,7 +12,10 @@ namespace TreatPraktik.ViewModel
     {
         //private ICollectionView designItemsView;
         private string filterString;
+        private string textSearchDescription;
         public string Language { get; set; }
+        public string TextNoToolboxItemsFound { get; set; }
+        //public string TextSearchDescription { get; set; } //Beskrivelse
         public List<ToolboxItem> ToolboxitemList { get; set; }
 
         public ICollectionView DesignItemsView { get; set;}
@@ -33,8 +36,16 @@ namespace TreatPraktik.ViewModel
         public ItemFilterViewModel()
         {
             Language = "English";
+            //TextNoToolboxItemsFound = "No items to display";
+            TextNoToolboxItemsFound = "No results found";
+            TextSearchDescription = "Search for item or in description";
             filterString = "";
             PopulateToolbox();
+        }
+
+        public void ChangeLanguage(string language)
+        {
+            Language = language;
         }
 
         public void PopulateToolbox()
@@ -78,10 +89,22 @@ namespace TreatPraktik.ViewModel
             }
         }
 
+        public string TextSearchDescription
+        {
+            get { return textSearchDescription; }
+            set
+            {
+                textSearchDescription = value;
+                OnPropertyChanged("TextSearchDescription");
+            }
+        }
+
         private bool ItemFilter(object item)
         {
             ToolboxItem toolboxItem = item as ToolboxItem;
-            return toolboxItem.Header.ToLower().Contains(filterString.ToLower()); //Case-insensitive
+            string header = toolboxItem.Header;
+            string toolTip = toolboxItem.ToolTip;
+            return header.ToLower().Contains(filterString.ToLower()) || toolTip.ToLower().Contains(filterString.ToLower()); //Case-insensitive
         }
     }
 }
