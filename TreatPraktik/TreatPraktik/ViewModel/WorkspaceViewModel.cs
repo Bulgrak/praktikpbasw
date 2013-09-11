@@ -8,6 +8,13 @@ namespace TreatPraktik.ViewModel
 {
     class WorkspaceViewModel
     {
+        public List<PageType> PageList { get; set; }
+
+        public WorkspaceViewModel()
+        {
+            PageList = GetAllPages();
+        }
+
         public List<PageType> GetAllPages()
         {
             ImportExcel excel = ImportExcel.Instance;
