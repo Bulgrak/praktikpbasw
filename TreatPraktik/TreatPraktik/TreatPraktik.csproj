@@ -75,6 +75,7 @@
     <Compile Include="Model\WorkSheets\WorkSheetUIPageType.cs" />
     <Compile Include="ViewModel\ImportExcel.cs" />
     <Compile Include="ViewModel\ItemFilterViewModel.cs" />
+    <Compile Include="ViewModel\RelayCommand.cs" />
     <Compile Include="ViewModel\WorkspaceViewModel.cs" />
     <Compile Include="View\WorkspaceUserControl.xaml.cs">
       <DependentUpon>WorkspaceUserControl.xaml</DependentUpon>

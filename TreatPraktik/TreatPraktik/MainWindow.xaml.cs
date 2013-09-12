@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -25,12 +26,13 @@ namespace TreatPraktik
         public MainWindow()
         {
             InitializeComponent();
-            //WorkflowViewModel d = new WorkflowViewModel();
-            //IEnumerable<PageType> hej = d.GetAllPages();
+            //WorkspaceViewModel d = new WorkspaceViewModel();
+            //ObservableCollection<PageType> obsCol = d.PageList;
 
-            //ImportExcel excel = ImportExcel.Instance;
+            //WorkspaceViewModel d = new WorkspaceViewModel();
+            //ObservableCollection<GroupType> obsCol = d.GetGroupForPage("15");
 
-            //List<ktUIOrder> f = excel.WorkSheetktUIOrder.ktUIOrderList;
+            //int i = 1;
         }
     }
 }
