@@ -13,32 +13,32 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
             <ListBox.Style>
-            <Style TargetType="ListBox" BasedOn="{StaticResource {x:Type ListBox}}">
-                <Style.Triggers>
-                    <DataTrigger 
+                <Style TargetType="ListBox" BasedOn="{StaticResource {x:Type ListBox}}">
+                    <Style.Triggers>
+                        <DataTrigger 
             Binding="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=Items.Count}" 
             Value="0"
             >
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate>
                                         <TextBlock Text="{Binding Path=TextNoToolboxItemsFound}"></TextBlock>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </DataTrigger>
-                </Style.Triggers>
-            </Style>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
             </ListBox.Style>
         </ListBox>
         <TextBox x:Name="tbxFilter" Text="{Binding Path=FilterString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Height="23" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="335">
             <TextBox.Style>
                 <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
                     <Style.Resources>
-                        <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
-                            <VisualBrush.Visual>
-                                <Label Content="Search for item or text in tooltip" Foreground="Gray" />
-                            </VisualBrush.Visual>
+                        <VisualBrush Visual="{Binding ElementName=lblSearchField}" x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
+                            <!--<VisualBrush.Visual>
+                                <Label Content="Search for item or in tooltip text" Foreground="Gray" />
+                            </VisualBrush.Visual>-->
                         </VisualBrush>
                     </Style.Resources>
                     <Style.Triggers>
@@ -55,5 +55,8 @@
                 </Style>
             </TextBox.Style>
         </TextBox>
+        <Border MinWidth="1000000" MinHeight="1000000" Visibility="Hidden"> <!--Hacky hacky solution-->
+            <Label Name="lblSearchField" Content="{Binding Path=TextSearchDescription}" HorizontalAlignment="Left" Margin="320,195,0,0" VerticalAlignment="Top" MinWidth="335" Foreground='Gray' Width="335"/>
+        </Border>
     </Grid>
 </UserControl>
