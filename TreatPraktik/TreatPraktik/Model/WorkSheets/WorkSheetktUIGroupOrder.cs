@@ -76,7 +76,7 @@ namespace TreatPraktik.Model
                     groupOrder.DepartmentID = textArray[0];
                     groupOrder.PageTypeID = textArray[1];
                     groupOrder.GroupTypeID = textArray[2];
-                    groupOrder.GroupOrder = textArray[3];
+                    groupOrder.GroupOrder = Convert.ToInt32(textArray[3]);
                     result.Add(groupOrder);
                 }
                 else

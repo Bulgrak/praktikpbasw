@@ -11,28 +11,16 @@
     </UserControl.DataContext>
 
     <Grid>
-        <TabControl ItemsSource="{Binding PageList}" HorizontalAlignment="Left" Height="580" Margin="10,10,0,0" VerticalAlignment="Top" Width="880" SelectionChanged="TabControl_SelectionChanged">
+        <TabControl ItemsSource="{Binding PageList}" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top">
             <TabControl.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Path=PageName}"></TextBlock>
                 </DataTemplate>
             </TabControl.ItemTemplate>
             <TabControl.ContentTemplate>
-                <DataTemplate>
+                <DataTemplate >
                     
-                    <!--<Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="20"/>
-                            <RowDefinition Height="20"/>
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="150"/>
-                            <ColumnDefinition Width="150"/>
-                        </Grid.ColumnDefinitions>
-                        
-                        <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding Path=PageTypeID}"></TextBlock>
-                        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Path=PageName}"></TextBlock>
-                    </Grid>-->
+                    
                 </DataTemplate>
             </TabControl.ContentTemplate>
         </TabControl>

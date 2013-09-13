@@ -11,7 +11,7 @@ namespace TreatPraktik.Model.WorkspaceObjects
     {
         public string GroupTypeID { get; set; }                         //Group ID
         private string _groupName { get; set; }                         //Group name
-        public string GroupOrder { get; set; }                          //Group order on the page
+        public int GroupOrder { get; set; }                          //Group order on the page
         public ObservableCollection<ItemType> Items { get; set; }       //Items in the group
 
         public GroupType()

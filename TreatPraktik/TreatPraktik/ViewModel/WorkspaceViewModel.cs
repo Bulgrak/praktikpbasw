@@ -12,9 +12,6 @@ namespace TreatPraktik.ViewModel
     class WorkspaceViewModel : INotifyPropertyChanged
     {
         public ObservableCollection<PageType> PageList { get; set; }
-        private RelayCommand<PageType> _pageParameterCommand;
-        private ObservableCollection<GroupType> _groupList { get; set; }
-        public PageType PageTypeSelected { get; set; }
 
         public WorkspaceViewModel()
         {
@@ -45,9 +42,10 @@ namespace TreatPraktik.ViewModel
                                     {
                                         PageTypeID = a.PageTypeID,
                                         PageName = a.PageType,
-                                        Groups = new ObservableCollection<GroupType>(from b in excel.WorkSheetktUIGroupOrder.ktUIGroupOrderList.
-                                                                         Where(b => b.PageTypeID.Equals(a.PageTypeID))
+                                        Groups = new ObservableCollection<GroupType>(from b in excel.WorkSheetktUIGroupOrder.ktUIGroupOrderList.OrderBy(m => m.GroupOrder)
+                                                                         //Where(b => b.PageTypeID.Equals(a.PageTypeID))
                                                                                      join c in excel.WorkSheetExaminedGroup.ExaminedGroupList on b.GroupTypeID equals c.ID
+                                                                                     where b.PageTypeID.Equals(a.PageTypeID)
                                                                                      select new GroupType
                                                                                      {
                                                                                          GroupTypeID = b.GroupTypeID,
@@ -59,7 +57,7 @@ namespace TreatPraktik.ViewModel
                                                                                                                                     select new ItemType
                                                                                                                                     {
                                                                                                                                         DesignID = d.DesignID,
-                                                                                                                                        GroupOrder = d.GroupOrder,
+                                                                                                                                        ItemOrder = d.GroupOrder,
                                                                                                                                         DatabaseFieldName = e.DatabaseFieldName
                                                                                                                                     }),
                                                                                      }),
@@ -68,48 +66,6 @@ namespace TreatPraktik.ViewModel
             ObservableCollection<PageType> obsCol = new ObservableCollection<PageType>(pages);
 
             return obsCol;
-        }
-
-        
-
-        public ICommand PageParameterCommand
-        {
-            get
-            {
-                if (null == _pageParameterCommand)
-                {
-                    _pageParameterCommand = new RelayCommand<PageType>(ExecutePageParameterCommand);
-                }
-                return _pageParameterCommand;
-            }
-        }
-
-        //private void ExecutePageParameterCommand(PageType page)
-        //{
-
-        //}
-
-        public void ExecutePageParameterCommand(PageType page)
-        {
-            bool found = false;
-            int i = 0;
-            //ObservableCollection<GroupType> temp = null;
-
-            while (!found)
-            {
-                if (PageList[i].PageTypeID.Equals(page.PageTypeID))
-                {
-                    found = true;
-                    _groupList = PageList[i].Groups;
-                    //temp = PageList[i].Groups;
-                }
-                else
-                {
-                    i++;
-                }
-
-            }
-            
         }
 
         #region GetAllPages method using foreach

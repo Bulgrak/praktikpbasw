@@ -21,22 +21,10 @@ namespace TreatPraktik.View
     /// </summary>
     public partial class WorkspaceUserControl : UserControl
     {
-        WorkspaceViewModel viewModel = new WorkspaceViewModel();
         public WorkspaceUserControl()
         {
             InitializeComponent();
             
-        }
-
-        private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            TabControl item = sender as TabControl;
-            if (item != null)
-            {
-                PageType hej = (PageType)item.SelectedItem;
-                viewModel.PageTypeSelected = hej; 
-            }
-            int i = 1;
         }
     }
 }
