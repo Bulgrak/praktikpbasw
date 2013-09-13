@@ -7,7 +7,7 @@ using System.Text;
 
 namespace TreatPraktik.Model.WorkspaceObjects
 {
-    class PageType : INotifyPropertyChanged
+    public class PageType : INotifyPropertyChanged
     {
         public string PageTypeID { get; set; }                          //The page ID
         private string _pageName { get; set; }                          //The page name

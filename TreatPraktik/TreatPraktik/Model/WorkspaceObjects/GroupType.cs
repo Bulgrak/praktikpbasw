@@ -7,7 +7,7 @@ using System.Text;
 
 namespace TreatPraktik.Model.WorkspaceObjects
 {
-    class GroupType : INotifyPropertyChanged
+    public class GroupType : INotifyPropertyChanged
     {
         public string GroupTypeID { get; set; }                         //Group ID
         private string _groupName { get; set; }                         //Group name

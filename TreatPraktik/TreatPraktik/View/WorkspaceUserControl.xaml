@@ -10,19 +10,9 @@
         <my:WorkspaceViewModel/>
     </UserControl.DataContext>
 
-    <Grid>
-        <TabControl ItemsSource="{Binding PageList}" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top">
-            <TabControl.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding Path=PageName}"></TextBlock>
-                </DataTemplate>
-            </TabControl.ItemTemplate>
-            <TabControl.ContentTemplate>
-                <DataTemplate >
-                    
-                    
-                </DataTemplate>
-            </TabControl.ContentTemplate>
-        </TabControl>
+    <Grid Background="Azure">
+        <!--<ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">-->
+        <TabControl Background="AliceBlue" Name="myTabControl" HorizontalAlignment="Stretch" Margin="10,10,0,0" VerticalAlignment="Stretch"/>
+        <!--</ScrollViewer>-->
     </Grid>
 </UserControl>

@@ -74,7 +74,7 @@ namespace TreatPraktik.Model
                     var textArray = textValues.ToArray();
                     ktUIOrder order = new ktUIOrder();
                     order.DesignID = textArray[0];
-                    order.GroupOrder = textArray[1];
+                    order.GroupOrder = Convert.ToDouble(textArray[1]);
                     order.GroupTypeID = textArray[2];
                     order.PageTypeID = textArray[3];
                     order.IncludedTypeID = textArray[4];

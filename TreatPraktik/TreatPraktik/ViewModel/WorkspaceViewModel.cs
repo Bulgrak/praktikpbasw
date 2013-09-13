@@ -51,9 +51,9 @@ namespace TreatPraktik.ViewModel
                                                                                          GroupTypeID = b.GroupTypeID,
                                                                                          GroupName = c.GroupType,
                                                                                          GroupOrder = b.GroupOrder,
-                                                                                         Items = new ObservableCollection<ItemType>(from d in excel.WorkSheetktUIOrder.ktUIOrderList.
-                                                                                                                        Where(d => d.GroupTypeID.Equals(b.GroupTypeID))
+                                                                                         Items = new ObservableCollection<ItemType>(from d in excel.WorkSheetktUIOrder.ktUIOrderList.OrderBy(n => n.GroupOrder)
                                                                                                                                     join e in excel.WorkSheetUIDesign.ktUIDesignList on d.DesignID equals e.DesignID
+                                                                                                                                    where d.GroupTypeID.Equals(b.GroupTypeID)
                                                                                                                                     select new ItemType
                                                                                                                                     {
                                                                                                                                         DesignID = d.DesignID,
