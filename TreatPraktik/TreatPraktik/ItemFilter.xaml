@@ -7,6 +7,15 @@
              d:DesignHeight="439.254" d:DesignWidth="398.507">
     <Grid>
         <ListBox x:Name="lstItems" ItemsSource="{Binding Path=DesignItemsView}" HorizontalContentAlignment="Stretch" HorizontalAlignment="Left" Margin="10,38,0,10" Width="335">
+            <ListBox.GroupStyle>
+                <GroupStyle>
+                    <GroupStyle.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock FontWeight="Bold" FontSize="14" Text="{Binding Name}"/>
+                        </DataTemplate>
+                    </GroupStyle.HeaderTemplate>
+                </GroupStyle>
+            </ListBox.GroupStyle>
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Path=Header}" ToolTip="{Binding Path=ToolTip}"/>

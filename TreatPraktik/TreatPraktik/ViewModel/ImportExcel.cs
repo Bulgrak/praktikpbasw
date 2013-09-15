@@ -5,6 +5,7 @@ using System.Text;
 using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Packaging;
 using TreatPraktik.Model;
+using TreatPraktik.Model.WorkSheets;
 
 
 namespace TreatPraktik.ViewModel
@@ -26,6 +27,8 @@ namespace TreatPraktik.ViewModel
         WorksheetPart ktResourcesSheet;
         WorksheetPart ktResourceTranslationSheet;
         WorksheetPart ktResourceTypeSheet;
+        WorksheetPart QAGroupsSheet;
+        WorksheetPart QAktUIDesignSheet;
 
         //Declare helper variables.
         string ktExaminedID;
@@ -37,6 +40,8 @@ namespace TreatPraktik.ViewModel
         string ktResourceTranslationID;
         string ktResourceTypeID;
         string ktUIPageTypeID;
+        string QAGroupsID;
+        string QAktUIDesignID;
 
         public WorkSheetktExaminedGroup WorkSheetExaminedGroup { get; set; }
         public WorkSheetktUIDesign WorkSheetUIDesign { get; set; }
@@ -47,6 +52,8 @@ namespace TreatPraktik.ViewModel
         public WorkSheetktResourceTranslation WorkSheetktResourceTranslation { get; set; }
         public WorkSheetktResourceType WorkSheetktResourceType { get; set; }
         public WorkSheetUIPageType WorkSheetktUIPageType { get; set; }
+        public WorkSheetQAGroup WorkSheetQAGroups { get; set; }
+        public WorkSheetQAktUIDesign WorkSheetQAktUIDesign { get; set; }
 
         public ImportExcel()
         {
@@ -59,6 +66,8 @@ namespace TreatPraktik.ViewModel
             this.WorkSheetktResourceTranslation = new WorkSheetktResourceTranslation();
             this.WorkSheetktResourceType = new WorkSheetktResourceType();
             this.WorkSheetktUIPageType = new WorkSheetUIPageType();
+            this.WorkSheetQAGroups = new WorkSheetQAGroup();
+            this.WorkSheetQAktUIDesign = new WorkSheetQAktUIDesign();
 
             //Open the Excel workbook.
             using (SpreadsheetDocument document =
@@ -132,6 +141,20 @@ namespace TreatPraktik.ViewModel
 
                 ////Load ktResource data to business object.
                 this.WorkSheetktUIPageType.LoadUIPageType(ktUIPageTypeSheet.Worksheet, sharedStrings);
+
+                ////Reference to Excel Worksheet with QAGroups data.
+                QAGroupsID = workSheets.First(s => s.Name == this.WorkSheetQAGroups.SheetName).Id;
+                QAGroupsSheet = (WorksheetPart)document.WorkbookPart.GetPartById(QAGroupsID);
+
+                ////Load QAGroups data to business object.
+                this.WorkSheetQAGroups.LoadQAGroups(QAGroupsSheet.Worksheet, sharedStrings);
+
+                ////Reference to Excel Worksheet with QAGroups data.
+                QAktUIDesignID = workSheets.First(s => s.Name == this.WorkSheetQAktUIDesign.SheetName).Id;
+                QAktUIDesignSheet = (WorksheetPart)document.WorkbookPart.GetPartById(QAktUIDesignID);
+
+                ////Load QAGroups data to business object.
+                this.WorkSheetQAktUIDesign.LoadQAktUIDesign(QAktUIDesignSheet.Worksheet, sharedStrings);
             }
         }
 

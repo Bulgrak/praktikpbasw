@@ -60,7 +60,11 @@
     <Compile Include="Model\ExcelObjects\ktResources.cs" />
     <Compile Include="Model\ExcelObjects\ktResourceTranslation.cs" />
     <Compile Include="Model\ExcelObjects\ktResourceType.cs" />
+    <Compile Include="Model\ExcelObjects\QAGroup.cs" />
+    <Compile Include="Model\ExcelObjects\QAktUIDesign.cs" />
     <Compile Include="Model\ToolboxItem.cs" />
+    <Compile Include="Model\WorkSheets\WorkSheetQAGroup.cs" />
+    <Compile Include="Model\WorkSheets\WorkSheetQAktUIDesign.cs" />
     <Compile Include="Model\WorkspaceObjects\GroupType.cs" />
     <Compile Include="Model\WorkspaceObjects\ItemType.cs" />
     <Compile Include="Model\WorkspaceObjects\PageType.cs" />

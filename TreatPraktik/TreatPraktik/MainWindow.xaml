@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:TreatPraktik" xmlns:View="clr-namespace:TreatPraktik.View" x:Class="TreatPraktik.MainWindow"
         Title="MainWindow" Height="431" Width="1008.4">
-    <Grid Background="Yellow">
+    <Grid>
 
         <local:ItemFilter HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
 

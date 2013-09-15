@@ -12,6 +12,7 @@ namespace TreatPraktik.Model
         public string ResxID { get; set; }
         public string Header { get; set; }
         public string ToolTip { get; set; }
+        public string Category { get; set; }
 
         public ToolboxItem()
         {

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Data;
 using TreatPraktik.Model;
+using TreatPraktik.Model.ExcelObjects;
 
 namespace TreatPraktik.ViewModel
 {
@@ -55,12 +56,16 @@ namespace TreatPraktik.ViewModel
             List<ktResources> resourceList = ie.WorkSheetktResources.ktResourceList;
             List<ktResourceTranslation> resourceTranslationList = ie.WorkSheetktResourceTranslation.ktResourceTranslationList;
             List<ktResourceType> resourceTypeList = ie.WorkSheetktResourceType.ktResourceTypeList;
+            List<QAktUIDesign> qaktuidesignList = ie.WorkSheetQAktUIDesign.QAktUIDesignList;
+            List<QAGroup> qagrouplist = ie.WorkSheetQAGroups.QAGroupsList;
             ToolboxitemList = (
                 //joiner tabeller, der vedrører header
                 from a in designList
                 join b in resourceList on a.ResxID equals b.ResourceResxID
                 join c in resourceTranslationList.Where(d => d.LanguageID.Equals("1")) on b.ResourceID equals c.ResourceID
                 join d in resourceTypeList.Where(d => d.ResourceTypeID.Equals("2")) on b.ResourceTypeID equals d.ResourceTypeID
+                join i in qaktuidesignList on a.DesignID equals i.DesignID
+                join j in qagrouplist on i.TypeID equals j.TypeID
                 //joiner tabeller, der vedrører tooltips
                 join f in resourceList on a.ResxID equals f.ResourceResxID
                 join g in resourceTranslationList.Where(d => d.LanguageID.Equals("1")) on f.ResourceID equals g.ResourceID
@@ -72,9 +77,12 @@ namespace TreatPraktik.ViewModel
                     ResourceID = b.ResourceID,
                     ResxID = a.ResxID,
                     Header = c.TranslationText,
-                    ToolTip = g.TranslationText
+                    ToolTip = g.TranslationText,
+                    Category = j.Type
                 }).ToList();
+
             DesignItemsView = CollectionViewSource.GetDefaultView(ToolboxitemList);
+            DesignItemsView.GroupDescriptions.Add(new PropertyGroupDescription("Category"));
             DesignItemsView.Filter = ItemFilter;
         }
 
