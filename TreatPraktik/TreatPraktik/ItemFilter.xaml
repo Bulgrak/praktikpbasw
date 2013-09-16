@@ -18,7 +18,7 @@
             </ListBox.GroupStyle>
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding Path=Header}" ToolTip="{Binding Path=ToolTip}"/>
+                    <TextBlock Text="{Binding Path=Header}" ToolTip="{Binding Path=ToolTip}" PreviewMouseMove="ToolboxItem_PreviewMouseMove"/>
                 </DataTemplate>
             </ListBox.ItemTemplate>
             <ListBox.Style>

@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Input;
 using TreatPraktik.Model;
 using TreatPraktik.Model.ExcelObjects;
 
@@ -114,5 +117,7 @@ namespace TreatPraktik.ViewModel
             string toolTip = toolboxItem.ToolTip;
             return header.ToLower().Contains(filterString.ToLower()) || toolTip.ToLower().Contains(filterString.ToLower()); //Case-insensitive
         }
+
+
     }
 }

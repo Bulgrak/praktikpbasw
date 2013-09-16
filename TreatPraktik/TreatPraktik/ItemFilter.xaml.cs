@@ -43,5 +43,16 @@ namespace TreatPraktik
                 DragDrop.DoDragDrop(draggedItem, draggedItem, DragDropEffects.Copy);
             }
         }
+
+        public void ToolboxItem_PreviewMouseMove(object sender, MouseEventArgs e)
+        {
+            if (sender is ListBoxItem && e.LeftButton == MouseButtonState.Pressed)
+            {
+
+                ListBoxItem draggedItem = sender as ListBoxItem;
+                draggedItem.IsSelected = true;
+                DragDrop.DoDragDrop(draggedItem, draggedItem, DragDropEffects.Copy);
+            }
+        }
     }
 }
