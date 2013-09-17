@@ -7,14 +7,12 @@
              mc:Ignorable="d">
     <ScrollViewer HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <Grid>
-        
             <Grid Name="myGrid">
-                <!--<Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"  />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>-->
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="80"  />
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
             </Grid>
-
         </Grid>
 </ScrollViewer>
 </UserControl>

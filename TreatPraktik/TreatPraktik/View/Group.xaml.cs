@@ -36,39 +36,34 @@ namespace TreatPraktik.View
             {
 
                 GroupType gt = groups[i];
-                DataGrid dg = new DataGrid();
-                dg.IsReadOnly = true;
-                dg.LoadingRow += dg_LoadingRow;
-                //dg.GridLinesVisibility = DataGridGridLinesVisibility.None;
+                Grid grid = new Grid();
+                Border border = new Border();
                 Color colorGroupRow = (Color)ColorConverter.ConvertFromString("#97CBFF");
-                dg.HorizontalGridLinesBrush = new SolidColorBrush(colorGroupRow);
-                dg.VerticalGridLinesBrush = new SolidColorBrush(colorGroupRow);
-                DataTable dt = new DataTable();
                 for (int j = 0; j < 4; j++)
                 {
-                    DataColumn cl = new DataColumn("Col" + j, typeof(string));
-                    dt.Columns.Add(cl);
+                    ColumnDefinition cd = new ColumnDefinition();
+                    grid.ColumnDefinitions.Add(cd);
                 }
                 int counterRow = 0;
                 int counterColumn = 0;
-                DataRow rw = dt.NewRow();
-                dt.Rows.Add(rw);
-                rw["Col0"] = gt.GroupName;
-               
+                AddNewGroupRow(grid);
+                TextBlock groupHeaderName = new TextBlock();
+                InsertGroupItem(grid, gt, 0, 0, false);
+                //AddNewItemRow(grid);
                 int skipped = 0;
                 for (int j = 0; j < gt.Items.Count - skipped; j++)
                 {
-                    if (gt.Items[j+skipped].DesignID.Equals("198"))
+                    if (gt.Items[j + skipped].DesignID.Equals("198"))
                     {
                         skipped = skipped + j;
-                        j=0;
-                    } else if (j % 4 == 0)
+                        j = 0;
+                    }
+                    else if (j % 4 == 0)
                     {
-                        rw = dt.NewRow();
-                        dt.Rows.Add();
+                        AddNewItemRow(grid);
                         counterRow++;
                     }
-                    if (gt.Items[j+skipped].DesignID.Equals("198"))
+                    if (gt.Items[j + skipped].DesignID.Equals("198"))
                     {
                         j--;
                         skipped++;
@@ -76,111 +71,146 @@ namespace TreatPraktik.View
                     }
                     if (gt.Items[j + skipped].DesignID.Equals("197"))
                     {
-                        //Empty field
                     }
                     else
                     {
-                        //if (counterRow >= 4)
-                        //{
-                        //    counterRow = 1;
-                        //}
                         if (counterColumn >= 4)
                         {
                             counterColumn = 0;
                         }
-                        //rw["Col" + counterRow] = gt.Items[j].DatabaseFieldName;
-                        dt.Rows[counterRow][j % 4] = gt.Items[j + skipped].DatabaseFieldName;
-                        //dt.Rows[1][0] = "Test";
-                        int hej = 1;
+                        InsertItem(grid, gt.Items[j + skipped], counterRow, j % 4, true);
                     }
                     counterColumn++;
                 }
-                dg.HeadersVisibility = DataGridHeadersVisibility.None;
-                //rw["Gert"] = "Value2";
-                dg.ItemsSource = dt.DefaultView;
-                dg.Items.Refresh();
-                //TextBlock tb = new TextBlock();
-                //tb.Text = groups[i].GroupName;
                 RowDefinition rd = new RowDefinition();
                 myGrid.RowDefinitions.Add(rd);
-                Grid.SetRow(dg, i);
-                Grid.SetColumn(dg, 0);
-                myGrid.Children.Add(dg);
-                //DataGridRow test = (DataGridRow)dg.ItemContainerGenerator.ContainerFromIndex(0);
-                //if (test == null)
-                //{
-                //    // May be virtualized, bring into view and try again.
-                //    dg.UpdateLayout();
-                //    dg.ScrollIntoView(dg.Items[0]);
-                //    test = (DataGridRow)dg.ItemContainerGenerator.ContainerFromIndex(0);
-                //}
-                //DataRowView dgr = (DataRowView)dg.Items[0];
-                DataRowView drv = (DataRowView)dg.Items[0];
-                Style cellStyle = new Style(typeof(DataGridCell));
-                cellStyle.Setters.Add(new Setter(DataGridCell.AllowDropProperty, true));
-                //itemContainerStyle.Setters.Add(new EventSetter(ListBoxItem.PreviewMouseLeftButtonDownEvent, new MouseButtonEventHandler(List_PreviewMouseLeftButtonDown)));
-                cellStyle.Setters.Add(new EventSetter(DataGridCell.DropEvent, new DragEventHandler(DataGridCell_Drop)));
-                //itemContainerStyle.Setters.Add(new EventSetter(ListBoxItem.DropEvent, new DragEventHandler(listbox1_Drop)));
-                dg.CellStyle = cellStyle;
-                dg.UpdateLayout();
-
-                int k = 0;
+                Grid.SetRow(grid, i);
+                Grid.SetColumn(grid, 1);
+                myGrid.Children.Add(grid);
+                TextBlock tbGroupNumber = new TextBlock();
+                Grid.SetRow(tbGroupNumber, i);
+                Grid.SetColumn(tbGroupNumber, 0);
+                tbGroupNumber.Text = Convert.ToString(gt.GroupOrder);
+                tbGroupNumber.FontSize = 18;
+                tbGroupNumber.FontWeight = FontWeights.ExtraBold;
+                tbGroupNumber.Foreground = Brushes.LightSlateGray;
+                myGrid.Children.Add(tbGroupNumber);
+                Button btnAddNewRow = new Button();
+                btnAddNewRow.HorizontalAlignment = HorizontalAlignment.Right;
+                btnAddNewRow.VerticalAlignment = VerticalAlignment.Bottom;
+                btnAddNewRow.Content = "Row+";
+                btnAddNewRow.Click += btnAddNewRow_Click;
+                Grid.SetRow(btnAddNewRow, i);
+                Grid.SetColumn(btnAddNewRow, 0);
+                myGrid.Children.Add(btnAddNewRow);
             }
         }
 
-        void dg_PreviewMouseMove(object sender, MouseEventArgs e)
+        void btnAddNewRow_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is DataGrid && e.LeftButton == MouseButtonState.Pressed)
-            {
-
-                DataGrid draggedItem = sender as DataGrid;
-                //draggedItem.IsSelected = true;
-                DragDrop.DoDragDrop(draggedItem, draggedItem, DragDropEffects.Copy);
-            }
+            Button btn = sender as Button;
+            var test = btn.Parent;
         }
 
-        private void DisableDragAndDropFirstRow(DataGrid dg)
+        private void InsertItem(Grid grid, ItemType itemType, int row, int column, bool allowDrop)
         {
+            Border border = (Border)grid.Children
+      .Cast<UIElement>()
+      .First(e => Grid.GetRow(e) == row && Grid.GetColumn(e) == column);
+            TextBlock tb = (TextBlock)border.Child;
+            tb.AllowDrop = allowDrop;
+            tb.DataContext = itemType; //skal sættes til at indeholde et toolboxitem
+            tb.Text = itemType.Header;
             int i = 0;
-            while(i < 4)
-            {
-                DataGridCell dgc = dg.GetCell(0, i);
-                dgc.AllowDrop = false;
-            }
         }
 
-        private void dg_LoadingRow(object sender, System.Windows.Controls.DataGridRowEventArgs e)
+        private void InsertGroupItem(Grid grid, GroupType groupType, int row, int column, bool allowDrop)
         {
-            Color colorGroupRow = (Color)ColorConverter.ConvertFromString("#97CBFF");
+            Border border = (Border)grid.Children
+      .Cast<UIElement>()
+      .First(e => Grid.GetRow(e) == row && Grid.GetColumn(e) == column);
+            TextBlock tb = (TextBlock)border.Child;
+            tb.AllowDrop = allowDrop;
+            tb.DataContext = groupType; //skal sættes til at indeholde et toolboxitem
+            tb.Text = groupType.GroupHeader;
+            int i = 0;
+        }
+
+
+        private void AddNewItemRow(Grid grid)
+        {
+            RowDefinition rd = new RowDefinition();
+            grid.RowDefinitions.Add(rd);
+            int rowNo = grid.RowDefinitions.Count - 1;
             Color colorItemRow = (Color)ColorConverter.ConvertFromString("#E4F1FF");
-            int index = e.Row.GetIndex();
-            if (index == 0)
-                e.Row.Background = new SolidColorBrush(colorGroupRow);
-            //else if (index == 1)
-            //    e.Row.Background = Brushes.Red;
-            //else if (index == 2)
-            //    e.Row.Background = Brushes.White;
-            else
+            int i = 0;
+            while (i < 4)
             {
-                e.Row.Background = new SolidColorBrush(colorItemRow);
+                ItemType itemType = new ItemType();
+                itemType.ItemOrder = rowNo + 3 + i;
+                Border border = new Border();
+                //border.BorderBrush = new SolidColorBrush(colorItemRow);
+                border.BorderBrush = new SolidColorBrush(Colors.Black);
+                border.Background = new SolidColorBrush(Colors.Yellow);
+                border.BorderThickness = new Thickness(1.0);
+                TextBlock tb = new TextBlock();
+                tb.HorizontalAlignment = HorizontalAlignment.Stretch;
+                tb.VerticalAlignment = VerticalAlignment.Stretch;
+                tb.DataContext = itemType;
+                tb.AllowDrop = true;
+                tb.Drop += tb_Drop;
+                border.Child = tb;
+                
+                Grid.SetRow(border, rowNo);
+                Grid.SetColumn(border, i);
+                grid.Children.Add(border);
+                i++;
             }
         }
 
-        private void DataGridCell_Drop(object sender, DragEventArgs e)
+        void tb_Drop(object sender, DragEventArgs e)
         {
+            if (e.Data.GetData("System.Windows.Controls.ListBoxItem") is ListBoxItem)
+            {
+                
+                TextBlock textBlock = e.Source as TextBlock;
+                ItemType itemType = (ItemType)textBlock.DataContext;
 
+                TextBlock source = sender as TextBlock;
+                ListBoxItem lbi = e.Data.GetData("System.Windows.Controls.ListBoxItem") as ListBoxItem;
+                ToolboxItem tbi = (ToolboxItem)lbi.Content;
+                //var test = (ToolboxItem)e.Source;
+                int i = 1;
+                //ListView listView = sender as ListView;
+                //listView.Items.Add(contact);
 
+            }
+        }
 
-            DataGridCell source = sender as DataGridCell;
-            ListBoxItem test = e.Data.GetData("System.Windows.Controls.ListBoxItem") as ListBoxItem;
-            ToolboxItem tbi = (ToolboxItem)test.Content;
-            source.DataContext = tbi;
-            source.Content = tbi.Header;
-            //var test = (ToolboxItem)e.Source;
-            int i = 1;
-            //ListView listView = sender as ListView;
-            //listView.Items.Add(contact);
+        private void AddNewGroupRow(Grid grid)
+        {
+            RowDefinition rd = new RowDefinition();
+            grid.RowDefinitions.Add(rd);
+            int rowNo = grid.RowDefinitions.Count - 1;
 
+            int i = 0;
+            while (i < 4)
+            {
+                Color colorGroupRow = (Color)ColorConverter.ConvertFromString("#97CBFF");
+                Border border = new Border();
+                border.BorderBrush = new SolidColorBrush(colorGroupRow);
+                border.Background = new SolidColorBrush(colorGroupRow);
+                border.BorderThickness = new Thickness(0);
+                //border.Padding = new Thickness(0);
+                TextBlock tb = new TextBlock();
+                tb.FontWeight = FontWeights.Bold;
+                tb.FontSize = 14.0;
+                border.Child = tb;
+                Grid.SetRow(border, rowNo);
+                Grid.SetColumn(border, i);
+                grid.Children.Add(border);
+                i++;
+            }
         }
     }
 }
