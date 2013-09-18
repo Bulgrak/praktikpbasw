@@ -9,5 +9,11 @@ namespace TreatPraktik.Model
     {
         public string ResourceTypeID { get; set; }
         public string ResourceType { get; set; }
+
+        public ktResourceType()
+        {
+            ResourceTypeID = "";
+            ResourceType = "";
+        }
     }
 }

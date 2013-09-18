@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Windows.Input;
+using TreatPraktik.Model;
 using TreatPraktik.Model.WorkspaceObjects;
 
 namespace TreatPraktik.ViewModel
@@ -37,6 +38,19 @@ namespace TreatPraktik.ViewModel
         {
             ImportExcel excel = ImportExcel.Instance;
 
+            List<LanguageType> tempList = (from aa in excel.WorkSheetktResources.ktResourceList
+                                          join bb in excel.WorkSheetktResourceTranslation.ktResourceTranslationList.Where(d => d.LanguageID.Equals("1")) on aa.ResourceID equals bb.ResourceID
+                                          join cc in excel.WorkSheetktResourceType.ktResourceTypeList.Where(d => d.ResourceTypeID.Equals("2")) on aa.ResourceTypeID equals cc.ResourceTypeID
+                                          select new LanguageType
+                                          {
+                                              ResourceID = aa.ResourceID,
+                                              ResourceResxID = aa.ResourceResxID,
+                                              ResourceTypeID = aa.ResourceTypeID,
+                                              TranslationText = bb.TranslationText
+                                          }
+                                              ).ToList();
+
+
             List<PageType> pages = (from a in excel.WorkSheetktUIPageType.ktUIPageTypeList
                                     select new PageType
                                     {
@@ -57,16 +71,17 @@ namespace TreatPraktik.ViewModel
                                                                                          GroupHeader = j.TranslationText,
                                                                                          Items = new ObservableCollection<ItemType>(from d in excel.WorkSheetktUIOrder.ktUIOrderList.OrderBy(n => n.GroupOrder)
                                                                                                                                     join e in excel.WorkSheetUIDesign.ktUIDesignList on d.DesignID equals e.DesignID
-                                                                                                                                    join f in excel.WorkSheetktResources.ktResourceList on e.ResxID equals f.ResourceResxID
-                                                                                                                                    join g in excel.WorkSheetktResourceTranslation.ktResourceTranslationList.Where(d => d.LanguageID.Equals("1")) on f.ResourceID equals g.ResourceID
-                                                                                                                                    join h in excel.WorkSheetktResourceType.ktResourceTypeList.Where(d => d.ResourceTypeID.Equals("2")) on f.ResourceTypeID equals h.ResourceTypeID
+                                                                                                                                    join f in tempList on e.ResxID equals f.ResourceResxID into gj
+                                                                                                                                    from f in gj.DefaultIfEmpty()
+                                                                                                                                    //join g in excel.WorkSheetktResourceTranslation.ktResourceTranslationList.Where(d => d.LanguageID.Equals("1")) on f.ResourceID equals g.ResourceID
+                                                                                                                                    //join h in excel.WorkSheetktResourceType.ktResourceTypeList.Where(d => d.ResourceTypeID.Equals("2")) on f.ResourceTypeID equals h.ResourceTypeID
                                                                                                                                     where d.GroupTypeID.Equals(b.GroupTypeID)
                                                                                                                                     select new ItemType
                                                                                                                                     {
                                                                                                                                         DesignID = d.DesignID,
                                                                                                                                         ItemOrder = d.GroupOrder,
                                                                                                                                         DatabaseFieldName = e.DatabaseFieldName,
-                                                                                                                                        Header = g.TranslationText
+                                                                                                                                        Header = (f == null) ? null : f.TranslationText 
                                                                                                                                     }),
                                                                                      }),
                                     }).ToList();

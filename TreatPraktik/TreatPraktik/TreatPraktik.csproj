@@ -67,6 +67,7 @@
     <Compile Include="Model\WorkSheets\WorkSheetQAktUIDesign.cs" />
     <Compile Include="Model\WorkspaceObjects\GroupType.cs" />
     <Compile Include="Model\WorkspaceObjects\ItemType.cs" />
+    <Compile Include="Model\WorkspaceObjects\LanguageType.cs" />
     <Compile Include="Model\WorkspaceObjects\PageType.cs" />
     <Compile Include="Model\WorkSheets\WorkSheetktExaminedGroup.cs" />
     <Compile Include="Model\WorkSheets\WorkSheetktResources.cs" />

@@ -10,5 +10,13 @@ namespace TreatPraktik.Model
         public string LanguageID { get; set; }
         public string ResourceID { get; set; }
         public string TranslationText { get; set; }
+
+        public ktResourceTranslation()
+        {
+            LanguageID = "";
+            ResourceID = "";
+            TranslationText = "";
+        }
+
     }
 }

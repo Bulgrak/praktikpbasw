@@ -55,6 +55,7 @@ namespace TreatPraktik.View
                 {
                     if (gt.Items[j + skipped].DesignID.Equals("198"))
                     {
+                        InsertItem(grid, gt.Items[j + skipped], counterRow, j % 4, true);
                         skipped = skipped + j;
                         j = 0;
                     }
@@ -65,6 +66,7 @@ namespace TreatPraktik.View
                     }
                     if (gt.Items[j + skipped].DesignID.Equals("198"))
                     {
+                        //InsertItem(grid, gt.Items[j + skipped], counterRow, j % 4, true);
                         j--;
                         skipped++;
                         continue;
@@ -109,7 +111,10 @@ namespace TreatPraktik.View
         void btnAddNewRow_Click(object sender, RoutedEventArgs e)
         {
             Button btn = sender as Button;
-            var test = btn.Parent;
+            Grid myGrid = (Grid)btn.Parent;
+            UIElementCollection uiElementCollection = myGrid.Children;
+            int i = 0;
+            
         }
 
         private void InsertItem(Grid grid, ItemType itemType, int row, int column, bool allowDrop)
@@ -121,6 +126,7 @@ namespace TreatPraktik.View
             tb.AllowDrop = allowDrop;
             tb.DataContext = itemType; //skal sættes til at indeholde et toolboxitem
             tb.Text = itemType.Header;
+            //tb.Text = itemType.DatabaseFieldName;
             int i = 0;
         }
 
@@ -133,6 +139,7 @@ namespace TreatPraktik.View
             tb.AllowDrop = allowDrop;
             tb.DataContext = groupType; //skal sættes til at indeholde et toolboxitem
             tb.Text = groupType.GroupHeader;
+            //tb.Text = groupType.GroupName;
             int i = 0;
         }
 
@@ -142,12 +149,13 @@ namespace TreatPraktik.View
             RowDefinition rd = new RowDefinition();
             grid.RowDefinitions.Add(rd);
             int rowNo = grid.RowDefinitions.Count - 1;
+            int itemOrderCounter = 0;
             Color colorItemRow = (Color)ColorConverter.ConvertFromString("#E4F1FF");
             int i = 0;
             while (i < 4)
             {
                 ItemType itemType = new ItemType();
-                itemType.ItemOrder = rowNo + 3 + i;
+                itemType.ItemOrder = ((rowNo -1)* 4) + i;
                 Border border = new Border();
                 //border.BorderBrush = new SolidColorBrush(colorItemRow);
                 border.BorderBrush = new SolidColorBrush(Colors.Black);
@@ -179,12 +187,23 @@ namespace TreatPraktik.View
                 TextBlock source = sender as TextBlock;
                 ListBoxItem lbi = e.Data.GetData("System.Windows.Controls.ListBoxItem") as ListBoxItem;
                 ToolboxItem tbi = (ToolboxItem)lbi.Content;
+                Border test = (Border)textBlock.Parent;
+                var test2 = test.Parent;
+                itemType.DesignID = tbi.DesignID;
+                itemType.Header = tbi.Header;
+                textBlock.Text = tbi.Header;
+
                 //var test = (ToolboxItem)e.Source;
                 int i = 1;
                 //ListView listView = sender as ListView;
                 //listView.Items.Add(contact);
 
             }
+        }
+
+        private void MoveAllItemsOnceCellForward()
+        {
+
         }
 
         private void AddNewGroupRow(Grid grid)
