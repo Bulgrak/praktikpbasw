@@ -45,20 +45,28 @@ namespace TreatPraktik.ViewModel
                                         Groups = new ObservableCollection<GroupType>(from b in excel.WorkSheetktUIGroupOrder.ktUIGroupOrderList.OrderBy(m => m.GroupOrder)
                                                                          //Where(b => b.PageTypeID.Equals(a.PageTypeID))
                                                                                      join c in excel.WorkSheetExaminedGroup.ExaminedGroupList on b.GroupTypeID equals c.ID
+                                                                                     join i in excel.WorkSheetktResources.ktResourceList on c.GroupType equals i.ResourceResxID
+                                                                                     join j in excel.WorkSheetktResourceTranslation.ktResourceTranslationList.Where(d => d.LanguageID.Equals("1")) on i.ResourceID equals j.ResourceID
+                                                                                     join k in excel.WorkSheetktResourceType.ktResourceTypeList.Where(d => d.ResourceTypeID.Equals("1")) on i.ResourceTypeID equals k.ResourceTypeID
                                                                                      where b.PageTypeID.Equals(a.PageTypeID)
                                                                                      select new GroupType
                                                                                      {
                                                                                          GroupTypeID = b.GroupTypeID,
                                                                                          GroupName = c.GroupType,
                                                                                          GroupOrder = b.GroupOrder,
+                                                                                         GroupHeader = j.TranslationText,
                                                                                          Items = new ObservableCollection<ItemType>(from d in excel.WorkSheetktUIOrder.ktUIOrderList.OrderBy(n => n.GroupOrder)
                                                                                                                                     join e in excel.WorkSheetUIDesign.ktUIDesignList on d.DesignID equals e.DesignID
+                                                                                                                                    join f in excel.WorkSheetktResources.ktResourceList on e.ResxID equals f.ResourceResxID
+                                                                                                                                    join g in excel.WorkSheetktResourceTranslation.ktResourceTranslationList.Where(d => d.LanguageID.Equals("1")) on f.ResourceID equals g.ResourceID
+                                                                                                                                    join h in excel.WorkSheetktResourceType.ktResourceTypeList.Where(d => d.ResourceTypeID.Equals("2")) on f.ResourceTypeID equals h.ResourceTypeID
                                                                                                                                     where d.GroupTypeID.Equals(b.GroupTypeID)
                                                                                                                                     select new ItemType
                                                                                                                                     {
                                                                                                                                         DesignID = d.DesignID,
                                                                                                                                         ItemOrder = d.GroupOrder,
-                                                                                                                                        DatabaseFieldName = e.DatabaseFieldName
+                                                                                                                                        DatabaseFieldName = e.DatabaseFieldName,
+                                                                                                                                        Header = g.TranslationText
                                                                                                                                     }),
                                                                                      }),
                                     }).ToList();
