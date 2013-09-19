@@ -79,15 +79,18 @@ namespace TreatPraktik.ViewModel
 
         public void CreateSheets(Sheets sheets, SpreadsheetDocument spreadsheetDocument, WorksheetPart worksheetPart)
         {
+            UInt32Value hej = 15;
             for (int i = 0; i < listOfPages.Count(); i++)
 			{
                 Sheet sheet = new Sheet()
                 {
                     Id = spreadsheetDocument.WorkbookPart.GetIdOfPart(worksheetPart),
-                    SheetId = (UInt32)i,
-                    Name = listOfPages[i].PageName
+                    SheetId = hej,
+                    Name = listOfPages[i].PageTypeID
+                    //Name = "hej" + i
                 };
                 sheets.Append(sheet);
+                hej++;
                 i++;
 			}
         }

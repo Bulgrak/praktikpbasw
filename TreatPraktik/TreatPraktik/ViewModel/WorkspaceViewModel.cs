@@ -50,6 +50,18 @@ namespace TreatPraktik.ViewModel
                                           }
                                               ).ToList();
 
+            List<LanguageType> tempList2 = (from aaa in excel.WorkSheetktResources.ktResourceList
+                                           join bbb in excel.WorkSheetktResourceTranslation.ktResourceTranslationList.Where(d => d.LanguageID.Equals("1")) on aaa.ResourceID equals bbb.ResourceID
+                                           join ccc in excel.WorkSheetktResourceType.ktResourceTypeList.Where(d => d.ResourceTypeID.Equals("1")) on aaa.ResourceTypeID equals ccc.ResourceTypeID
+                                           select new LanguageType
+                                           {
+                                               ResourceID = aaa.ResourceID,
+                                               ResourceResxID = aaa.ResourceResxID,
+                                               ResourceTypeID = aaa.ResourceTypeID,
+                                               TranslationText = bbb.TranslationText
+                                           }
+                                          ).ToList();
+
 
             List<PageType> pages = (from a in excel.WorkSheetktUIPageType.ktUIPageTypeList
                                     select new PageType
@@ -59,16 +71,17 @@ namespace TreatPraktik.ViewModel
                                         Groups = new ObservableCollection<GroupType>(from b in excel.WorkSheetktUIGroupOrder.ktUIGroupOrderList.OrderBy(m => m.GroupOrder)
                                                                          //Where(b => b.PageTypeID.Equals(a.PageTypeID))
                                                                                      join c in excel.WorkSheetExaminedGroup.ExaminedGroupList on b.GroupTypeID equals c.ID
-                                                                                     join i in excel.WorkSheetktResources.ktResourceList on c.GroupType equals i.ResourceResxID
-                                                                                     join j in excel.WorkSheetktResourceTranslation.ktResourceTranslationList.Where(d => d.LanguageID.Equals("1")) on i.ResourceID equals j.ResourceID
-                                                                                     join k in excel.WorkSheetktResourceType.ktResourceTypeList.Where(d => d.ResourceTypeID.Equals("1")) on i.ResourceTypeID equals k.ResourceTypeID
+                                                                                     join i in tempList2 on c.GroupType equals i.ResourceResxID
+                                                                                     //join i in excel.WorkSheetktResources.ktResourceList on c.GroupType equals i.ResourceResxID
+                                                                                     //join j in excel.WorkSheetktResourceTranslation.ktResourceTranslationList.Where(d => d.LanguageID.Equals("1")) on i.ResourceID equals j.ResourceID
+                                                                                     //join k in excel.WorkSheetktResourceType.ktResourceTypeList.Where(d => d.ResourceTypeID.Equals("1")) on i.ResourceTypeID equals k.ResourceTypeID
                                                                                      where b.PageTypeID.Equals(a.PageTypeID)
                                                                                      select new GroupType
                                                                                      {
                                                                                          GroupTypeID = b.GroupTypeID,
                                                                                          GroupName = c.GroupType,
                                                                                          GroupOrder = b.GroupOrder,
-                                                                                         GroupHeader = j.TranslationText,
+                                                                                         GroupHeader = i.TranslationText,
                                                                                          Items = new ObservableCollection<ItemType>(from d in excel.WorkSheetktUIOrder.ktUIOrderList.OrderBy(n => n.GroupOrder)
                                                                                                                                     join e in excel.WorkSheetUIDesign.ktUIDesignList on d.DesignID equals e.DesignID
                                                                                                                                     join f in tempList on e.ResxID equals f.ResourceResxID into gj
