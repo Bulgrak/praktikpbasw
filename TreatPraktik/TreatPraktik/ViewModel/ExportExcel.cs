@@ -17,28 +17,29 @@ namespace TreatPraktik.ViewModel
 
         //The TabControl is passed from the View.WorkspaceUserControl to myTab
         public TabControl myTab { get; set; }
+        List<PageType> listOfPages;
+
 
         private ExportExcel()
         {
-
-            //CreateExcelDocument();
+            listOfPages = new List<PageType>();
         }
 
-        public void Export()
-        {
-            List<PageType> hej = new List<PageType>();
-            
+        /// <summary>
+        /// Load PageItems from the workspace
+        /// </summary>
+        public void LoadItemsFromWorkspace()
+        {            
             foreach (TabItem item in myTab.Items)
             {
-                hej.Add((PageType)item.DataContext);
-                
-
-                int f = 0;
+                listOfPages.Add((PageType)item.DataContext);
             }
         }
 
         public void CreateNewExcel(string path)
         {
+            LoadItemsFromWorkspace();
+
             // Create a spreadsheet document by supplying the filepath.
             // By default, AutoSave = true, Editable = true, and Type = xlsx.
             SpreadsheetDocument spreadsheetDocument =
@@ -56,21 +57,39 @@ namespace TreatPraktik.ViewModel
             Sheets sheets = spreadsheetDocument.WorkbookPart.Workbook.
                 AppendChild<Sheets>(new Sheets());
 
-            // Append a new worksheet and associate it with the workbook.
-            Sheet sheet = new Sheet()
-            {
-                Id = spreadsheetDocument.WorkbookPart.
-                    GetIdOfPart(worksheetPart),
-                SheetId = 1,
-                Name = "mySheet"
-            };
-            sheets.Append(sheet);
+            CreateSheets(sheets, spreadsheetDocument, worksheetPart);
+
+
+            //// Append a new worksheet and associate it with the workbook.
+            //Sheet sheet = new Sheet()
+            //{
+            //    Id = spreadsheetDocument.WorkbookPart.
+            //        GetIdOfPart(worksheetPart),
+            //    SheetId = 1,
+            //    Name = "mySheet"
+            //};
+            //sheets.Append(sheet);
 
             workbookpart.Workbook.Save();
 
             // Close the document.
             //spreadsheetDocument.Close();
             spreadsheetDocument.Close();
+        }
+
+        public void CreateSheets(Sheets sheets, SpreadsheetDocument spreadsheetDocument, WorksheetPart worksheetPart)
+        {
+            for (int i = 0; i < listOfPages.Count(); i++)
+			{
+                Sheet sheet = new Sheet()
+                {
+                    Id = spreadsheetDocument.WorkbookPart.GetIdOfPart(worksheetPart),
+                    SheetId = (UInt32)i,
+                    Name = listOfPages[i].PageName
+                };
+                sheets.Append(sheet);
+                i++;
+			}
         }
 
     //    public void CreateExcelDocumentRandom()
