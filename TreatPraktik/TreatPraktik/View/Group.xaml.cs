@@ -28,6 +28,7 @@ namespace TreatPraktik.View
         public Group()
         {
             InitializeComponent();
+            myGrid.VerticalAlignment = VerticalAlignment.Top;
         }
 
         public void PopulateGrid()
@@ -37,9 +38,10 @@ namespace TreatPraktik.View
 
                 GroupType gt = groups[i];
                 Grid grid = new Grid();
+                grid.DataContext = gt;
                 Border border = new Border();
                 Color colorGroupRow = (Color)ColorConverter.ConvertFromString("#97CBFF");
-                for (int j = 0; j < 4; j++)
+                for (int j = 0; j < 5; j++)
                 {
                     ColumnDefinition cd = new ColumnDefinition();
                     grid.ColumnDefinitions.Add(cd);
@@ -97,24 +99,101 @@ namespace TreatPraktik.View
                 tbGroupNumber.FontWeight = FontWeights.ExtraBold;
                 tbGroupNumber.Foreground = Brushes.LightSlateGray;
                 myGrid.Children.Add(tbGroupNumber);
-                Button btnAddNewRow = new Button();
-                btnAddNewRow.HorizontalAlignment = HorizontalAlignment.Right;
-                btnAddNewRow.VerticalAlignment = VerticalAlignment.Bottom;
-                btnAddNewRow.Content = "Row+";
-                btnAddNewRow.Click += btnAddNewRow_Click;
-                Grid.SetRow(btnAddNewRow, i);
-                Grid.SetColumn(btnAddNewRow, 0);
-                myGrid.Children.Add(btnAddNewRow);
+                StackPanel sp = new StackPanel();
+                //sp.HorizontalAlignment = HorizontalAlignment.Right;
+                //sp.VerticalAlignment = VerticalAlignment.Bottom;
+                Button btnRemoveRow = new Button();
+                //btnRemoveRow.HorizontalAlignment = HorizontalAlignment.Right;
+                //btnRemoveRow.VerticalAlignment = VerticalAlignment.Bottom;
+                btnRemoveRow.Content = "Row-";
+                btnRemoveRow.DataContext = gt;
+                btnRemoveRow.Click += btnRemoveRow_Click;
+
+                //RowDefinition rdAddNewRow = new RowDefinition();
+                //grid.RowDefinitions.Add(rdAddNewRow);
+                //Button btnAddNewRow = new Button();
+                ////btnAddNewRow.HorizontalAlignment = HorizontalAlignment.Right;
+                ////btnAddNewRow.VerticalAlignment = VerticalAlignment.Bottom;
+                //btnAddNewRow.Content = "Add new row";
+                //btnAddNewRow.DataContext = gt;
+                //btnAddNewRow.Click += btnAddNewRow_Click;
+                //btnAddNewRow.HorizontalAlignment = HorizontalAlignment.Right;
+                //btnAddNewRow.VerticalAlignment = VerticalAlignment.Top;
+                ////grid.Children.Add(btnAddNewRow);
+                ////sp.Children.Add(btnAddNewRow);
+                ////sp.Children.Add(btnRemoveRow);
+                //Grid.SetRow(btnAddNewRow, grid.RowDefinitions.Count - 1);
+                //Grid.SetColumn(btnAddNewRow, 0);
+                //Grid.SetColumnSpan(btnAddNewRow, 4);
+                //grid.Children.Add(btnAddNewRow);
+
+                AddNewRowBtn(grid);
+                //Grid.SetRow(btnAddNewRow, i);
+                //Grid.SetColumn(btnAddNewRow, 0);
+                //Grid.SetRow(btnRemoveRow, i);
+                //Grid.SetColumn(btnRemoveRow, 0);
+                //myGrid.Children.Add(btnAddNewRow);
+                //myGrid.Children.Add(btnRemoveRow);
+                //myGrid.Children.Add(sp);
             }
+        }
+
+
+
+        void btnRemoveRow_Click(object sender, RoutedEventArgs e)
+        {
+            Button btn = sender as Button;
+            Grid myGrid = (Grid)btn.Parent;
+            GroupType groupType = (GroupType)btn.DataContext;
+            int row = groupType.GroupOrder - 1;
+            int column = 1;
+            //UIElementCollection uiElementCollection = myGrid.Children;
+            Grid table = (Grid)myGrid.Children
+     .Cast<UIElement>()
+     .First(a => Grid.GetRow(a) == row && Grid.GetColumn(a) == column);
+            AddNewItemRow(table);
+        }
+
+        void AddNewRowBtn(Grid grid)
+        {
+            RowDefinition rdAddNewRow = new RowDefinition();
+            grid.RowDefinitions.Add(rdAddNewRow);
+            Button btnAddNewRow = new Button();
+            btnAddNewRow.Content = "Add new row";
+            //btnAddNewRow.DataContext = gt;
+            btnAddNewRow.Click += btnAddNewRow_Click;
+            btnAddNewRow.HorizontalAlignment = HorizontalAlignment.Right;
+            btnAddNewRow.VerticalAlignment = VerticalAlignment.Top;
+            Grid.SetRow(btnAddNewRow, grid.RowDefinitions.Count - 1);
+            Grid.SetColumn(btnAddNewRow, 0);
+            Grid.SetColumnSpan(btnAddNewRow, 4);
+            
+            grid.Children.Add(btnAddNewRow);
         }
 
         void btnAddNewRow_Click(object sender, RoutedEventArgs e)
         {
+     //       Button btn = sender as Button;
+     //       StackPanel myStack = (StackPanel)btn.Parent;
+     //       Grid myGrid = (Grid)myStack.Parent;
+     //       GroupType groupType = (GroupType)btn.DataContext;
+     //       int row = groupType.GroupOrder - 1;
+     //       int column = 1;
+     //       //UIElementCollection uiElementCollection = myGrid.Children;
+     //       Grid table = (Grid)myGrid.Children
+     //.Cast<UIElement>()
+     //.First(a => Grid.GetRow(a) == row && Grid.GetColumn(a) == column);
+     //       AddNewItemRow(table);
+
             Button btn = sender as Button;
-            Grid myGrid = (Grid)btn.Parent;
-            UIElementCollection uiElementCollection = myGrid.Children;
-            int i = 0;
-            
+            Grid grid = (Grid)btn.Parent;
+            //GroupType groupType = (GroupType)btn.DataContext;
+            //int row = groupType.GroupOrder - 1;
+            //int column = 1;
+            //UIElementCollection uiElementCollection = myGrid.Children;
+            grid.RowDefinitions.RemoveAt(grid.RowDefinitions.Count - 1);
+            AddNewItemRow(grid);
+            AddNewRowBtn(grid);
         }
 
         private void InsertItem(Grid grid, ItemType itemType, int row, int column, bool allowDrop)
@@ -161,6 +240,8 @@ namespace TreatPraktik.View
                 border.BorderBrush = new SolidColorBrush(Colors.Black);
                 border.Background = new SolidColorBrush(Colors.Yellow);
                 border.BorderThickness = new Thickness(1.0);
+                border.Height = 27.0;
+                border.MaxHeight = 27.0;
                 TextBlock tb = new TextBlock();
                 tb.HorizontalAlignment = HorizontalAlignment.Stretch;
                 tb.VerticalAlignment = VerticalAlignment.Stretch;
@@ -174,6 +255,22 @@ namespace TreatPraktik.View
                 grid.Children.Add(border);
                 i++;
             }
+            CheckBox btnRemove = new CheckBox();
+            btnRemove.HorizontalAlignment = HorizontalAlignment.Left;
+            btnRemove.VerticalAlignment = VerticalAlignment.Center;
+            //btnRemove.Content = "-";
+            //Image img = new Image();
+            //img.Source = 
+            //btnRemove.Content
+            Grid.SetColumn(btnRemove, 4);
+            Grid.SetRow(btnRemove, rowNo);
+            grid.Children.Add(btnRemove);
+        }
+
+        private void RemoveItemRow(Grid grid)
+        {
+            int lastRow = grid.RowDefinitions.Count - 1;
+            grid.RowDefinitions.RemoveAt(lastRow);
         }
 
         void tb_Drop(object sender, DragEventArgs e)
@@ -220,6 +317,8 @@ namespace TreatPraktik.View
                 border.BorderBrush = new SolidColorBrush(colorGroupRow);
                 border.Background = new SolidColorBrush(colorGroupRow);
                 border.BorderThickness = new Thickness(0);
+                border.Height = 27.0;
+                border.MaxHeight = 27.0;
                 //border.Padding = new Thickness(0);
                 TextBlock tb = new TextBlock();
                 tb.FontWeight = FontWeights.Bold;
@@ -230,6 +329,10 @@ namespace TreatPraktik.View
                 grid.Children.Add(border);
                 i++;
             }
+        }
+
+        public void Add()
+        {
         }
     }
 }
