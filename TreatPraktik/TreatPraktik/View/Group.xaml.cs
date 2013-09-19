@@ -15,6 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using TreatPraktik.Model;
 using TreatPraktik.Model.WorkspaceObjects;
+using TreatPraktik.ViewModel;
 
 namespace TreatPraktik.View
 {
