@@ -88,6 +88,9 @@
     <Compile Include="View\Group.xaml.cs">
       <DependentUpon>Group.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\ImportExportExcel.xaml.cs">
+      <DependentUpon>ImportExportExcel.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\WorkspaceUserControl.xaml.cs">
       <DependentUpon>WorkspaceUserControl.xaml</DependentUpon>
     </Compile>
@@ -108,6 +111,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="View\Group.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ImportExportExcel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
