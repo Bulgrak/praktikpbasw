@@ -22,17 +22,21 @@ namespace TreatPraktik.View
     /// </summary>
     public partial class WorkspaceUserControl : UserControl
     {
+        private ExportExcel exExcel;
+
         public WorkspaceUserControl()
         {
             InitializeComponent();
             WorkspaceViewModel wvm = new WorkspaceViewModel();
             ObservableCollection<PageType> pageTypeList = wvm.PageList;
 
+
             for (int i = 0; i < pageTypeList.Count; i++)
             {
                 PageType pt = pageTypeList[i];
                 TabItem ti = new TabItem();
                 ti.Header = pt.PageName;
+                ti.DataContext = pt;
 
                 if (pt.PageTypeID.Equals("15") || pt.PageTypeID.Equals("16") || pt.PageTypeID.Equals("17")) //burde nok gøres i LINQ
                 {
@@ -45,6 +49,12 @@ namespace TreatPraktik.View
                     //myTabControl;
                 }
             }
+
+            //Create instance of the ExportExcel class,
+            //and pass the current TabControl to it.
+            exExcel = ExportExcel.Instance;
+            exExcel.myTab = myTabControl;
+            //exExcel.Export();
         }
     }
 }
