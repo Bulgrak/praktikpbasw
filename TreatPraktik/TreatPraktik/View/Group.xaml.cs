@@ -100,60 +100,149 @@ namespace TreatPraktik.View
                 tbGroupNumber.FontWeight = FontWeights.ExtraBold;
                 tbGroupNumber.Foreground = Brushes.LightSlateGray;
                 myGrid.Children.Add(tbGroupNumber);
-                StackPanel sp = new StackPanel();
-                //sp.HorizontalAlignment = HorizontalAlignment.Right;
-                //sp.VerticalAlignment = VerticalAlignment.Bottom;
-                //Button btnRemoveRow = new Button();
-                ////btnRemoveRow.HorizontalAlignment = HorizontalAlignment.Right;
-                ////btnRemoveRow.VerticalAlignment = VerticalAlignment.Bottom;
-                //btnRemoveRow.Content = "Row-";
-                //btnRemoveRow.DataContext = gt;
-                //btnRemoveRow.Click += btnRemoveRow_Click;
-
-                //RowDefinition rdAddNewRow = new RowDefinition();
-                //grid.RowDefinitions.Add(rdAddNewRow);
-                //Button btnAddNewRow = new Button();
-                ////btnAddNewRow.HorizontalAlignment = HorizontalAlignment.Right;
-                ////btnAddNewRow.VerticalAlignment = VerticalAlignment.Bottom;
-                //btnAddNewRow.Content = "Add new row";
-                //btnAddNewRow.DataContext = gt;
-                //btnAddNewRow.Click += btnAddNewRow_Click;
-                //btnAddNewRow.HorizontalAlignment = HorizontalAlignment.Right;
-                //btnAddNewRow.VerticalAlignment = VerticalAlignment.Top;
-                ////grid.Children.Add(btnAddNewRow);
-                ////sp.Children.Add(btnAddNewRow);
-                ////sp.Children.Add(btnRemoveRow);
-                //Grid.SetRow(btnAddNewRow, grid.RowDefinitions.Count - 1);
-                //Grid.SetColumn(btnAddNewRow, 0);
-                //Grid.SetColumnSpan(btnAddNewRow, 4);
-                //grid.Children.Add(btnAddNewRow);
-
                 AddNewRowBtn(grid);
-                //Grid.SetRow(btnAddNewRow, i);
-                //Grid.SetColumn(btnAddNewRow, 0);
-                //Grid.SetRow(btnRemoveRow, i);
-                //Grid.SetColumn(btnRemoveRow, 0);
-                //myGrid.Children.Add(btnAddNewRow);
-                //myGrid.Children.Add(btnRemoveRow);
-                //myGrid.Children.Add(sp);
             }
         }
 
+        public void PopulateGroup(GroupType gt, Grid grid)
+        {
+            Border border = new Border();
+            Color colorGroupRow = (Color)ColorConverter.ConvertFromString("#97CBFF");
+            for (int j = 0; j < 5; j++)
+            {
+                ColumnDefinition cd = new ColumnDefinition();
+                grid.ColumnDefinitions.Add(cd);
+            }
+            int counterRow = 0;
+            int counterColumn = 0;
+            AddNewGroupRow(grid);
+            TextBlock groupHeaderName = new TextBlock();
+            InsertGroupItem(grid, gt, 0, 0, false);
+            int skipped = 0;
+            for (int j = 0; j < gt.Items.Count - skipped; j++)
+            {
+                if (gt.Items[j + skipped].DesignID.Equals("198"))
+                {
+                    InsertItem(grid, gt.Items[j + skipped], counterRow, j % 4, true);
+                    skipped = skipped + j;
+                    j = 0;
+                }
+                else if (j % 4 == 0)
+                {
+                    AddNewItemRow(grid);
+                    counterRow++;
+                }
+                if (gt.Items[j + skipped].DesignID.Equals("198"))
+                {
+                    //InsertItem(grid, gt.Items[j + skipped], counterRow, j % 4, true);
+                    j--;
+                    skipped++;
+                    continue;
+                }
+                if (gt.Items[j + skipped].DesignID.Equals("197"))
+                {
+                }
+                else
+                {
+                    if (counterColumn >= 4)
+                    {
+                        counterColumn = 0;
+                    }
+                    InsertItem(grid, gt.Items[j + skipped], counterRow, j % 4, true);
+                }
+                counterColumn++;
+            }
+            //RowDefinition rd = new RowDefinition();
+            //myGrid.RowDefinitions.Add(rd);
+            //Grid.SetRow(grid, i);
+            //Grid.SetColumn(grid, 1);
+            //myGrid.Children.Add(grid);
+            //TextBlock tbGroupNumber = new TextBlock();
+            //Grid.SetRow(tbGroupNumber, i);
+            //Grid.SetColumn(tbGroupNumber, 0);
+            //tbGroupNumber.Text = Convert.ToString(gt.GroupOrder);
+            //tbGroupNumber.FontSize = 18;
+            //tbGroupNumber.FontWeight = FontWeights.ExtraBold;
+            //tbGroupNumber.Foreground = Brushes.LightSlateGray;
+            //myGrid.Children.Add(tbGroupNumber);
+            AddNewRowBtn(grid);
+            grid.UpdateLayout();
+        }
 
+        void RemoveRow(Grid gridi, int rowCount)
+        {
+            List<UIElement> elementsToRemove = new List<UIElement>();
 
-     //   void btnRemoveRow_Click(object sender, RoutedEventArgs e)
-     //   {
-     //       Button btn = sender as Button;
-     //       Grid myGrid = (Grid)btn.Parent;
-     //       GroupType groupType = (GroupType)btn.DataContext;
-     //       int row = groupType.GroupOrder - 1;
-     //       int column = 1;
-     //       //UIElementCollection uiElementCollection = myGrid.Children;
-     //       Grid table = (Grid)myGrid.Children
-     //.Cast<UIElement>()
-     //.First(a => Grid.GetRow(a) == row && Grid.GetColumn(a) == column);
-     //       AddNewItemRow(table);
-     //   }
+            foreach (UIElement element in gridi.Children)
+            {
+                if (Grid.GetRow(element) == rowCount)
+                    elementsToRemove.Add(element);
+            }
+            foreach (UIElement element in elementsToRemove)
+                gridi.Children.Remove(element);
+
+            gridi.RowDefinitions.RemoveAt(rowCount);
+            UpdateItemsRowPosition(gridi, rowCount);
+        }
+
+        public void UpdateItemsRowPosition(Grid grid, int row)
+        {
+            if (row < grid.RowDefinitions.Count)
+            {
+                for (int i = row + 1; i <= grid.RowDefinitions.Count; i++)
+                {
+                    for (int j = 0; j < grid.ColumnDefinitions.Count; j++)
+                    {
+                        List<UIElement> children = GetGridCellChildren(grid, i, j);
+                        foreach (UIElement uie in children)
+                        {
+                            Grid.SetRow(uie, i - 1);
+                        }
+                    }
+                }
+            }
+        }
+
+        public List<UIElement> GetGridCellChildren(Grid grid, int row, int col)
+        {
+            return grid.Children.Cast<UIElement>().Where(
+                                x => Grid.GetRow(x) == row && Grid.GetColumn(x) == col).ToList();
+        }
+
+        GroupType GetGroupType(Grid grid)
+        {
+            Border b = (Border)grid.Children
+     .Cast<UIElement>()
+     .First(a => Grid.GetRow(a) == 0 && Grid.GetColumn(a) == 0);
+            TextBlock tb = (TextBlock)b.Child;
+            GroupType gt = (GroupType)tb.DataContext;
+            return gt;
+        }
+
+        List<ItemType> GetItemTypes(Grid grid)
+        {
+            List<ItemType> itemTypeList = new List<ItemType>();
+            int i = 1;
+            int j = 0;
+            while (i < grid.RowDefinitions.Count - 1)
+            {
+                j = 0;
+                while (j < grid.ColumnDefinitions.Count - 1)
+                {
+                    Border b = (Border)grid.Children
+ .Cast<UIElement>()
+ .First(a => Grid.GetRow(a) == i && Grid.GetColumn(a) == j);
+                    TextBlock tb = (TextBlock)b.Child;
+                    ItemType it = (ItemType)tb.DataContext;
+                    if (it.DesignID != null)
+                        itemTypeList.Add(it);
+                    //borderList.Add(b);
+                    j++;
+                }
+                i++;
+            }
+            return itemTypeList;
+        }
 
         void AddNewRowBtn(Grid grid)
         {
@@ -161,7 +250,6 @@ namespace TreatPraktik.View
             grid.RowDefinitions.Add(rdAddNewRow);
             Button btnAddNewRow = new Button();
             btnAddNewRow.Content = "Add new row";
-            //btnAddNewRow.DataContext = gt;
             btnAddNewRow.Click += btnAddNewRow_Click;
             btnAddNewRow.HorizontalAlignment = HorizontalAlignment.Right;
             btnAddNewRow.VerticalAlignment = VerticalAlignment.Top;
@@ -174,25 +262,20 @@ namespace TreatPraktik.View
 
         void btnAddNewRow_Click(object sender, RoutedEventArgs e)
         {
-            //       Button btn = sender as Button;
-            //       StackPanel myStack = (StackPanel)btn.Parent;
-            //       Grid myGrid = (Grid)myStack.Parent;
-            //       GroupType groupType = (GroupType)btn.DataContext;
-            //       int row = groupType.GroupOrder - 1;
-            //       int column = 1;
-            //       //UIElementCollection uiElementCollection = myGrid.Children;
-            //       Grid table = (Grid)myGrid.Children
-            //.Cast<UIElement>()
-            //.First(a => Grid.GetRow(a) == row && Grid.GetColumn(a) == column);
-            //       AddNewItemRow(table);
-
             Button btn = sender as Button;
             Grid grid = (Grid)btn.Parent;
-            //GroupType groupType = (GroupType)btn.DataContext;
-            //int row = groupType.GroupOrder - 1;
-            //int column = 1;
-            //UIElementCollection uiElementCollection = myGrid.Children;
-            grid.RowDefinitions.RemoveAt(grid.RowDefinitions.Count - 1);
+            int rowCount = Grid.GetRow(btn);
+            List<UIElement> elementsToRemove = new List<UIElement>();
+
+            foreach (UIElement element in grid.Children)
+            {
+                if (Grid.GetRow(element) == rowCount)
+                    elementsToRemove.Add(element);
+            }
+            foreach (UIElement element in elementsToRemove)
+                grid.Children.Remove(element);
+
+            grid.RowDefinitions.RemoveAt(rowCount);
             AddNewItemRow(grid);
             AddNewRowBtn(grid);
         }
@@ -206,8 +289,6 @@ namespace TreatPraktik.View
             tb.AllowDrop = allowDrop;
             tb.DataContext = itemType; //skal sættes til at indeholde et toolboxitem
             tb.Text = itemType.Header;
-            //tb.Text = itemType.DatabaseFieldName;
-            int i = 0;
         }
 
         private void InsertGroupItem(Grid grid, GroupType groupType, int row, int column, bool allowDrop)
@@ -219,8 +300,6 @@ namespace TreatPraktik.View
             tb.AllowDrop = allowDrop;
             tb.DataContext = groupType; //skal sættes til at indeholde et toolboxitem
             tb.Text = groupType.GroupHeader;
-            //tb.Text = groupType.GroupName;
-            int i = 0;
         }
 
 
@@ -229,15 +308,13 @@ namespace TreatPraktik.View
             RowDefinition rd = new RowDefinition();
             grid.RowDefinitions.Add(rd);
             int rowNo = grid.RowDefinitions.Count - 1;
-            int itemOrderCounter = 0;
             Color colorItemRow = (Color)ColorConverter.ConvertFromString("#E4F1FF");
             int i = 0;
             while (i < 4)
             {
                 ItemType itemType = new ItemType();
-                itemType.ItemOrder = ((rowNo -1)* 4) + i;
+                itemType.ItemOrder = ((rowNo - 1) * 4) + i;
                 Border border = new Border();
-                //border.BorderBrush = new SolidColorBrush(colorItemRow);
                 border.BorderBrush = new SolidColorBrush(Colors.Black);
                 border.Background = new SolidColorBrush(Colors.Yellow);
                 border.BorderThickness = new Thickness(1.0);
@@ -250,27 +327,24 @@ namespace TreatPraktik.View
                 tb.AllowDrop = true;
                 tb.Drop += tb_Drop;
                 border.Child = tb;
-                
+
                 Grid.SetRow(border, rowNo);
                 Grid.SetColumn(border, i);
                 grid.Children.Add(border);
                 i++;
             }
-            //CheckBox btnRemove = new CheckBox();
             Button btnRemove = new Button();
             btnRemove.Width = 16.0;
             btnRemove.Height = 16.0;
             btnRemove.HorizontalAlignment = HorizontalAlignment.Left;
             btnRemove.VerticalAlignment = VerticalAlignment.Center;
-            //var uriSource = new Uri("Ressources/Delete-icon.png", UriKind.Relative);
             var uriSource = new Uri(@"/TreatPraktik;component/Ressources/Delete-icon.png", UriKind.Relative);
             BitmapImage logo = new BitmapImage();
-            //btnRemove.Content = "-";
             Image img = new Image();
             img.Source = new BitmapImage(uriSource);
             btnRemove.Content = img;
             btnRemove.Click += btnRemove_Click;
-            btnRemove.DataContext = rowNo; 
+            btnRemove.DataContext = rowNo;
             Grid.SetColumn(btnRemove, 4);
             Grid.SetRow(btnRemove, rowNo);
             grid.Children.Add(btnRemove);
@@ -279,26 +353,28 @@ namespace TreatPraktik.View
         void btnRemove_Click(object sender, RoutedEventArgs e)
         {
             Button btn = sender as Button;
-            int rowNo = (int)btn.DataContext;
-            Grid grid = (Grid)btn.Parent;
-            //GroupType groupType = (GroupType)btn.DataContext;
-            //int row = groupType.GroupOrder - 1;
-            //int column = 1;
-            //UIElementCollection uiElementCollection = myGrid.Children;
 
-            int i = rowNo * 4;
-            int ii = i + 4;
-            //while(i < ii){
-            //Border b1 = (Border)grid.Children[4];
-            
-            //grid.Children.RemoveAt(4);
-              //  grid.Children.RemoveAt(5);
-                //grid.Children.RemoveAt(6);
-                //grid.Children.RemoveAt(7);
-            
-                i++;
+            int rowNo = Grid.GetRow(btn);
+            Grid grid = (Grid)btn.Parent;
+
+
+            List<UIElement> elementsToRemove = new List<UIElement>();
+
+            //foreach (UIElement element in grid.Children)
+            //{
+
+            //    if (Grid.GetRow(element) == grid.RowDefinitions.Count - 1)
+
+            //        elementsToRemove.Add(element);
+
             //}
-          //  grid.RowDefinitions.RemoveAt(rowNo);
+
+            //foreach (UIElement element in elementsToRemove)
+
+            //   grid.Children.Remove(element);
+            //grid.RowDefinitions.RemoveAt(grid.RowDefinitions.Count - 1);
+
+            RemoveRow(grid, rowNo);
         }
 
         private void RemoveItemRow(Grid grid)
@@ -313,28 +389,71 @@ namespace TreatPraktik.View
             {
 
                 TextBlock textBlock = e.Source as TextBlock;
-                ItemType itemType = (ItemType)textBlock.DataContext;
+                //ItemType itemType = (ItemType)textBlock.DataContext;
 
                 TextBlock source = sender as TextBlock;
                 ListBoxItem lbi = e.Data.GetData("System.Windows.Controls.ListBoxItem") as ListBoxItem;
                 ToolboxItem tbi = (ToolboxItem)lbi.Content;
-                Border test = (Border)textBlock.Parent;
-                var test2 = test.Parent;
-                itemType.DesignID = tbi.DesignID;
-                itemType.Header = tbi.Header;
-                textBlock.Text = tbi.Header;
+                //itemType.DesignID = tbi.DesignID;
+                //itemType.Header = tbi.Header;
+                //textBlock.Text = tbi.Header;
+                ItemType itToBeMoved = (ItemType)textBlock.DataContext;
+                
 
-                //var test = (ToolboxItem)e.Source;
-                int i = 1;
-                //ListView listView = sender as ListView;
-                //listView.Items.Add(contact);
+                Border b1 = (Border)textBlock.Parent;
+                ItemType newItemType = new ItemType();
+                newItemType.DesignID = tbi.DesignID;
+                newItemType.Header = tbi.Header;
+                newItemType.ItemOrder = itToBeMoved.ItemOrder;
+                Grid grid = (Grid)b1.Parent;
+                GroupType gt = GetGroupType(grid);
+                //gt.Items = GetItemTypes(grid, );
+
+                //Grid.GetRow(b);newItemType
+                //int i = 1;
+                //int j = 0;
+                //int i = Grid.GetRow(b1);
+                List<ItemType> itemTypeList = GetItemTypes(grid);
+                int i = itemTypeList.IndexOf(itToBeMoved);
+                while (i < itemTypeList.Count)
+                {
+                    itemTypeList[i].ItemOrder++;
+                    i++;
+                }
+                itemTypeList.Add(newItemType);
+
+                itemTypeList = itemTypeList.OrderBy(o => o.ItemOrder).ToList();
+                ObservableCollection<ItemType> ocItemTypeList = new ObservableCollection<ItemType>();
+
+                //add list to observablecollection
+                foreach (ItemType it in itemTypeList)
+                {
+                    ocItemTypeList.Add(it);
+                }
+                gt.Items = ocItemTypeList;
+                grid.Children.Clear();
+                grid.RowDefinitions.Clear();
+                grid.ColumnDefinitions.Clear();
+                PopulateGroup(gt, grid);
+     //           while (i < grid.RowDefinitions.Count - 1)
+     //           {
+     //               j = 0;
+     //               while (j < grid.ColumnDefinitions.Count - 1)
+     //               {
+     //                   Border b = (Border)grid.Children
+     //.Cast<UIElement>()
+     //.First(a => Grid.GetRow(a) == i && Grid.GetColumn(a) == j);
+     //                   TextBlock tb = (TextBlock)b.Child;
+     //                   ItemType it = (ItemType)tb.DataContext;
+     //                   if (it.DesignID != null)
+     //                       itemTypeList.Add(it);
+     //                   //borderList.Add(b);
+     //                   j++;
+     //               }
+     //               i++;
+     //           }
 
             }
-        }
-
-        private void MoveAllItemsOnceCellForward()
-        {
-
         }
 
         private void AddNewGroupRow(Grid grid)
@@ -347,26 +466,25 @@ namespace TreatPraktik.View
             while (i < 4)
             {
                 Color colorGroupRow = (Color)ColorConverter.ConvertFromString("#97CBFF");
+
                 Border border = new Border();
                 border.BorderBrush = new SolidColorBrush(colorGroupRow);
                 border.Background = new SolidColorBrush(colorGroupRow);
                 border.BorderThickness = new Thickness(0);
                 border.Height = 27.0;
                 border.MaxHeight = 27.0;
-                //border.Padding = new Thickness(0);
+
                 TextBlock tb = new TextBlock();
                 tb.FontWeight = FontWeights.Bold;
                 tb.FontSize = 14.0;
+
                 border.Child = tb;
+
                 Grid.SetRow(border, rowNo);
                 Grid.SetColumn(border, i);
                 grid.Children.Add(border);
                 i++;
             }
-        }
-
-        public void Add()
-        {
         }
     }
 }
