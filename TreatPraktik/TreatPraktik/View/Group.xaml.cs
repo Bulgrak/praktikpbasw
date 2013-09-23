@@ -320,6 +320,7 @@ namespace TreatPraktik.View
                 border.BorderThickness = new Thickness(1.0);
                 border.Height = 27.0;
                 border.MaxHeight = 27.0;
+                border.HorizontalAlignment = HorizontalAlignment.Stretch;
                 TextBlock tb = new TextBlock();
                 tb.HorizontalAlignment = HorizontalAlignment.Stretch;
                 tb.VerticalAlignment = VerticalAlignment.Stretch;
@@ -394,65 +395,79 @@ namespace TreatPraktik.View
                 TextBlock source = sender as TextBlock;
                 ListBoxItem lbi = e.Data.GetData("System.Windows.Controls.ListBoxItem") as ListBoxItem;
                 ToolboxItem tbi = (ToolboxItem)lbi.Content;
-                //itemType.DesignID = tbi.DesignID;
-                //itemType.Header = tbi.Header;
-                //textBlock.Text = tbi.Header;
+
                 ItemType itToBeMoved = (ItemType)textBlock.DataContext;
-                
-
-                Border b1 = (Border)textBlock.Parent;
-                ItemType newItemType = new ItemType();
-                newItemType.DesignID = tbi.DesignID;
-                newItemType.Header = tbi.Header;
-                newItemType.ItemOrder = itToBeMoved.ItemOrder;
-                Grid grid = (Grid)b1.Parent;
-                GroupType gt = GetGroupType(grid);
-                //gt.Items = GetItemTypes(grid, );
-
-                //Grid.GetRow(b);newItemType
-                //int i = 1;
-                //int j = 0;
-                //int i = Grid.GetRow(b1);
-                List<ItemType> itemTypeList = GetItemTypes(grid);
-                int i = itemTypeList.IndexOf(itToBeMoved);
-                while (i < itemTypeList.Count)
+                int designID = Convert.ToInt32(itToBeMoved.DesignID); 
+                if (designID != 0 && designID != 198)
                 {
-                    itemTypeList[i].ItemOrder++;
-                    i++;
+                        Border b1 = (Border)textBlock.Parent;
+                        ItemType newItemType = new ItemType();
+                        newItemType.DesignID = tbi.DesignID;
+                        newItemType.Header = tbi.Header;
+                        newItemType.ItemOrder = itToBeMoved.ItemOrder;
+                        Grid grid = (Grid)b1.Parent;
+                        GroupType gt = GetGroupType(grid);
+                        //gt.Items = GetItemTypes(grid, );
+
+                        //Grid.GetRow(b);newItemType
+                        //int i = 1;
+                        //int j = 0;
+                        //int i = Grid.GetRow(b1);
+                        List<ItemType> itemTypeList = GetItemTypes(grid);
+                        int i = itemTypeList.IndexOf(itToBeMoved);
+                    bool stopCounting = false;
+                        while (i < itemTypeList.Count && !stopCounting)
+                        {
+                            if (itemTypeList[i].DesignID.Equals("198"))
+                            {
+                                itemTypeList.RemoveAt(i);
+                                stopCounting = true;
+                            }
+                            else
+                            {
+                                itemTypeList[i].ItemOrder++;
+                                i++;
+                            }
+                        }
+                        itemTypeList.Add(newItemType);
+
+                        itemTypeList = itemTypeList.OrderBy(o => o.ItemOrder).ToList();
+                        ObservableCollection<ItemType> ocItemTypeList = new ObservableCollection<ItemType>();
+
+                        //add list to observablecollection
+                        foreach (ItemType it in itemTypeList)
+                        {
+                            ocItemTypeList.Add(it);
+                        }
+                        gt.Items = ocItemTypeList;
+                        grid.Children.Clear();
+                        grid.RowDefinitions.Clear();
+                        grid.ColumnDefinitions.Clear();
+                        PopulateGroup(gt, grid);
+                        //           while (i < grid.RowDefinitions.Count - 1)
+                        //           {
+                        //               j = 0;
+                        //               while (j < grid.ColumnDefinitions.Count - 1)
+                        //               {
+                        //                   Border b = (Border)grid.Children
+                        //.Cast<UIElement>()
+                        //.First(a => Grid.GetRow(a) == i && Grid.GetColumn(a) == j);
+                        //                   TextBlock tb = (TextBlock)b.Child;
+                        //                   ItemType it = (ItemType)tb.DataContext;
+                        //                   if (it.DesignID != null)
+                        //                       itemTypeList.Add(it);
+                        //                   //borderList.Add(b);
+                        //                   j++;
+                        //               }
+                        //               i++;
+                        //           }
                 }
-                itemTypeList.Add(newItemType);
-
-                itemTypeList = itemTypeList.OrderBy(o => o.ItemOrder).ToList();
-                ObservableCollection<ItemType> ocItemTypeList = new ObservableCollection<ItemType>();
-
-                //add list to observablecollection
-                foreach (ItemType it in itemTypeList)
+                else
                 {
-                    ocItemTypeList.Add(it);
+                    itToBeMoved.DesignID = tbi.DesignID;
+                    itToBeMoved.Header = tbi.Header;
+                    textBlock.Text = tbi.Header;
                 }
-                gt.Items = ocItemTypeList;
-                grid.Children.Clear();
-                grid.RowDefinitions.Clear();
-                grid.ColumnDefinitions.Clear();
-                PopulateGroup(gt, grid);
-     //           while (i < grid.RowDefinitions.Count - 1)
-     //           {
-     //               j = 0;
-     //               while (j < grid.ColumnDefinitions.Count - 1)
-     //               {
-     //                   Border b = (Border)grid.Children
-     //.Cast<UIElement>()
-     //.First(a => Grid.GetRow(a) == i && Grid.GetColumn(a) == j);
-     //                   TextBlock tb = (TextBlock)b.Child;
-     //                   ItemType it = (ItemType)tb.DataContext;
-     //                   if (it.DesignID != null)
-     //                       itemTypeList.Add(it);
-     //                   //borderList.Add(b);
-     //                   j++;
-     //               }
-     //               i++;
-     //           }
-
             }
         }
 
@@ -473,6 +488,7 @@ namespace TreatPraktik.View
                 border.BorderThickness = new Thickness(0);
                 border.Height = 27.0;
                 border.MaxHeight = 27.0;
+                border.HorizontalAlignment = HorizontalAlignment.Stretch;
 
                 TextBlock tb = new TextBlock();
                 tb.FontWeight = FontWeights.Bold;
@@ -480,9 +496,20 @@ namespace TreatPraktik.View
 
                 border.Child = tb;
 
-                Grid.SetRow(border, rowNo);
-                Grid.SetColumn(border, i);
-                grid.Children.Add(border);
+                if (i == 0)
+                {
+                    Grid.SetRow(border, rowNo);
+                    Grid.SetColumn(border, i);
+                    Grid.SetColumnSpan(border, 4);
+                    grid.Children.Add(border);
+                }
+                //else
+                //{
+                //    Grid.SetRow(border, rowNo);
+                //    Grid.SetColumn(border, i);
+                //    grid.Children.Add(border);
+                //}
+
                 i++;
             }
         }

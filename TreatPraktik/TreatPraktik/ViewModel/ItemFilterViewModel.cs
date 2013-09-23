@@ -86,6 +86,8 @@ namespace TreatPraktik.ViewModel
 
             DesignItemsView = CollectionViewSource.GetDefaultView(ToolboxitemList);
             DesignItemsView.GroupDescriptions.Add(new PropertyGroupDescription("Category"));
+            DesignItemsView.SortDescriptions.Add( 
+                new SortDescription("Header", ListSortDirection.Ascending ));
             DesignItemsView.Filter = ItemFilter;
         }
 
