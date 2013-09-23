@@ -5,11 +5,8 @@ using System.Text;
 
 namespace TreatPraktik.Model
 {
-    class ktUIPageType
+    public class ktUIPageType
     {
-        //public int PageTypeID { get; set; }
-        //public string PageType { get; set; }
-
         public string PageTypeID { get; set; }
         public string PageType { get; set; }
 

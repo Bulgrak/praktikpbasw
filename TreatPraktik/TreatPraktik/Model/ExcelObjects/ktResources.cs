@@ -5,7 +5,7 @@ using System.Text;
 
 namespace TreatPraktik.Model
 {
-    class ktResources
+    public class ktResources
     {
         public string ResourceID { get; set; }
         public string ResourceTypeID { get; set; }
@@ -13,9 +13,7 @@ namespace TreatPraktik.Model
 
         public ktResources()
         {
-            ResourceID = "";
-            ResourceTypeID = "";
-            ResourceResxID = "";
+            
         }
     }
 }

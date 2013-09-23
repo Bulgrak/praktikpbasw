@@ -5,7 +5,7 @@ using System.Text;
 
 namespace TreatPraktik.Model
 {
-    class ktUIOrder
+    public class ktUIOrder
     {
         public string DesignID { get; set; }
         public Double GroupOrder { get; set; }
