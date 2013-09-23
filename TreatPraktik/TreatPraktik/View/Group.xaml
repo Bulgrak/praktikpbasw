@@ -7,7 +7,7 @@
              mc:Ignorable="d">
     <ScrollViewer HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalScrollBarVisibility="Visible">
         <Grid>
-            <Grid Name="myGrid" HorizontalAlignment="Stretch">
+            <Grid Name="myGrid" HorizontalAlignment="Stretch" VerticalAlignment="Top">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="80"/>
                     <ColumnDefinition Width="*"/>
