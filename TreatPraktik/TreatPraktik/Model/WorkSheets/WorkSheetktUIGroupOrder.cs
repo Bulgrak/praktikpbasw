@@ -6,12 +6,14 @@ using System.Text;
 
 namespace TreatPraktik.Model
 {
-    class WorkSheetktUIGroupOrder
+    public class WorkSheetktUIGroupOrder
     {
+        private static WorkSheetktUIGroupOrder instance;
+
         public string SheetName { get; set; }
         public List<ktUIGroupOrder> ktUIGroupOrderList { get; set; }
 
-        public WorkSheetktUIGroupOrder()
+        private WorkSheetktUIGroupOrder()
         {
             SheetName = "ktUIGroupOrder";
             ktUIGroupOrderList = new List<ktUIGroupOrder>();
@@ -21,8 +23,7 @@ namespace TreatPraktik.Model
         /// Helper method for creating a list of ktExaminedGroup 
         /// from an Excel worksheet.
         /// </summary>
-        public void LoadUIGroupOrder(Worksheet worksheet,
-          SharedStringTable sharedString)
+        public void LoadUIGroupOrder(Worksheet worksheet, SharedStringTable sharedString)
         {
             //Initialize the ktExaminedGroup list.
             List<ktUIGroupOrder> result = new List<ktUIGroupOrder>();
@@ -42,29 +43,17 @@ namespace TreatPraktik.Model
                 //If the cell contains a Shared String, its value will be a 
                 //  reference id which will be used to look up the value in the 
                 //  Shared String table.
-                //IEnumerable<String> textValues =
-                //  from cell in row.Descendants<Cell>()
-                //  where cell.CellValue != null
-                //  select
-                //    (cell.DataType != null
-                //      && cell.DataType.HasValue
-                //      && cell.DataType == CellValues.SharedString
-                //    ? sharedString.ChildElements[
-                //      int.Parse(cell.CellValue.InnerText)].InnerText
-                //    : cell.CellValue.InnerText)
-                //  ;
-
                 IEnumerable<String> textValues =
-  from cell in row.Descendants<Cell>()
-  where cell.CellValue != null
-  select
-    (cell.DataType != null
-      && cell.DataType.HasValue
-      && cell.DataType == CellValues.SharedString
-    ? sharedString.ChildElements[
-      int.Parse(cell.CellValue.InnerText)].InnerText
-    : cell.CellValue.InnerText)
-  ;
+                  from cell in row.Descendants<Cell>()
+                  where cell.CellValue != null
+                  select
+                    (cell.DataType != null
+                      && cell.DataType.HasValue
+                      && cell.DataType == CellValues.SharedString
+                    ? sharedString.ChildElements[
+                      int.Parse(cell.CellValue.InnerText)].InnerText
+                    : cell.CellValue.InnerText)
+                  ;
 
                 //Check to verify the row contained data.
                 if (textValues.Count() > 0)
@@ -86,6 +75,21 @@ namespace TreatPraktik.Model
                 }
                 //Return populated list of ktExaminedGroup.
                 ktUIGroupOrderList = result;
+            }
+        }
+
+        /// <summary>
+        /// Singleton pattern
+        /// </summary>
+        public static WorkSheetktUIGroupOrder Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new WorkSheetktUIGroupOrder();
+                }
+                return instance;
             }
         }
     }

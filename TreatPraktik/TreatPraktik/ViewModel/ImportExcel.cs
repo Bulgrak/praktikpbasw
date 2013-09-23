@@ -55,12 +55,15 @@ namespace TreatPraktik.ViewModel
         public WorkSheetQAGroup WorkSheetQAGroups { get; set; }
         public WorkSheetQAktUIDesign WorkSheetQAktUIDesign { get; set; }
 
-        public ImportExcel()
+        /// <summary>
+        /// Imports all data from the original Excel file 
+        /// </summary>
+        private ImportExcel()
         {
             this.WorkSheetExaminedGroup = new WorkSheetktExaminedGroup();
             this.WorkSheetUIDesign = new WorkSheetktUIDesign();
             this.WorkSheetktUIFieldIncludedType = new WorkSheetktUIFieldIncludedType();
-            this.WorkSheetktUIGroupOrder = new WorkSheetktUIGroupOrder();
+            this.WorkSheetktUIGroupOrder = WorkSheetktUIGroupOrder.Instance;
             this.WorkSheetktUIOrder = new WorkSheetktUIOrder();
             this.WorkSheetktResources = new WorkSheetktResources();
             this.WorkSheetktResourceTranslation = new WorkSheetktResourceTranslation();
@@ -158,6 +161,10 @@ namespace TreatPraktik.ViewModel
             }
         }
 
+
+        /// <summary>
+        /// Singleton pattern
+        /// </summary>
         public static ImportExcel Instance
         {
             get
