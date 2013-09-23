@@ -41,11 +41,7 @@ namespace TreatPraktik.View
                 grid.DataContext = gt;
                 Border border = new Border();
                 Color colorGroupRow = (Color)ColorConverter.ConvertFromString("#97CBFF");
-                for (int j = 0; j < 5; j++)
-                {
-                    ColumnDefinition cd = new ColumnDefinition();
-                    grid.ColumnDefinitions.Add(cd);
-                }
+                CreateColumns(grid);
                 int counterRow = 0;
                 int counterColumn = 0;
                 AddNewGroupRow(grid);
@@ -103,15 +99,13 @@ namespace TreatPraktik.View
             }
         }
 
+
+
         public void PopulateGroup(GroupType gt, Grid grid)
         {
             Border border = new Border();
             Color colorGroupRow = (Color)ColorConverter.ConvertFromString("#97CBFF");
-            for (int j = 0; j < 5; j++)
-            {
-                ColumnDefinition cd = new ColumnDefinition();
-                grid.ColumnDefinitions.Add(cd);
-            }
+            CreateColumns(grid);
             int counterRow = 0;
             int counterColumn = 0;
             AddNewGroupRow(grid);
@@ -154,6 +148,15 @@ namespace TreatPraktik.View
             //AddNewRowBtn(grid);
             AddNewItemRow(grid);
             grid.UpdateLayout();
+        }
+
+        private void CreateColumns(Grid grid)
+        {
+            for (int j = 0; j < 5; j++)
+            {
+                ColumnDefinition cd = new ColumnDefinition();
+                grid.ColumnDefinitions.Add(cd);
+            }
         }
 
         private void RemoveRow(Grid grid, int rowCount)
