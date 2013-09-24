@@ -9,6 +9,8 @@ namespace TreatPraktik.Model.WorkSheets
 {
     public class WorkSheetQAktUIDesign
     {
+        private static WorkSheetQAktUIDesign instance;
+
         public string SheetName { get; set; }
         public List<QAktUIDesign> QAktUIDesignList { get; set; }
 
@@ -86,6 +88,21 @@ namespace TreatPraktik.Model.WorkSheets
                 }
                 //Return populated list of ktExaminedGroup.
                 QAktUIDesignList = result;
+            }
+        }
+
+        /// <summary>
+        /// Singleton pattern
+        /// </summary>
+        public static WorkSheetQAktUIDesign Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new WorkSheetQAktUIDesign();
+                }
+                return instance;
             }
         }
     }

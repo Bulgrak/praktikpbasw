@@ -60,17 +60,17 @@ namespace TreatPraktik.ViewModel
         /// </summary>
         private ImportExcel()
         {
-            this.WorkSheetExaminedGroup = new WorkSheetktExaminedGroup();
-            this.WorkSheetUIDesign = new WorkSheetktUIDesign();
-            this.WorkSheetktUIFieldIncludedType = new WorkSheetktUIFieldIncludedType();
+            this.WorkSheetExaminedGroup = WorkSheetktExaminedGroup.Instance;
+            this.WorkSheetUIDesign = WorkSheetktUIDesign.Instance;
+            this.WorkSheetktUIFieldIncludedType = WorkSheetktUIFieldIncludedType.Instance;
             this.WorkSheetktUIGroupOrder = WorkSheetktUIGroupOrder.Instance;
-            this.WorkSheetktUIOrder = new WorkSheetktUIOrder();
-            this.WorkSheetktResources = new WorkSheetktResources();
-            this.WorkSheetktResourceTranslation = new WorkSheetktResourceTranslation();
-            this.WorkSheetktResourceType = new WorkSheetktResourceType();
-            this.WorkSheetktUIPageType = new WorkSheetUIPageType();
-            this.WorkSheetQAGroups = new WorkSheetQAGroup();
-            this.WorkSheetQAktUIDesign = new WorkSheetQAktUIDesign();
+            this.WorkSheetktUIOrder = WorkSheetktUIOrder.Instance;
+            this.WorkSheetktResources = WorkSheetktResources.Instance;
+            this.WorkSheetktResourceTranslation = WorkSheetktResourceTranslation.Instance;
+            this.WorkSheetktResourceType = WorkSheetktResourceType.Instance;
+            this.WorkSheetktUIPageType = WorkSheetUIPageType.Instance;
+            this.WorkSheetQAGroups = WorkSheetQAGroup.Instance;
+            this.WorkSheetQAktUIDesign = WorkSheetQAktUIDesign.Instance;
 
             //Open the Excel workbook.
             using (SpreadsheetDocument document =

@@ -23,11 +23,12 @@ namespace TreatPraktik.View
     public partial class WorkspaceUserControl : UserControl
     {
         private ExportExcel exExcel;
+        private WorkspaceViewModel wvm;
 
         public WorkspaceUserControl()
         {
             InitializeComponent();
-            WorkspaceViewModel wvm = new WorkspaceViewModel();
+            wvm = WorkspaceViewModel.Instance;
             ObservableCollection<PageType> pageTypeList = wvm.PageList;
 
 
@@ -46,7 +47,6 @@ namespace TreatPraktik.View
                     ti.Content = ucGroup;
 
                     myTabControl.Items.Add(ti);
-                    //myTabControl;
                 }
             }
 
@@ -54,7 +54,6 @@ namespace TreatPraktik.View
             //and pass the current TabControl to it.
             exExcel = ExportExcel.Instance;
             exExcel.myTab = myTabControl;
-            //exExcel.Export();
         }
     }
 }

@@ -9,6 +9,8 @@ namespace TreatPraktik.Model.WorkSheets
 {
     public class WorkSheetQAGroup
     {
+        private static WorkSheetQAGroup instance;
+
                 public string SheetName { get; set; }
         public List<QAGroup> QAGroupsList { get; set; }
 
@@ -85,6 +87,21 @@ namespace TreatPraktik.Model.WorkSheets
                 }
                 //Return populated list of ktExaminedGroup.
                 QAGroupsList = result;
+            }
+        }
+
+        /// <summary>
+        /// Singleton pattern
+        /// </summary>
+        public static WorkSheetQAGroup Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new WorkSheetQAGroup();
+                }
+                return instance;
             }
         }
     }

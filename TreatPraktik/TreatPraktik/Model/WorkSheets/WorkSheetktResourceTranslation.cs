@@ -4,10 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace TreatPraktik.Model
+namespace TreatPraktik.Model.WorkSheets
 {
-    class WorkSheetktResourceTranslation
+    public class WorkSheetktResourceTranslation
     {
+        private static WorkSheetktResourceTranslation instance;
+
                public string SheetName { get; set; }
         public List<ktResourceTranslation> ktResourceTranslationList { get; set; }
 
@@ -119,6 +121,21 @@ namespace TreatPraktik.Model
                 }
                 //Return populated list of ktExaminedGroup.
                 ktResourceTranslationList = result;
+            }
+        }
+
+        /// <summary>
+        /// Singleton pattern
+        /// </summary>
+        public static WorkSheetktResourceTranslation Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new WorkSheetktResourceTranslation();
+                }
+                return instance;
             }
         }
     }

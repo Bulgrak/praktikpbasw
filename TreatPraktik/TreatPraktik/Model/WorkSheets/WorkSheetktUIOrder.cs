@@ -4,10 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace TreatPraktik.Model
+namespace TreatPraktik.Model.WorkSheets
 {
-    class WorkSheetktUIOrder
+    public class WorkSheetktUIOrder
     {
+        private static WorkSheetktUIOrder instance;
+
         public string SheetName { get; set; }
         public List<ktUIOrder> ktUIOrderList { get; set; }
 
@@ -87,6 +89,21 @@ namespace TreatPraktik.Model
                 }
                 //Return populated list of ktExaminedGroup.
                 ktUIOrderList = result;
+            }
+        }
+
+        /// <summary>
+        /// Singleton pattern
+        /// </summary>
+        public static WorkSheetktUIOrder Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new WorkSheetktUIOrder();
+                }
+                return instance;
             }
         }
     }
