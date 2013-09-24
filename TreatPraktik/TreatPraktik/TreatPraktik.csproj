@@ -80,6 +80,7 @@
     <Compile Include="Model\WorkSheets\WorkSheetUIPageType.cs" />
     <Compile Include="Ressources\GeneratedTestExcel.cs" />
     <Compile Include="ViewModel\ExportExcel.cs" />
+    <Compile Include="ViewModel\GroupViewModel.cs" />
     <Compile Include="ViewModel\ImportExcel.cs" />
     <Compile Include="ViewModel\ItemFilterViewModel.cs" />
     <Compile Include="ViewModel\RelayCommand.cs" />
