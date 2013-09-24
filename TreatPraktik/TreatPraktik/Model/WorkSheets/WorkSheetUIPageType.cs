@@ -4,10 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace TreatPraktik.Model
+namespace TreatPraktik.Model.WorkSheets
 {
-    class WorkSheetUIPageType
+    public class WorkSheetUIPageType
     {
+        private static WorkSheetUIPageType instance;
+
         public string SheetName { get; set; }
         public List<ktUIPageType> ktUIPageTypeList { get; set; }
 
@@ -84,6 +86,21 @@ namespace TreatPraktik.Model
                 }
                 //Return populated list of ktExaminedGroup.
                 ktUIPageTypeList = result;
+            }
+        }
+
+        /// <summary>
+        /// Singleton pattern
+        /// </summary>
+        public static WorkSheetUIPageType Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new WorkSheetUIPageType();
+                }
+                return instance;
             }
         }
     }

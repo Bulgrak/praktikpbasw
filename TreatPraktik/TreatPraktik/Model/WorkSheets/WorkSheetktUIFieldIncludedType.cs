@@ -4,10 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace TreatPraktik.Model
+namespace TreatPraktik.Model.WorkSheets
 {
-    class WorkSheetktUIFieldIncludedType
+    public class WorkSheetktUIFieldIncludedType
     {
+        private static WorkSheetktUIFieldIncludedType instance;
+
         public string SheetName { get; set; }
         public List<ktUIFieldIncludedType> ktUIFieldIncludedTypeList { get; set; }
 
@@ -84,6 +86,21 @@ namespace TreatPraktik.Model
                 }
                 //Return populated list of ktExaminedGroup.
                 ktUIFieldIncludedTypeList = result;
+            }
+        }
+
+        /// <summary>
+        /// Singleton pattern
+        /// </summary>
+        public static WorkSheetktUIFieldIncludedType Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new WorkSheetktUIFieldIncludedType();
+                }
+                return instance;
             }
         }
     }

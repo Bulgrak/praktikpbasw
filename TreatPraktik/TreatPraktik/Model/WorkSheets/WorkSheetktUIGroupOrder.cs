@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace TreatPraktik.Model
+namespace TreatPraktik.Model.WorkSheets
 {
     public class WorkSheetktUIGroupOrder
     {

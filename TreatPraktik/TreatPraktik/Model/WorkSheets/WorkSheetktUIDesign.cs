@@ -4,10 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace TreatPraktik.Model
+namespace TreatPraktik.Model.WorkSheets
 {
-    class WorkSheetktUIDesign
+    public class WorkSheetktUIDesign
     {
+        private static WorkSheetktUIDesign instance;
+
         public string SheetName { get; set; }
         public List<ktUIDesign> ktUIDesignList { get; set; }
 
@@ -125,6 +127,21 @@ namespace TreatPraktik.Model
                 }
                 //Return populated list of ktExaminedGroup.
                 ktUIDesignList = result;
+            }
+        }
+
+        /// <summary>
+        /// Singleton pattern
+        /// </summary>
+        public static WorkSheetktUIDesign Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new WorkSheetktUIDesign();
+                }
+                return instance;
             }
         }
     }
