@@ -10,8 +10,10 @@ using TreatPraktik.Model.WorkspaceObjects;
 
 namespace TreatPraktik.ViewModel
 {
-    class WorkspaceViewModel : INotifyPropertyChanged
+    public class WorkspaceViewModel : INotifyPropertyChanged
     {
+        private static WorkspaceViewModel instance;
+
         public ObservableCollection<PageType> PageList { get; set; }
 
         public WorkspaceViewModel()
@@ -104,34 +106,19 @@ namespace TreatPraktik.ViewModel
             return obsCol;
         }
 
-        #region GetAllPages method using foreach
-        //public List<PageType> GetAllPages2()
-        //{
-        //    ImportExcel excel = ImportExcel.Instance;
-
-        //    List<PageType> pages = (from a in excel.WorkSheetktUIPageType.ktUIPageTypeList
-        //                            select new PageType
-        //                            {
-        //                                PageTypeID = a.PageTypeID,
-        //                                PageName = a.PageType
-        //                            }).ToList();
-
-
-        //    foreach (var item in pages)
-        //    {
-        //        item.Groups = (from c in excel.WorkSheetExaminedGroup.ExaminedGroupList
-        //                       join b in excel.WorkSheetktUIGroupOrder.ktUIGroupOrderList.
-        //                            Where(b => b.PageTypeID.Equals(item.PageTypeID)) on c.ID equals b.GroupTypeID
-        //                       select new GroupType
-        //                       {
-        //                           GroupTypeID = b.GroupTypeID,
-        //                           GroupName = c.GroupType,
-        //                           GroupOrder = b.GroupOrder
-        //                       }).ToList();
-
-        //    }
-        //    return pages;
-        //}
-        #endregion
+        /// <summary>
+        /// Singleton pattern
+        /// </summary>
+        public static WorkspaceViewModel Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new WorkspaceViewModel();
+                }
+                return instance;
+            }
+        }
     }
 }
