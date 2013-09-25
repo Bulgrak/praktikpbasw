@@ -10,7 +10,7 @@ namespace TreatPraktik.Model
         public string DepartmentID { get; set; }
         public string PageTypeID { get; set; }
         public string GroupTypeID { get; set; }
-        public int GroupOrder { get; set; }
+        public string GroupOrder { get; set; }
 
         public ktUIGroupOrder()
         {

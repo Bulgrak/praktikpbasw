@@ -80,6 +80,7 @@ namespace TreatPraktik.ViewModel
                                                                                      where b.PageTypeID.Equals(a.PageTypeID)
                                                                                      select new GroupType
                                                                                      {
+                                                                                         DepartmentID = b.DepartmentID,
                                                                                          GroupTypeID = b.GroupTypeID,
                                                                                          GroupName = c.GroupType,
                                                                                          GroupOrder = b.GroupOrder,

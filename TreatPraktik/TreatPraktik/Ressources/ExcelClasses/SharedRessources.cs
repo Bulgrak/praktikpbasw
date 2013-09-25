@@ -93,6 +93,19 @@ namespace TreatPraktik.Ressources.ExcelClasses
         }
 
         /// <summary>
+        /// Convert integers to alphabetical value
+        /// 1, 2, 3, 4.. --> A, B, C, D..
+        /// </summary>
+        /// <param name="number">integer value</param>
+        /// <param name="isCaps"></param>
+        /// <returns></returns>
+        public String Number2String(int number, bool isCaps)
+        {
+            Char c = (Char)((isCaps ? 65 : 97) + (number - 1));
+            return c.ToString();
+        }
+
+        /// <summary>
         /// Singleton pattern
         /// </summary>
         public static SharedRessources Instance

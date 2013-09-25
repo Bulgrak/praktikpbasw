@@ -20,13 +20,13 @@ namespace TreatPraktik.ViewModel
 
         ExaminedGroup examinedGroup;
         Resources resources;
+        GroupOrder groupOrder;
         
 
         //WorkSheetktResourceTranslation resourceTranslation;
         //WorkSheetktResourceType resourceType;
         //WorkSheetktUIDesign design;
         //WorkSheetktUIFieldIncludedType fieldIncludeType;
-        //WorkSheetktUIGroupOrder groupOrder;
         //WorkSheetktUIOrder order;
         //WorkSheetQAGroup qaGroup;
         //WorkSheetQAktUIDesign qaDesign;
@@ -56,6 +56,7 @@ namespace TreatPraktik.ViewModel
 
             examinedGroup = new ExaminedGroup();
             resources = new Resources();
+            groupOrder = new GroupOrder();
             
             //resourceTranslation = WorkSheetktResourceTranslation.Instance;
             //resourceType = WorkSheetktResourceType.Instance;
@@ -85,6 +86,7 @@ namespace TreatPraktik.ViewModel
                 //Add sheets to the Workbook
                 examinedGroup.CreateSheet(sheets, spreadsheetDocument, workbookpart);
                 resources.CreateSheet(sheets, spreadsheetDocument, workbookpart);
+                groupOrder.CreateSheet(sheets, spreadsheetDocument, workbookpart);
 
                 workbookpart.Workbook.Save();
 
