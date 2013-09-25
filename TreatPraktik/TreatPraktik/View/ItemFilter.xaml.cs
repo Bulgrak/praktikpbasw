@@ -13,7 +13,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using TreatPraktik.ViewModel;
 
-namespace TreatPraktik
+namespace TreatPraktik.View
 {
     /// <summary>
     /// Interaction logic for ucListOfItemsFilter.xaml

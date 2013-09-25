@@ -54,7 +54,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="ItemFilter.xaml.cs">
+    <Compile Include="View\ItemFilter.xaml.cs">
       <DependentUpon>ItemFilter.xaml</DependentUpon>
     </Compile>
     <Compile Include="Model\ExcelObjects\ktResources.cs" />
@@ -98,7 +98,7 @@
     <Compile Include="View\WorkspaceUserControl.xaml.cs">
       <DependentUpon>WorkspaceUserControl.xaml</DependentUpon>
     </Compile>
-    <Page Include="ItemFilter.xaml">
+    <Page Include="View\ItemFilter.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

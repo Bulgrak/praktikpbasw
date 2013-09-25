@@ -20,9 +20,7 @@ namespace TreatPraktik.ViewModel
         public string Language { get; set; }
         public string TextNoToolboxItemsFound { get; set; }
         //public string TextSearchDescription { get; set; } //Beskrivelse
-        public List<ToolboxItem> ToolboxitemList { get; set; }
-
-        public ICollectionView DesignItemsView { get; set;}
+        public ICollectionView DesignItemsView { get; set; }
 
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
@@ -54,6 +52,19 @@ namespace TreatPraktik.ViewModel
 
         public void PopulateToolbox()
         {
+            List<ToolboxItem> toolboxItemList = new List<ToolboxItem>();
+            toolboxItemList = CreateToolboxItems();
+
+            DesignItemsView = CollectionViewSource.GetDefaultView(toolboxItemList);
+            DesignItemsView.GroupDescriptions.Add(new PropertyGroupDescription("Category"));
+            DesignItemsView.SortDescriptions.Add(
+                new SortDescription("Header", ListSortDirection.Ascending));
+            DesignItemsView.Filter = ItemFilter;
+        }
+
+        private List<ToolboxItem> CreateToolboxItems()
+        {
+            List<ToolboxItem> toolboxItemList = new List<ToolboxItem>();
             ImportExcel ie = ImportExcel.Instance;
             List<ktUIDesign> designList = ie.WorkSheetUIDesign.ktUIDesignList;
             List<ktResources> resourceList = ie.WorkSheetktResources.ktResourceList;
@@ -61,7 +72,7 @@ namespace TreatPraktik.ViewModel
             List<ktResourceType> resourceTypeList = ie.WorkSheetktResourceType.ktResourceTypeList;
             List<QAktUIDesign> qaktuidesignList = ie.WorkSheetQAktUIDesign.QAktUIDesignList;
             List<QAGroup> qagrouplist = ie.WorkSheetQAGroups.QAGroupsList;
-            ToolboxitemList = (
+            toolboxItemList = (
                 //joiner tabeller, der vedrører header
                 from a in designList
                 join b in resourceList on a.ResxID equals b.ResourceResxID
@@ -83,12 +94,7 @@ namespace TreatPraktik.ViewModel
                     ToolTip = g.TranslationText,
                     Category = j.Type
                 }).ToList();
-
-            DesignItemsView = CollectionViewSource.GetDefaultView(ToolboxitemList);
-            DesignItemsView.GroupDescriptions.Add(new PropertyGroupDescription("Category"));
-            DesignItemsView.SortDescriptions.Add( 
-                new SortDescription("Header", ListSortDirection.Ascending ));
-            DesignItemsView.Filter = ItemFilter;
+            return toolboxItemList;
         }
 
         public string FilterString
@@ -119,7 +125,5 @@ namespace TreatPraktik.ViewModel
             string toolTip = toolboxItem.ToolTip;
             return header.ToLower().Contains(filterString.ToLower()) || toolTip.ToLower().Contains(filterString.ToLower()); //Case-insensitive
         }
-
-
     }
 }
