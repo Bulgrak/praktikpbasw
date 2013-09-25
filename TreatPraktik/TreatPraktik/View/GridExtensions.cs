@@ -101,5 +101,23 @@ namespace TreatPraktik.View
                 .First(a => Grid.GetRow(a) == row && Grid.GetColumn(a) == column);
             return uie;
         }
+        
+        /// <summary>
+        /// Removes all children, rows and columns
+        /// </summary>
+        /// <param name="grid"></param>
+        public static void ClearGrid(this Grid grid)
+        {
+            grid.Children.Clear();
+            grid.RowDefinitions.Clear();
+            grid.ColumnDefinitions.Clear();
+        }
+
+        public static void RemoveRow(this Grid grid, int row)
+        {
+            grid.RemoveGridCellChildrenByRow(row);
+            grid.RowDefinitions.RemoveAt(row);
+            grid.UpdateCellContentsRowPosition(row);
+        }
     }
 }

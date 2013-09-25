@@ -43,7 +43,7 @@ namespace TreatPraktik.View
                 {
                     Group ucGroup = new Group();
                     ucGroup.groups = pageTypeList[i].Groups;
-                    ucGroup.PopulateGrid();
+                    ucGroup.CreateGroupTables();
                     ti.Content = ucGroup;
 
                     myTabControl.Items.Add(ti);
