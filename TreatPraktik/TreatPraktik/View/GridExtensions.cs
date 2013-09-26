@@ -31,6 +31,18 @@ namespace TreatPraktik.View
                                 x => Grid.GetRow(x) == row && Grid.GetColumn(x) == col).ToList();
         }
 
+        public static List<UIElement> GetGridCellChildrenByRow(this Grid grid, int row)
+        {
+            List<UIElement> uieList = new List<UIElement>();
+            int i = 0;
+            while (i < grid.ColumnDefinitions.Count)
+            {
+                UIElement uie = grid.GetGridCellChildren(row, i);
+                uieList.Add(uie);
+                i++;
+            }
+            return uieList;
+        }
 
         /// <summary>
         /// Updates items row position in the grid from a certain row number
