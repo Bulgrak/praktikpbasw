@@ -212,7 +212,13 @@ namespace TreatPraktik.View
 
             if (CheckForEmptyRow(groupTable, row))
             {
+                ClearNewRowItems(groupTable, row - 1);
                 groupTable.RemoveRow(row);
+
+            }
+            else
+            {
+                CheckForEmptyFields(groupTable, row);
             }
             List<ItemType> itemTypeList = GetItemTypes(groupTable);
             //groupTable.RemoveRow(row);
@@ -239,7 +245,7 @@ namespace TreatPraktik.View
             PopulateGroupTable(gt, gridGroupTable);
 
             int n = 1;
-            while (n < groupTable.RowDefinitions.Count - 1)
+            while (n < groupTable.RowDefinitions.Count - 2)
             {
                 CheckRow(groupTable, n, false);
                 n++;
@@ -250,8 +256,23 @@ namespace TreatPraktik.View
 
         private void ClearNewRowItems(Grid groupTable, int row)
         {
-            groupTable.GetGridCellChildrenByRow(row);
 
+            List<ItemType> itemTypeListCheck = GetItemsByRow(groupTable, row);
+            int i = 0;
+            bool cleared = false;
+            while (i < itemTypeListCheck.Count)
+            {
+                ItemType it = itemTypeListCheck[i];
+                if (it.DesignID != null && it.DesignID.Equals("198"))
+                {
+                    it.DesignID = null;
+                    it.DatabaseFieldName = null;
+                    it.Header = null;
+                    it.ItemOrder = 0;
+                    cleared = true;
+                }
+                i++;
+            }
         }
 
         private List<ItemType> GetItemsByRow(Grid groupTable, int row)
@@ -271,6 +292,33 @@ namespace TreatPraktik.View
             }
             return itemTypeListCheck;
         }
+
+        private void CheckForEmptyFields(Grid groupTable, int row)
+        {
+            List<ItemType> itemTypeListCheck = GetItemsByRow(groupTable, row);
+            bool deleteEmptyField = true;
+            int i = itemTypeListCheck.Count - 1;
+            while (i >= 0)
+            {
+                string designID = itemTypeListCheck[i].DesignID;
+                if (itemTypeListCheck[3].DesignID != null && !itemTypeListCheck[3].DesignID.Equals("198"))
+                {
+                    deleteEmptyField = false;
+                }
+                if (designID != null && designID.Equals("198"))
+                {
+                    deleteEmptyField = false;
+                }
+
+                if (deleteEmptyField && designID != null && designID.Equals("197"))
+                {
+                    itemTypeListCheck[i].DesignID = null;
+                    itemTypeListCheck[i].Header = null;
+                }
+                i--;
+            }
+        }
+
 
         private bool CheckForEmptyRow(Grid groupTable, int row)
         {
