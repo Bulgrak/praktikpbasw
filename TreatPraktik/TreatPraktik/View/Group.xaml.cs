@@ -70,9 +70,6 @@ namespace TreatPraktik.View
             {
                 if (gt.Items[j + skipped].DesignID.Equals("198"))
                 {
-                    gt.Items[j + skipped].Header = "<NewRowItem>";
-                    SolidColorBrush textColor = Brushes.Black;
-                    InsertItem(groupTable, gt.Items[j + skipped], counterRow, j % 4, true, textColor);
                     skipped = skipped + j;
                     j = 0;
                 }
@@ -83,7 +80,6 @@ namespace TreatPraktik.View
                 }
                 if (gt.Items[j + skipped].DesignID.Equals("198"))
                 {
-                    //InsertItem(groupTable, gt.Items[j + skipped], counterRow, j % 4, true);
                     j--;
                     skipped++;
                     continue;
@@ -216,21 +212,21 @@ namespace TreatPraktik.View
             ItemType itemType = new ItemType();
             tb.DataContext = itemType;
 
-            if (CheckForEmptyRow(groupTable, row))
-            {
-                if (row != 1)
-                {
-                    ClearNewRowItems(groupTable, row - 1);
-                }
-                ClearNewRowItems(groupTable, row);
-                groupTable.RemoveRow(row);
+            //if (CheckForEmptyRow(groupTable, row))
+            //{
+            //    if (row != 1)
+            //    {
+            //        ClearNewRowItems(groupTable, row - 1);
+            //    }
+            //    ClearNewRowItems(groupTable, row);
+            //    groupTable.RemoveRow(row);
 
-            }
-            else
-            {
-                if(!itToBeDeleted.DesignID.Equals("197"))
-                CheckForEmptyFields(groupTable, row);
-            }
+            //}
+            //else
+            //{
+            //    if(!itToBeDeleted.DesignID.Equals("197"))
+            //    CheckForEmptyFields(groupTable, row);
+            //}
             List<ItemType> itemTypeList = GetItemTypes(groupTable);
             //groupTable.RemoveRow(row);
             //////////////
@@ -258,13 +254,13 @@ namespace TreatPraktik.View
             int n = 1;
             while (n < groupTable.RowDefinitions.Count - 2)
             {
-                CheckRow(groupTable, n, false);
+                //CheckRow(groupTable, n, false);
                 n++;
             }
             if (itToBeDeleted.DesignID.Equals("198"))
             {
                 CheckForEmptyFields(groupTable, row);
-                CheckRow(groupTable, row, false);
+                //CheckRow(groupTable, row, false);
                 if (row == groupTable.RowDefinitions.Count - 2)
                     ClearNewRowItems(groupTable, groupTable.RowDefinitions.Count - 2);
             }
@@ -344,57 +340,57 @@ namespace TreatPraktik.View
         }
 
 
-        private bool CheckForEmptyRow(Grid groupTable, int row)
-        {
-            List<ItemType> itemTypeList = GetItemsByRow(groupTable, row);
-            int i = 0;
-            bool isEmpty = true;
-            while (i < itemTypeList.Count && isEmpty)
-            {
-                string designID = itemTypeList[i].DesignID;
-                if (designID == null || designID.Equals("198") || designID.Equals("197"))
-                    i++;
-                else
-                    isEmpty = false;
-            }
-            return isEmpty;
-        }
+        //private bool CheckForEmptyRow(Grid groupTable, int row)
+        //{
+        //    List<ItemType> itemTypeList = GetItemsByRow(groupTable, row);
+        //    int i = 0;
+        //    bool isEmpty = true;
+        //    while (i < itemTypeList.Count && isEmpty)
+        //    {
+        //        string designID = itemTypeList[i].DesignID;
+        //        if (designID == null || designID.Equals("198") || designID.Equals("197"))
+        //            i++;
+        //        else
+        //            isEmpty = false;
+        //    }
+        //    return isEmpty;
+        //}
 
-        private void CheckRow(Grid groupTable, int row, bool addEmptyFieldsOnly)
-        {
-            List<ItemType> itemTypeListCheck = GetItemsByRow(groupTable, row);
-            bool addNewRowItem = true;
-            int i = itemTypeListCheck.Count - 1;
-            while (i >= 0)
-            {
-                string designID = itemTypeListCheck[i].DesignID;
-                if (itemTypeListCheck[3].DesignID != null && !itemTypeListCheck[3].DesignID.Equals("198"))
-                {
-                    addNewRowItem = false;
-                }
-                if (designID != null && designID.Equals("198"))
-                {
-                    addNewRowItem = false;
-                }
+        //private void CheckRow(Grid groupTable, int row, bool addEmptyFieldsOnly)
+        //{
+        //    List<ItemType> itemTypeListCheck = GetItemsByRow(groupTable, row);
+        //    bool addNewRowItem = true;
+        //    int i = itemTypeListCheck.Count - 1;
+        //    while (i >= 0)
+        //    {
+        //        string designID = itemTypeListCheck[i].DesignID;
+        //        if (itemTypeListCheck[3].DesignID != null && !itemTypeListCheck[3].DesignID.Equals("198"))
+        //        {
+        //            addNewRowItem = false;
+        //        }
+        //        if (designID != null && designID.Equals("198"))
+        //        {
+        //            addNewRowItem = false;
+        //        }
 
-                if (addNewRowItem && designID != null && !designID.Equals("197"))
-                {
-                    if (!addEmptyFieldsOnly)
-                    {
-                        itemTypeListCheck[i + 1].DesignID = "198";
-                        itemTypeListCheck[i + 1].Header = "<NewRowItem>";
-                    }
-                    addNewRowItem = false;
-                }
+        //        if (addNewRowItem && designID != null && !designID.Equals("197"))
+        //        {
+        //            if (!addEmptyFieldsOnly)
+        //            {
+        //                itemTypeListCheck[i + 1].DesignID = "198";
+        //                itemTypeListCheck[i + 1].Header = "<NewRowItem>";
+        //            }
+        //            addNewRowItem = false;
+        //        }
 
-                if (!addNewRowItem && designID == null)
-                {
-                    itemTypeListCheck[i].DesignID = "197";
-                    itemTypeListCheck[i].Header = "<EmptyFieldItem>";
-                }
-                i--;
-            }
-        }
+        //        if (!addNewRowItem && designID == null)
+        //        {
+        //            itemTypeListCheck[i].DesignID = "197";
+        //            itemTypeListCheck[i].Header = "<EmptyFieldItem>";
+        //        }
+        //        i--;
+        //    }
+        //}
 
 
         private void AddNewGroupRow(Grid grid)
@@ -492,7 +488,7 @@ namespace TreatPraktik.View
                     int n = 0;
                     while (n < grid.RowDefinitions.Count - 1)
                     {
-                        CheckRow(grid, row, false);
+                        //CheckRow(grid, row, false);
                         n++;
                     }
                     while (i < itemTypeList.Count && !stopCounting)
@@ -540,9 +536,9 @@ namespace TreatPraktik.View
                     if (row == grid.RowDefinitions.Count - 1)
                     {
                         AddNewEmptyItemRow(grid);
-                        CheckRow(grid, row - 1, false);
+                        //CheckRow(grid, row - 1, false);
                     }
-                    CheckRow(grid, row, true);
+                    //CheckRow(grid, row, true);
                 }
             }
         }

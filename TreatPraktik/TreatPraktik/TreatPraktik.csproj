@@ -54,6 +54,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ViewModel\SpecialFieldsViewModel.cs" />
     <Compile Include="View\ItemFilter.xaml.cs">
       <DependentUpon>ItemFilter.xaml</DependentUpon>
     </Compile>
@@ -95,6 +96,9 @@
     <Compile Include="View\ImportExportExcel.xaml.cs">
       <DependentUpon>ImportExportExcel.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\SpecialFields.xaml.cs">
+      <DependentUpon>SpecialFields.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\WorkspaceUserControl.xaml.cs">
       <DependentUpon>WorkspaceUserControl.xaml</DependentUpon>
     </Compile>
@@ -119,6 +123,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\ImportExportExcel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\SpecialFields.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
