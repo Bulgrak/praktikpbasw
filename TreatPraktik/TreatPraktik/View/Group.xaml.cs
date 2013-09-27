@@ -197,14 +197,20 @@ namespace TreatPraktik.View
         {
             Button btn = sender as Button;
             btn.Visibility = Visibility.Hidden;
+            
             Grid gridCell = (Grid)btn.Parent;
             Border border = (Border)gridCell.Parent;
             Grid gridGroupTable = (Grid)border.Parent;
+            gridGroupTable.RemoveRow(gridGroupTable.RowDefinitions.Count - 1);
             int row = Grid.GetRow(border);
             Grid groupTable = (Grid)border.Parent;
             GroupType gt = (GroupType)gridGroupTable.DataContext;
             TextBlock tb = (TextBlock)gridCell.Children[1];
+            
             ItemType itToBeDeleted = (ItemType)tb.DataContext;
+
+
+            
 
             int i = Convert.ToInt32(itToBeDeleted.ItemOrder);
             ItemType itemType = new ItemType();
@@ -212,12 +218,17 @@ namespace TreatPraktik.View
 
             if (CheckForEmptyRow(groupTable, row))
             {
-                ClearNewRowItems(groupTable, row - 1);
+                if (row != 1)
+                {
+                    ClearNewRowItems(groupTable, row - 1);
+                }
+                ClearNewRowItems(groupTable, row);
                 groupTable.RemoveRow(row);
 
             }
             else
             {
+                if(!itToBeDeleted.DesignID.Equals("197"))
                 CheckForEmptyFields(groupTable, row);
             }
             List<ItemType> itemTypeList = GetItemTypes(groupTable);
@@ -250,8 +261,21 @@ namespace TreatPraktik.View
                 CheckRow(groupTable, n, false);
                 n++;
             }
-
-
+            if (itToBeDeleted.DesignID.Equals("198"))
+            {
+                CheckForEmptyFields(groupTable, row);
+                CheckRow(groupTable, row, false);
+                if (row == groupTable.RowDefinitions.Count - 2)
+                    ClearNewRowItems(groupTable, groupTable.RowDefinitions.Count - 2);
+            }
+            //CheckForEmptyFields(groupTable, row);
+            //CheckRow(groupTable, row -1, true);
+            //n = 1;
+            //while (n < groupTable.RowDefinitions.Count - 2)
+            //{
+            //    CheckRow(groupTable, n, false);
+            //    n++;
+            //}
         }
 
         private void ClearNewRowItems(Grid groupTable, int row)
@@ -301,10 +325,10 @@ namespace TreatPraktik.View
             while (i >= 0)
             {
                 string designID = itemTypeListCheck[i].DesignID;
-                if (itemTypeListCheck[3].DesignID != null && !itemTypeListCheck[3].DesignID.Equals("198"))
-                {
-                    deleteEmptyField = false;
-                }
+                //if (itemTypeListCheck[3].DesignID != null && !itemTypeListCheck[3].DesignID.Equals("198"))
+                //{
+                //    deleteEmptyField = false;
+                //}
                 if (designID != null && designID.Equals("198"))
                 {
                     deleteEmptyField = false;
@@ -418,8 +442,6 @@ namespace TreatPraktik.View
             tb.VerticalAlignment = VerticalAlignment.Stretch;
             tb.DataContext = itemType;
             tb.SetBinding(TextBlock.TextProperty, "Header");
-            //tb.AllowDrop = true;
-            //tb.Drop += tb_Drop;
 
             Grid gridCell = new Grid();
             CreateColumns(gridCell, 2);
@@ -454,7 +476,7 @@ namespace TreatPraktik.View
 
                 ItemType itToBeMoved = (ItemType)tb.DataContext;
                 int designID = Convert.ToInt32(itToBeMoved.DesignID);
-                if (designID != 0 && designID != 198)
+                if (designID != 0 && designID != 198 && designID != 197)
                 {
                     Border b1 = (Border)gridCell.Parent;
                     int row = Grid.GetRow(b1);
