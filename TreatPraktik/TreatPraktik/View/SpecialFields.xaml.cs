@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using TreatPraktik.ViewModel;
 
 namespace TreatPraktik.View
 {
@@ -22,6 +23,34 @@ namespace TreatPraktik.View
         public SpecialFields()
         {
             InitializeComponent();
+            DataContext = new SpecialFieldsViewModel();
+            Style itemContainerStyle = new Style(typeof(ListBoxItem));
+            itemContainerStyle.Setters.Add(new Setter(ListBoxItem.AllowDropProperty, true));
+            itemContainerStyle.Setters.Add(new EventSetter(ListBoxItem.PreviewMouseMoveEvent, new MouseEventHandler(List_MouseMove)));
+            //itemContainerStyle.Setters.Add(new EventSetter(ListBoxItem.DropEvent, new DragEventHandler(listbox1_Drop)));
+            lstSpecialItems.ItemContainerStyle = itemContainerStyle;
+        }
+
+        void List_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (sender is ListBoxItem && e.LeftButton == MouseButtonState.Pressed)
+            {
+
+                ListBoxItem draggedItem = sender as ListBoxItem;
+                draggedItem.IsSelected = true;
+                DragDrop.DoDragDrop(draggedItem, draggedItem, DragDropEffects.Copy);
+            }
+        }
+
+        public void ToolboxItem_PreviewMouseMove(object sender, MouseEventArgs e)
+        {
+            if (sender is ListBoxItem && e.LeftButton == MouseButtonState.Pressed)
+            {
+
+                ListBoxItem draggedItem = sender as ListBoxItem;
+                draggedItem.IsSelected = true;
+                DragDrop.DoDragDrop(draggedItem, draggedItem, DragDropEffects.Copy);
+            }
         }
     }
 }

@@ -356,41 +356,103 @@ namespace TreatPraktik.View
         //    return isEmpty;
         //}
 
-        //private void CheckRow(Grid groupTable, int row, bool addEmptyFieldsOnly)
-        //{
-        //    List<ItemType> itemTypeListCheck = GetItemsByRow(groupTable, row);
-        //    bool addNewRowItem = true;
-        //    int i = itemTypeListCheck.Count - 1;
-        //    while (i >= 0)
-        //    {
-        //        string designID = itemTypeListCheck[i].DesignID;
-        //        if (itemTypeListCheck[3].DesignID != null && !itemTypeListCheck[3].DesignID.Equals("198"))
-        //        {
-        //            addNewRowItem = false;
-        //        }
-        //        if (designID != null && designID.Equals("198"))
-        //        {
-        //            addNewRowItem = false;
-        //        }
+        private void CheckRow(Grid groupTable, int row, bool addEmptyFieldsOnly)
+        {
+            List<ItemType> itemTypeListCheck = GetItemsByRow(groupTable, row);
+            bool addNewRowItem = true;
+            int i = itemTypeListCheck.Count - 1;
+            while (i >= 0)
+            {
+                string designID = itemTypeListCheck[i].DesignID;
+                if (itemTypeListCheck[3].DesignID != null && !itemTypeListCheck[3].DesignID.Equals("198"))
+                {
+                    addNewRowItem = false;
+                }
+                if (designID != null && designID.Equals("198"))
+                {
+                    addNewRowItem = false;
+                }
 
-        //        if (addNewRowItem && designID != null && !designID.Equals("197"))
-        //        {
-        //            if (!addEmptyFieldsOnly)
-        //            {
-        //                itemTypeListCheck[i + 1].DesignID = "198";
-        //                itemTypeListCheck[i + 1].Header = "<NewRowItem>";
-        //            }
-        //            addNewRowItem = false;
-        //        }
+                if (addNewRowItem && designID != null && !designID.Equals("197"))
+                {
+                    if (!addEmptyFieldsOnly)
+                    {
+                        itemTypeListCheck[i + 1].DesignID = "198";
+                        itemTypeListCheck[i + 1].Header = "<NewRowItem>";
+                    }
+                    addNewRowItem = false;
+                }
 
-        //        if (!addNewRowItem && designID == null)
-        //        {
-        //            itemTypeListCheck[i].DesignID = "197";
-        //            itemTypeListCheck[i].Header = "<EmptyFieldItem>";
-        //        }
-        //        i--;
-        //    }
-        //}
+                if (!addNewRowItem && designID == null)
+                {
+                    itemTypeListCheck[i].DesignID = "197";
+                    itemTypeListCheck[i].Header = "<EmptyFieldItem>";
+                }
+                i--;
+            }
+        }
+
+        private bool CheckForNewLineItem(Grid groupTable, int row)
+        {
+            List<ItemType> itemTypeListCheck = GetItemsByRow(groupTable, row);
+            bool newLineItemFound = false;
+            int i = 0;
+            while (i < itemTypeListCheck.Count)
+            {
+                string designID = itemTypeListCheck[i].DesignID;
+                if(designID != null && designID.Equals("198"))
+                {
+                    newLineItemFound = true;
+                }
+                i++;
+            }
+            return newLineItemFound;
+        }
+
+        private void GenerateEmptyFields(Grid groupTable, int row, bool wholeRow)
+        {
+            List<ItemType> itemTypeListCheck = GetItemsByRow(groupTable, row);
+            bool newLineItemExist = CheckForNewLineItem(groupTable, row);
+            bool addEmptyfields = false;
+            int i = itemTypeListCheck.Count - 1;
+           
+            while (i >= 0)
+            {
+                string designID = itemTypeListCheck[i].DesignID;
+
+                if (newLineItemExist && !wholeRow)
+                {
+                    addEmptyfields = false;
+                }
+
+                if (newLineItemExist && designID != null && itemTypeListCheck[i].DesignID.Equals("198") && !wholeRow)
+                {
+                    addEmptyfields = true;
+                    newLineItemExist = false;
+                    wholeRow = false;
+                }
+
+                if (!newLineItemExist && !addEmptyfields && designID != null && !wholeRow)
+                {
+                    addEmptyfields = true;
+                }
+
+                if (addEmptyfields && designID == null && !wholeRow)
+                {
+                    itemTypeListCheck[i].DesignID = "197";
+                    itemTypeListCheck[i].Header = "<EmptyField>";
+                }
+
+                if (wholeRow && designID == null && !newLineItemExist)
+                {
+                    itemTypeListCheck[i].DesignID = "197";
+                    itemTypeListCheck[i].Header = "<EmptyField>";
+                }
+
+
+                i--;
+            }
+        }
 
 
         private void AddNewGroupRow(Grid grid)
@@ -472,6 +534,8 @@ namespace TreatPraktik.View
 
                 ItemType itToBeMoved = (ItemType)tb.DataContext;
                 int designID = Convert.ToInt32(itToBeMoved.DesignID);
+
+
                 if (designID != 0 && designID != 198 && designID != 197)
                 {
                     Border b1 = (Border)gridCell.Parent;
@@ -524,6 +588,8 @@ namespace TreatPraktik.View
                     gt.Items = ocItemTypeList;
                     grid.ClearGrid();
                     PopulateGroupTable(gt, grid);
+                    
+
                 }
                 else
                 {
@@ -535,6 +601,9 @@ namespace TreatPraktik.View
                     int col = Grid.GetColumn(bTarget);
                     if (row == grid.RowDefinitions.Count - 1)
                     {
+                        //CheckRow(grid, row, true);
+                        GenerateEmptyFields(grid, row, false);
+                        GenerateEmptyFields(grid, row - 1, true);
                         AddNewEmptyItemRow(grid);
                         //CheckRow(grid, row - 1, false);
                     }

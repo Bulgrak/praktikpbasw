@@ -7,17 +7,13 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <GroupBox Header="Special field items">
         <Grid>
-    <ListBox>
-                <ListBox.GroupStyle>
-                <GroupStyle>
-                    <GroupStyle.HeaderTemplate>
-                        <DataTemplate>
-                            <TextBlock FontWeight="Bold" FontSize="14" Text="{Binding Name}"/>
-                        </DataTemplate>
-                    </GroupStyle.HeaderTemplate>
-                </GroupStyle>
-            </ListBox.GroupStyle>
-        </ListBox>
+            <ListBox x:Name="lstSpecialItems" ItemsSource="{Binding SpecialItemsView}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Path=Header}" ToolTip="{Binding Path=ToolTip}" PreviewMouseMove="ToolboxItem_PreviewMouseMove"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
         </Grid>
     </GroupBox>
 </UserControl>
