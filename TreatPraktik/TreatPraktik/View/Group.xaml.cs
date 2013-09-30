@@ -57,38 +57,37 @@ namespace TreatPraktik.View
             }
         }
 
-        public void PopulateGroupTable(GroupType gt, Grid grid)
+        public void PopulateGroupTable(GroupType gt, Grid groupTable)
         {
-            CreateColumns(grid, 4);
+            CreateColumns(groupTable, 4);
             int counterRow = 0;
             int counterColumn = 0;
-            AddNewGroupRow(grid);
+            AddNewGroupRow(groupTable);
             TextBlock groupHeaderName = new TextBlock();
-            InsertGroupItem(grid, gt, 0, 0, false);
+            InsertGroupItem(groupTable, gt, 0, 0, false);
             int skipped = 0;
             for (int j = 0; j < gt.Items.Count - skipped; j++)
             {
                 if (gt.Items[j + skipped].DesignID.Equals("198"))
                 {
-                    InsertItem(grid, gt.Items[j + skipped], counterRow, j % 4, true);
                     skipped = skipped + j;
                     j = 0;
                 }
                 else if (j % 4 == 0)
                 {
-                    AddNewEmptyItemRow(grid);
+                    AddNewEmptyItemRow(groupTable);
                     counterRow++;
                 }
                 if (gt.Items[j + skipped].DesignID.Equals("198"))
                 {
-                    //InsertItem(grid, gt.Items[j + skipped], counterRow, j % 4, true);
                     j--;
                     skipped++;
                     continue;
                 }
                 if (gt.Items[j + skipped].DesignID.Equals("197"))
                 {
-                    InsertItem(grid, gt.Items[j + skipped], counterRow, j % 4, true);
+                    SolidColorBrush textColor = Brushes.Black;
+                    InsertItem(groupTable, gt.Items[j + skipped], counterRow, j % 4, true, textColor);
                 }
                 else
                 {
@@ -96,11 +95,12 @@ namespace TreatPraktik.View
                     {
                         counterColumn = 0;
                     }
-                    InsertItem(grid, gt.Items[j + skipped], counterRow, j % 4, true);
+                    SolidColorBrush textColor = Brushes.Black;
+                    InsertItem(groupTable, gt.Items[j + skipped], counterRow, j % 4, true, textColor);
                 }
                 counterColumn++;
             }
-            AddNewEmptyItemRow(grid);
+            AddNewEmptyItemRow(groupTable);
         }
 
         private void CreateColumns(Grid grid, int columns)
@@ -145,23 +145,22 @@ namespace TreatPraktik.View
             return itemTypeList;
         }
 
-        private void InsertItem(Grid groupTable, ItemType itemType, int row, int column, bool allowDrop)
+        private void InsertItem(Grid groupTable, ItemType itemType, int row, int column, bool allowDrop, SolidColorBrush textColor)
         {
             Border border = GetCellItem(groupTable, row, column);
             Grid cellItem = (Grid)border.Child;
-            TextBlock tb = (TextBlock)cellItem.Children[1]; 
-            tb.AllowDrop = allowDrop;
+            TextBlock tb = (TextBlock)cellItem.Children[1];
             tb.DataContext = itemType;
-            tb.Text = itemType.Header;
+            tb.SetBinding(TextBlock.TextProperty, "Header");
+            tb.Foreground = textColor;
         }
 
         private void InsertGroupItem(Grid groupTable, GroupType groupType, int row, int column, bool allowDrop)
         {
             Border border = GetCellItem(groupTable, row, column);
             TextBlock tb = (TextBlock)border.Child;
-            tb.AllowDrop = allowDrop;
             tb.DataContext = groupType;
-            tb.Text = groupType.GroupHeader;
+            tb.SetBinding(TextBlock.TextProperty, "GroupHeader");
         }
 
         public Border GetCellItem(Grid groupTable, int row, int column)
@@ -176,18 +175,14 @@ namespace TreatPraktik.View
         {
             RowDefinition rd = new RowDefinition();
             groupTable.RowDefinitions.Add(rd);
-            int rowNo = groupTable.RowDefinitions.Count - 1;
+            int row = groupTable.RowDefinitions.Count - 1;
             int i = 0;
-            while (i < 4)
+            while (i < groupTable.ColumnDefinitions.Count)
             {
                 ItemType itemType = new ItemType();
-                itemType.ItemOrder = ((rowNo - 1) * 4) + i;
+                itemType.ItemOrder = ((row - 1) * 4) + i;
                 Border border = CreateItemCell(Colors.Black, Colors.Yellow, itemType);
-
-
-                //border.Child = tb;
-
-                Grid.SetRow(border, rowNo);
+                Grid.SetRow(border, row);
                 Grid.SetColumn(border, i);
                 groupTable.Children.Add(border);
                 i++;
@@ -198,184 +193,178 @@ namespace TreatPraktik.View
         {
             Button btn = sender as Button;
             btn.Visibility = Visibility.Hidden;
-            //int row = Grid.GetRow(btn);
+            
             Grid gridCell = (Grid)btn.Parent;
             Border border = (Border)gridCell.Parent;
+            Grid gridGroupTable = (Grid)border.Parent;
+            gridGroupTable.RemoveRow(gridGroupTable.RowDefinitions.Count - 1);
             int row = Grid.GetRow(border);
             Grid groupTable = (Grid)border.Parent;
+            GroupType gt = (GroupType)gridGroupTable.DataContext;
             TextBlock tb = (TextBlock)gridCell.Children[1];
+            
+            ItemType itToBeDeleted = (ItemType)tb.DataContext;
+
+
+            
+
+            int i = Convert.ToInt32(itToBeDeleted.ItemOrder);
             ItemType itemType = new ItemType();
             tb.DataContext = itemType;
-            tb.Text = "";
-            if (CheckForEmptyRow(groupTable, row))
-            {
-                groupTable.RemoveRow(row);
-            }
 
+            //if (CheckForEmptyRow(groupTable, row))
+            //{
+            //    if (row != 1)
+            //    {
+            //        ClearNewRowItems(groupTable, row - 1);
+            //    }
+            //    ClearNewRowItems(groupTable, row);
+            //    groupTable.RemoveRow(row);
+
+            //}
+            //else
+            //{
+            //    if(!itToBeDeleted.DesignID.Equals("197"))
+            //    CheckForEmptyFields(groupTable, row);
+            //}
+            List<ItemType> itemTypeList = GetItemTypes(groupTable);
             //groupTable.RemoveRow(row);
+            //////////////
+            bool stopCounting = false;
+            // CheckRow(grid, row - 1);
+
+            while (i < itemTypeList.Count && !stopCounting)
+            {
+                itemTypeList[i].ItemOrder--;
+                i++;
+            }
+
+            itemTypeList = itemTypeList.OrderBy(o => o.ItemOrder).ToList();
+            ObservableCollection<ItemType> ocItemTypeList = new ObservableCollection<ItemType>();
+
+            //add list to observablecollection
+            foreach (ItemType it in itemTypeList)
+            {
+                ocItemTypeList.Add(it);
+            }
+            gt.Items = ocItemTypeList;
+            gridGroupTable.ClearGrid();
+            PopulateGroupTable(gt, gridGroupTable);
+
+            int n = 1;
+            while (n < groupTable.RowDefinitions.Count - 2)
+            {
+                //CheckRow(groupTable, n, false);
+                n++;
+            }
+            if (itToBeDeleted.DesignID.Equals("198"))
+            {
+                CheckForEmptyFields(groupTable, row);
+                //CheckRow(groupTable, row, false);
+                if (row == groupTable.RowDefinitions.Count - 2)
+                    ClearNewRowItems(groupTable, groupTable.RowDefinitions.Count - 2);
+            }
+            //CheckForEmptyFields(groupTable, row);
+            //CheckRow(groupTable, row -1, true);
+            //n = 1;
+            //while (n < groupTable.RowDefinitions.Count - 2)
+            //{
+            //    CheckRow(groupTable, n, false);
+            //    n++;
+            //}
         }
 
-        private bool CheckForEmptyRow(Grid grid, int row)
+        private void ClearNewRowItems(Grid groupTable, int row)
         {
-            List<UIElement> uieList = new List<UIElement>();
-            List<ItemType> itemTypeListCheck = new List<ItemType>();
 
-            int col = grid.ColumnDefinitions.Count - 1;
-            while (0 <= col)
-            {
-                UIElement uie = grid.GetGridCellChildren(row, col);
-                uieList.Add(uie);
-                col--;
-            }
-            foreach (UIElement uie in uieList)
-            {
-                if (uie is Border)
-                {
-                    Border b = (Border)uie;
-                    Grid gridCell = (Grid)b.Child;
-                    TextBlock tb = (TextBlock)gridCell.Children[1];
-                    ItemType it = (ItemType)tb.DataContext;
-
-
-                    itemTypeListCheck.Add(it);
-                }
-            }
-
+            List<ItemType> itemTypeListCheck = GetItemsByRow(groupTable, row);
             int i = 0;
-            bool isEmpty = true;
-            while (i < itemTypeListCheck.Count && isEmpty)
-            {
-                string designID = itemTypeListCheck[i].DesignID;
-                if (designID == null || designID.Equals("198") || designID.Equals("197"))
-                    i++;
-                else
-                    isEmpty = false;
-            }
-            return isEmpty;
-        }
-
-
-        private void tb_Drop(object sender, DragEventArgs e)
-        {
-            if (e.Data.GetData("System.Windows.Controls.ListBoxItem") is ListBoxItem)
-            {
-                TextBlock target = e.Source as TextBlock;
-                TextBlock source = sender as TextBlock;
-                ListBoxItem lbi = e.Data.GetData("System.Windows.Controls.ListBoxItem") as ListBoxItem;
-                ToolboxItem tbi = (ToolboxItem)lbi.Content;
-
-                ItemType itToBeMoved = (ItemType)target.DataContext;
-                int designID = Convert.ToInt32(itToBeMoved.DesignID);
-                if (designID != 0 && designID != 198)
-                {
-                    Grid gridCell = (Grid)target.Parent;
-                    Border b1 = (Border)gridCell.Parent;
-                    int row = Grid.GetRow(b1);
-                    ItemType newItemType = new ItemType();
-                    newItemType.DesignID = tbi.DesignID;
-                    newItemType.Header = tbi.Header;
-                    newItemType.ItemOrder = itToBeMoved.ItemOrder;
-                    Grid grid = (Grid)b1.Parent;
-                    GroupType gt = GetGroupType(grid);
-                    List<ItemType> itemTypeList = GetItemTypes(grid);
-                    int i = itemTypeList.IndexOf(itToBeMoved);
-                    bool stopCounting = false;
-                   // CheckRow(grid, row - 1);
-                    int n = 0;
-                    while (n < grid.RowDefinitions.Count - 1)
-                    {
-                        //CheckRow(grid, row);
-                        CheckRow(grid, row);
-                        n++;
-                    }
-                    while (i < itemTypeList.Count && !stopCounting)
-                    {
-                        if (itemTypeList[i].DesignID.Equals("198"))
-                        {
-                            if (itemTypeList[i].ItemOrder % 4 == 3)
-                            {
-                                itemTypeList.RemoveAt(i);
-
-                            }
-                            else
-                            {
-                                itemTypeList[i].ItemOrder++;
-                            }
-                            stopCounting = true;
-                        }
-                        else
-                        {
-                            itemTypeList[i].ItemOrder++;
-                            i++;
-                        }
-                    }
-                    itemTypeList.Add(newItemType);
-
-                    itemTypeList = itemTypeList.OrderBy(o => o.ItemOrder).ToList();
-                    ObservableCollection<ItemType> ocItemTypeList = new ObservableCollection<ItemType>();
-
-                    //add list to observablecollection
-                    foreach (ItemType it in itemTypeList)
-                    {
-                        ocItemTypeList.Add(it);
-                    }
-                    gt.Items = ocItemTypeList;
-                    grid.Children.Clear();
-                    grid.RowDefinitions.Clear();
-                    grid.ColumnDefinitions.Clear();
-                    PopulateGroupTable(gt, grid);
-                }
-                else
-                {
-                    itToBeMoved.DesignID = tbi.DesignID;
-                    itToBeMoved.Header = tbi.Header;
-                    target.Text = tbi.Header;
-                    Grid gridCell = (Grid)target.Parent;
-                    Border bTarget = (Border)gridCell.Parent;
-                    Grid grid = (Grid)bTarget.Parent;
-                    int row = Grid.GetRow(bTarget);
-                    int col = Grid.GetColumn(bTarget);
-                    if (row == grid.RowDefinitions.Count - 1)
-                    {
-                        AddNewEmptyItemRow(grid);
-                        CheckRow(grid, row - 1);
-                    }
-                }
-            }
-        }
-
-        private void CheckRow(Grid grid, int row)
-        {
-            List<UIElement> uieList = new List<UIElement>();
-            List<ItemType> itemTypeListCheck = new List<ItemType>();
-
-            int col = grid.ColumnDefinitions.Count - 1;
-            while (0 <= col)
-            {
-                UIElement uie = grid.GetGridCellChildren(row, col);
-                uieList.Add(uie);
-                col--;
-            }
-            foreach (UIElement uie in uieList)
-            {
-                if (uie is Border)
-                {
-                    Border b = (Border)uie;
-                    Grid gridCell = (Grid)b.Child;
-                    TextBlock tb = (TextBlock)gridCell.Children[1];
-                    ItemType it = (ItemType)tb.DataContext;
-
-
-                    itemTypeListCheck.Add(it);
-                }
-            }
-
-            bool addNewRowItem = true;
-            int i = 0;
+            bool cleared = false;
             while (i < itemTypeListCheck.Count)
             {
+                ItemType it = itemTypeListCheck[i];
+                if (it.DesignID != null && it.DesignID.Equals("198"))
+                {
+                    it.DesignID = null;
+                    it.DatabaseFieldName = null;
+                    it.Header = null;
+                    it.ItemOrder = 0;
+                    cleared = true;
+                }
+                i++;
+            }
+        }
+
+        private List<ItemType> GetItemsByRow(Grid groupTable, int row)
+        {
+            List<UIElement> uieList = groupTable.GetGridCellChildrenByRow(row);
+            List<ItemType> itemTypeListCheck = new List<ItemType>();
+            foreach (UIElement uie in uieList)
+            {
+                if (uie is Border)
+                {
+                    Border b = (Border)uie;
+                    Grid gridCell = (Grid)b.Child;
+                    TextBlock tb = (TextBlock)gridCell.Children[1];
+                    ItemType it = (ItemType)tb.DataContext;
+                    itemTypeListCheck.Add(it);
+                }
+            }
+            return itemTypeListCheck;
+        }
+
+        private void CheckForEmptyFields(Grid groupTable, int row)
+        {
+            List<ItemType> itemTypeListCheck = GetItemsByRow(groupTable, row);
+            bool deleteEmptyField = true;
+            int i = itemTypeListCheck.Count - 1;
+            while (i >= 0)
+            {
                 string designID = itemTypeListCheck[i].DesignID;
-                if (itemTypeListCheck[0].DesignID != null && !itemTypeListCheck[0].DesignID.Equals("198"))
+                //if (itemTypeListCheck[3].DesignID != null && !itemTypeListCheck[3].DesignID.Equals("198"))
+                //{
+                //    deleteEmptyField = false;
+                //}
+                if (designID != null && designID.Equals("198"))
+                {
+                    deleteEmptyField = false;
+                }
+
+                if (deleteEmptyField && designID != null && designID.Equals("197"))
+                {
+                    itemTypeListCheck[i].DesignID = null;
+                    itemTypeListCheck[i].Header = null;
+                }
+                i--;
+            }
+        }
+
+
+        //private bool CheckForEmptyRow(Grid groupTable, int row)
+        //{
+        //    List<ItemType> itemTypeList = GetItemsByRow(groupTable, row);
+        //    int i = 0;
+        //    bool isEmpty = true;
+        //    while (i < itemTypeList.Count && isEmpty)
+        //    {
+        //        string designID = itemTypeList[i].DesignID;
+        //        if (designID == null || designID.Equals("198") || designID.Equals("197"))
+        //            i++;
+        //        else
+        //            isEmpty = false;
+        //    }
+        //    return isEmpty;
+        //}
+
+        private void CheckRow(Grid groupTable, int row, bool addEmptyFieldsOnly)
+        {
+            List<ItemType> itemTypeListCheck = GetItemsByRow(groupTable, row);
+            bool addNewRowItem = true;
+            int i = itemTypeListCheck.Count - 1;
+            while (i >= 0)
+            {
+                string designID = itemTypeListCheck[i].DesignID;
+                if (itemTypeListCheck[3].DesignID != null && !itemTypeListCheck[3].DesignID.Equals("198"))
                 {
                     addNewRowItem = false;
                 }
@@ -386,15 +375,82 @@ namespace TreatPraktik.View
 
                 if (addNewRowItem && designID != null && !designID.Equals("197"))
                 {
-                    itemTypeListCheck[i - 1].DesignID = "198";
+                    if (!addEmptyFieldsOnly)
+                    {
+                        itemTypeListCheck[i + 1].DesignID = "198";
+                        itemTypeListCheck[i + 1].Header = "<NewRowItem>";
+                    }
                     addNewRowItem = false;
                 }
 
                 if (!addNewRowItem && designID == null)
                 {
                     itemTypeListCheck[i].DesignID = "197";
+                    itemTypeListCheck[i].Header = "<EmptyFieldItem>";
+                }
+                i--;
+            }
+        }
+
+        private bool CheckForNewLineItem(Grid groupTable, int row)
+        {
+            List<ItemType> itemTypeListCheck = GetItemsByRow(groupTable, row);
+            bool newLineItemFound = false;
+            int i = 0;
+            while (i < itemTypeListCheck.Count)
+            {
+                string designID = itemTypeListCheck[i].DesignID;
+                if(designID != null && designID.Equals("198"))
+                {
+                    newLineItemFound = true;
                 }
                 i++;
+            }
+            return newLineItemFound;
+        }
+
+        private void GenerateEmptyFields(Grid groupTable, int row, bool wholeRow)
+        {
+            List<ItemType> itemTypeListCheck = GetItemsByRow(groupTable, row);
+            bool newLineItemExist = CheckForNewLineItem(groupTable, row);
+            bool addEmptyfields = false;
+            int i = itemTypeListCheck.Count - 1;
+           
+            while (i >= 0)
+            {
+                string designID = itemTypeListCheck[i].DesignID;
+
+                if (newLineItemExist && !wholeRow)
+                {
+                    addEmptyfields = false;
+                }
+
+                if (newLineItemExist && designID != null && itemTypeListCheck[i].DesignID.Equals("198") && !wholeRow)
+                {
+                    addEmptyfields = true;
+                    newLineItemExist = false;
+                    wholeRow = false;
+                }
+
+                if (!newLineItemExist && !addEmptyfields && designID != null && !wholeRow)
+                {
+                    addEmptyfields = true;
+                }
+
+                if (addEmptyfields && designID == null && !wholeRow)
+                {
+                    itemTypeListCheck[i].DesignID = "197";
+                    itemTypeListCheck[i].Header = "<EmptyField>";
+                }
+
+                if (wholeRow && designID == null && !newLineItemExist)
+                {
+                    itemTypeListCheck[i].DesignID = "197";
+                    itemTypeListCheck[i].Header = "<EmptyField>";
+                }
+
+
+                i--;
             }
         }
 
@@ -424,11 +480,9 @@ namespace TreatPraktik.View
         private Border CreateGroupCell(Color borderBrush, Color background)
         {
             Border border = CreateBorderContainer(borderBrush, background);
-           
             TextBlock tb = new TextBlock();
             tb.FontWeight = FontWeights.Bold;
             tb.FontSize = 14.0;
-
             border.Child = tb;
             return border;
         }
@@ -438,29 +492,124 @@ namespace TreatPraktik.View
             Border border = CreateBorderContainer(borderBrush, background);
             border.MouseEnter += border_MouseEnter;
             border.MouseLeave += border_MouseLeave;
+            border.AllowDrop = true;
+            border.Drop += border_Drop;
             TextBlock tb = new TextBlock();
             tb.FontSize = 14.0;
             tb.HorizontalAlignment = HorizontalAlignment.Stretch;
             tb.VerticalAlignment = VerticalAlignment.Stretch;
             tb.DataContext = itemType;
-            tb.AllowDrop = true;
-            tb.Drop += tb_Drop;
-            tb.Margin = new Thickness(0, 0, 20, 0);
+            tb.SetBinding(TextBlock.TextProperty, "Header");
 
             Grid gridCell = new Grid();
-            //gridCell.HorizontalAlignment = HorizontalAlignment.Stretch;
-            //gridCell.VerticalAlignment = VerticalAlignment.Stretch;
-            //gridCell.MouseEnter += gridCell_MouseEnter;
-            //gridCell.MouseLeave += gridCell_MouseLeave;
-            CreateColumns(gridCell, 1);
+            CreateColumns(gridCell, 2);
             Button clearCellBtn = CreateClearCellBtn();
-            Grid.SetColumn(tb, 0);
             Grid.SetColumn(clearCellBtn, 1);
+            Grid.SetColumn(tb, 0);
             gridCell.Children.Add(clearCellBtn);
             gridCell.Children.Add(tb);
-            
             border.Child = gridCell;
             return border;
+        }
+
+        void border_Drop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetData("System.Windows.Controls.ListBoxItem") is ListBoxItem)
+            {
+                TextBlock tb = null;
+                Grid gridCell = null;
+                if (e.Source is Border)
+                {
+                    Border target = e.Source as Border;
+                    gridCell = (Grid)target.Child;
+                    tb = (TextBlock)gridCell.Children[1];
+                }
+                else
+                {
+                    tb = e.Source as TextBlock;
+                    gridCell = (Grid)tb.Parent;
+                }
+                ListBoxItem lbi = e.Data.GetData("System.Windows.Controls.ListBoxItem") as ListBoxItem;
+                ToolboxItem tbi = (ToolboxItem)lbi.Content;
+
+                ItemType itToBeMoved = (ItemType)tb.DataContext;
+                int designID = Convert.ToInt32(itToBeMoved.DesignID);
+
+
+                if (designID != 0 && designID != 198 && designID != 197)
+                {
+                    Border b1 = (Border)gridCell.Parent;
+                    int row = Grid.GetRow(b1);
+                    ItemType newItemType = new ItemType();
+                    newItemType.DesignID = tbi.DesignID;
+                    newItemType.Header = tbi.Header;
+                    newItemType.ItemOrder = itToBeMoved.ItemOrder;
+                    Grid grid = (Grid)b1.Parent;
+                    GroupType gt = GetGroupType(grid);
+                    List<ItemType> itemTypeList = GetItemTypes(grid);
+                    int i = itemTypeList.IndexOf(itToBeMoved);
+                    bool stopCounting = false;
+                    int n = 0;
+                    while (n < grid.RowDefinitions.Count - 1)
+                    {
+                        //CheckRow(grid, row, false);
+                        n++;
+                    }
+                    while (i < itemTypeList.Count && !stopCounting)
+                    {
+                        if (itemTypeList[i].DesignID.Equals("198"))
+                        {
+                            if (itemTypeList[i].ItemOrder % 4 == 3)
+                            {
+                                itemTypeList.RemoveAt(i);
+                            }
+                            else
+                            {
+                                itemTypeList[i].ItemOrder++;
+                            }
+                            stopCounting = true;
+                        }
+                        else
+                        {
+                            itemTypeList[i].ItemOrder++;
+                            i++;
+                        }
+                    }
+                    itemTypeList.Add(newItemType);
+
+                    itemTypeList = itemTypeList.OrderBy(o => o.ItemOrder).ToList();
+                    ObservableCollection<ItemType> ocItemTypeList = new ObservableCollection<ItemType>();
+
+                    //add list to observablecollection
+                    foreach (ItemType it in itemTypeList)
+                    {
+                        ocItemTypeList.Add(it);
+                    }
+                    gt.Items = ocItemTypeList;
+                    grid.ClearGrid();
+                    PopulateGroupTable(gt, grid);
+                    
+
+                }
+                else
+                {
+                    itToBeMoved.DesignID = tbi.DesignID;
+                    itToBeMoved.Header = tbi.Header;
+                    Border bTarget = (Border)gridCell.Parent;
+                    Grid grid = (Grid)bTarget.Parent;
+                    int row = Grid.GetRow(bTarget);
+                    int col = Grid.GetColumn(bTarget);
+                    if (row == grid.RowDefinitions.Count - 1)
+                    {
+                        //CheckRow(grid, row, true);
+                        GenerateEmptyFields(grid, row, false);
+                        GenerateEmptyFields(grid, row - 1, true);
+                        AddNewEmptyItemRow(grid);
+                        //CheckRow(grid, row - 1, false);
+                    }
+                    //CheckRow(grid, row, true);
+                }
+            }
         }
 
         void border_MouseEnter(object sender, MouseEventArgs e)
@@ -480,7 +629,6 @@ namespace TreatPraktik.View
         void border_MouseLeave(object sender, MouseEventArgs e)
         {
             Border border = sender as Border;
-
             Grid cellItem = (Grid)border.Child;
             Button btnClearCell = (Button)cellItem.Children[0];
             btnClearCell.Visibility = Visibility.Hidden;

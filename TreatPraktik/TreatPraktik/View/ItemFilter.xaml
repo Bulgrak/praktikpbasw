@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              d:DesignHeight="439.254" d:DesignWidth="398.507">
+    <GroupBox Header="Items">
     <Grid>
         <ListBox x:Name="lstItems" ItemsSource="{Binding Path=DesignItemsView}" HorizontalContentAlignment="Stretch" HorizontalAlignment="Left" Margin="10,38,0,10" Width="335">
             <ListBox.GroupStyle>
@@ -68,4 +69,5 @@
             <Label Name="lblSearchField" Content="{Binding Path=TextSearchDescription}" HorizontalAlignment="Left" Margin="320,195,0,0" VerticalAlignment="Top" MinWidth="335" Foreground='Gray' Width="335"/>
         </Border>
     </Grid>
+    </GroupBox>
 </UserControl>
