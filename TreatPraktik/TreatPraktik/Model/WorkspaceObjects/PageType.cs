@@ -10,13 +10,13 @@ namespace TreatPraktik.Model.WorkspaceObjects
     public class PageType : INotifyPropertyChanged
     {
         public string PageTypeID { get; set; }                          //The page ID
-        private string _pageName { get; set; }                          //The page name
-        private ObservableCollection<GroupType> _groups { get; set; }     //List of groups on the page
+        public string PageName { get; set; }                          //The page name
+        public ObservableCollection<GroupType> Groups { get; set; }     //List of groups on the page
 
 
         public PageType()
         {
-
+            Groups = new ObservableCollection<GroupType>();
         }
 
         #region INotifyPropertyChanged
@@ -33,32 +33,5 @@ namespace TreatPraktik.Model.WorkspaceObjects
         }
 
         #endregion
-
-        public string PageName
-        {
-            get
-            {
-                return _pageName;
-            }
-            set
-            {
-                _pageName = value;
-                OnPropertyChanged("PageName");
-            }
-        }
-
-        public ObservableCollection<GroupType> Groups
-        {
-            get
-            {
-                return _groups;
-            }
-            set
-            {
-                _groups = value;
-                OnPropertyChanged("Groups");
-            }
-        }
-
     }
 }

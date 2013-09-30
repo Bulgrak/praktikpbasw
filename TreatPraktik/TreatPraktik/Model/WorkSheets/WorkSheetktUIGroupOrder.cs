@@ -1,6 +1,7 @@
 ﻿using DocumentFormat.OpenXml.Spreadsheet;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 
@@ -65,7 +66,7 @@ namespace TreatPraktik.Model.WorkSheets
                     groupOrder.DepartmentID = textArray[0];
                     groupOrder.PageTypeID = textArray[1];
                     groupOrder.GroupTypeID = textArray[2];
-                    groupOrder.GroupOrder = textArray[3];
+                    groupOrder.GroupOrder = Convert.ToDouble(textArray[3], CultureInfo.InvariantCulture);
                     result.Add(groupOrder);
                 }
                 else

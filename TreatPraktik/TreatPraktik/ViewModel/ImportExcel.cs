@@ -10,7 +10,7 @@ using TreatPraktik.Model.WorkSheets;
 
 namespace TreatPraktik.ViewModel
 {
-    class ImportExcel
+    public class ImportExcel
     {
         private static ImportExcel instance;
 

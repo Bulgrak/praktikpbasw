@@ -87,7 +87,7 @@ namespace TreatPraktik.Ressources.ExcelClasses
                 Cell newCell = new Cell() { CellReference = cellReference };
                 row.InsertBefore(newCell, refCell);
 
-                worksheet.Save();
+                //worksheet.Save();     <-- Slow bastard!!
                 return newCell;
             }
         }

@@ -1,6 +1,7 @@
 ﻿using DocumentFormat.OpenXml.Spreadsheet;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 
@@ -76,7 +77,7 @@ namespace TreatPraktik.Model.WorkSheets
                     var textArray = textValues.ToArray();
                     ktUIOrder order = new ktUIOrder();
                     order.DesignID = textArray[0];
-                    order.GroupOrder = Convert.ToDouble(textArray[1]);
+                    order.GroupOrder = double.Parse(textArray[1], CultureInfo.InvariantCulture); // Convert.ToDouble(textArray[1]);
                     order.GroupTypeID = textArray[2];
                     order.PageTypeID = textArray[3];
                     order.IncludedTypeID = textArray[4];

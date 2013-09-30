@@ -9,9 +9,10 @@ namespace TreatPraktik.Model.WorkspaceObjects
 {
     public class GroupType : INotifyPropertyChanged
     {
+        public string PageTypeID { get; set; }
         public string GroupTypeID { get; set; }                         //Group ID
-        private string _groupName { get; set; }                         //Group name
-        public string GroupOrder { get; set; }                          //Group order on the page
+        //private string _groupName { get; set; }                         //Group name
+        public double GroupOrder { get; set; }                          //Group order on the page
         public string GroupHeader { get; set; }                         //The real name for the group
         public string DepartmentID { get; set; }                        //Department ID for the group
         public ObservableCollection<ItemType> Items { get; set; }       //Items in the group
@@ -19,7 +20,7 @@ namespace TreatPraktik.Model.WorkspaceObjects
 
         public GroupType()
         {
-
+            Items = new ObservableCollection<ItemType>();
         }
 
         #region INotifyPropertyChanged
@@ -37,17 +38,17 @@ namespace TreatPraktik.Model.WorkspaceObjects
 
         #endregion
 
-        public string GroupName
-        {
-            get
-            {
-                return _groupName;
-            }
-            set
-            {
-                _groupName = value;
-                OnPropertyChanged("GroupName");
-            }
-        }
+        //public string GroupName
+        //{
+        //    get
+        //    {
+        //        return _groupName;
+        //    }
+        //    set
+        //    {
+        //        _groupName = value;
+        //        OnPropertyChanged("GroupName");
+        //    }
+        //}
     }
 }

@@ -21,6 +21,7 @@ namespace TreatPraktik.ViewModel
         ExaminedGroup examinedGroup;
         Resources resources;
         GroupOrder groupOrder;
+        Order order;
         
 
         //WorkSheetktResourceTranslation resourceTranslation;
@@ -57,6 +58,7 @@ namespace TreatPraktik.ViewModel
             examinedGroup = new ExaminedGroup();
             resources = new Resources();
             groupOrder = new GroupOrder();
+            order = new Order();
             
             //resourceTranslation = WorkSheetktResourceTranslation.Instance;
             //resourceType = WorkSheetktResourceType.Instance;
@@ -87,6 +89,7 @@ namespace TreatPraktik.ViewModel
                 examinedGroup.CreateSheet(sheets, spreadsheetDocument, workbookpart);
                 resources.CreateSheet(sheets, spreadsheetDocument, workbookpart);
                 groupOrder.CreateSheet(sheets, spreadsheetDocument, workbookpart);
+                order.CreateSheet(sheets, spreadsheetDocument, workbookpart);
 
                 workbookpart.Workbook.Save();
 

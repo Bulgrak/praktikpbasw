@@ -54,6 +54,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Ressources\ExcelClasses\Order.cs" />
     <Compile Include="View\ItemFilter.xaml.cs">
       <DependentUpon>ItemFilter.xaml</DependentUpon>
     </Compile>
