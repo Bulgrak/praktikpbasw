@@ -56,6 +56,7 @@
     </ApplicationDefinition>
     <Compile Include="ViewModel\SpecialFieldsViewModel.cs" />
     <Compile Include="Ressources\ExcelClasses\Order.cs" />
+    <Compile Include="View\DragAdorner.cs" />
     <Compile Include="View\ItemFilter.xaml.cs">
       <DependentUpon>ItemFilter.xaml</DependentUpon>
     </Compile>

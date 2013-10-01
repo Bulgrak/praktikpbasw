@@ -13,6 +13,9 @@ namespace TreatPraktik.Model.WorkspaceObjects
         public Double ItemOrder { get; set; }          //Item order in the group
         public string DatabaseFieldName { get; set; }   //Item name
         private string header { get; set; }
+        //public string English { get; set; }
+        //public string Danish { get; set; }
+        //public string LanguageID { get; set; }
 
         public ItemType()
         {
@@ -46,5 +49,23 @@ namespace TreatPraktik.Model.WorkspaceObjects
                 OnPropertyChanged("Header");
             }
         }
+
+        //public string LanguageID
+        //{
+        //    get
+        //    {
+        //        return LanguageID;
+        //    }
+        //    set
+        //    {
+        //        LanguageID = value;
+        //        if(LanguageID == 1)
+        //        {
+        //        header = English
+        //        }
+        //        yyy
+        //        OnPropertyChanged("Header");
+        //    }
+        //}
     }
 }
