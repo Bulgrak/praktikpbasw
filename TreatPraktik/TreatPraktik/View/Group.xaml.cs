@@ -63,23 +63,33 @@ namespace TreatPraktik.View
 
                 //Create stackpanel
                 Button btnGroupMoveUp = new Button();
+                btnGroupMoveUp.Name = "btnGroupMoveUp";
                 btnGroupMoveUp.Content = "Up";
                 btnGroupMoveUp.Click += btnGroupMoveUp_Click;
+                btnGroupMoveUp.FontSize = 9;
                 btnGroupMoveUp.DataContext = gridGroup; //i = rowNo
                 if (i == 0)
                 {
                     btnGroupMoveUp.IsEnabled = false;
                 }
                 Button btnGroupMoveDown = new Button();
+                btnGroupMoveDown.Name = "btnGroupMoveDown";
                 btnGroupMoveDown.Content = "Down";
                 btnGroupMoveDown.Click += btnGroupMoveDown_Click;
+                btnGroupMoveDown.FontSize = 9;
                 btnGroupMoveDown.DataContext = gridGroup; //i == rowNo
+                if (i == groups.Count - 1)
+                {
+                    btnGroupMoveDown.IsEnabled = false;
+                }
                 StackPanel sp = new StackPanel();
+                sp.Name = "spBtnUpDown";
                 Grid.SetRow(sp, i);
                 Grid.SetColumn(sp, 0);
                 sp.Orientation = Orientation.Vertical;
                 sp.HorizontalAlignment = HorizontalAlignment.Left;
                 sp.VerticalAlignment = VerticalAlignment.Bottom;
+                //sp.Margin = new Thickness(0, 0, 10, 0);
                 sp.Children.Add(btnGroupMoveUp);
                 sp.Children.Add(btnGroupMoveDown);
                 //End create stackpanel
@@ -113,13 +123,27 @@ namespace TreatPraktik.View
             {
                 Grid.SetRow(uie, row);
             }
-
             TextBlock tb = (TextBlock)uieListMoveUp[0];
             GroupType gt = (GroupType)tb.DataContext;
-            int groupNumber = Convert.ToInt32(gt.GroupOrder);
-            //gt.GroupOrder = Convert.ToString(groupNumber - 1);
+            //int groupNumber = Convert.ToInt32(gt.GroupOrder);
+            gt.GroupOrder--;
             //gt.GroupOrder =
+            StackPanel sp = (StackPanel)uieListMoveUp[1];
+            Button btnUp = (Button)sp.Children[0];
+            Button btnDown = (Button)sp.Children[1];
+            if (gt.GroupOrder == 1)
+            {
+
+                btnUp.IsEnabled = false;
+            }
+            else
+            {
+                btnUp.IsEnabled = true;
+            }
+            btnDown.IsEnabled = true;
         }
+
+
 
         void MoveGroupDown(List<UIElement> uieListMoveDown, int row)
         {
@@ -127,6 +151,25 @@ namespace TreatPraktik.View
             {
                 Grid.SetRow(uie, row + 1);
             }
+            TextBlock tb = (TextBlock)uieListMoveDown[0];
+            GroupType gt = (GroupType)tb.DataContext;
+            //int groupNumber = Convert.ToInt32(gt.GroupOrder);
+            gt.GroupOrder++;
+
+            StackPanel sp = (StackPanel)uieListMoveDown[1];
+            Button btnDown = (Button)sp.Children[1];
+            Button btnUp = (Button)sp.Children[0];
+            if (gt.GroupOrder == groups.Count)
+            {
+
+                btnDown.IsEnabled = false;
+               
+            }
+            else
+            {
+                btnDown.IsEnabled = true;
+            }
+            btnUp.IsEnabled = true;
         }
 
         void btnGroupMoveUp_Click(object sender, RoutedEventArgs e)
@@ -161,7 +204,7 @@ namespace TreatPraktik.View
                     {
                         AddNewEmptyItemRow(groupTable);
                         counterRow++;
-                        gt.Items[j + skipped].Header = "<NewRowItem>";
+                        gt.Items[j + skipped].Header = "<NewLineItem>";
                         gt.Items[j + skipped].ItemOrder = j + skipped;
                         SolidColorBrush textColor2 = Brushes.Black;
                         InsertItem(groupTable, gt.Items[j + skipped], counterRow, j % 4, true, textColor2);
@@ -170,7 +213,7 @@ namespace TreatPraktik.View
 
                         continue;
                     }
-                    gt.Items[j + skipped].Header = "<NewRowItem>";
+                    gt.Items[j + skipped].Header = "<NewLineItem>";
                     gt.Items[j + skipped].ItemOrder = j + skipped;
                     SolidColorBrush textColor = Brushes.Black;
                     InsertItem(groupTable, gt.Items[j + skipped], counterRow, j % 4, true, textColor);

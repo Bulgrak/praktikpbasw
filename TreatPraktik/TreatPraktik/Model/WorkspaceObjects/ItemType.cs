@@ -36,6 +36,20 @@ namespace TreatPraktik.Model.WorkspaceObjects
                 handler(this, new PropertyChangedEventArgs(propertyName));
             }
         }
+        #endregion
+
+        public string Header
+        {
+            get 
+            { 
+                return header;
+            }
+            set 
+            { 
+                header = value;
+                OnPropertyChanged("Header");
+            }
+        }
 
         public string LanguageID
         {
@@ -52,21 +66,6 @@ namespace TreatPraktik.Model.WorkspaceObjects
                     case "2": Header = DanishTranslationText; break;
                     default: Header = EnglishTranslationText; break;
                 }
-            }
-        }
-
-        #endregion
-
-        public string Header
-        {
-            get 
-            { 
-                return header;
-            }
-            set 
-            { 
-                header = value;
-                OnPropertyChanged("Header");
             }
         }
     }
