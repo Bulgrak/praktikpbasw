@@ -54,6 +54,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ViewModel\LanguageViewModel.cs" />
     <Compile Include="ViewModel\SpecialFieldsViewModel.cs" />
     <Compile Include="Ressources\ExcelClasses\Order.cs" />
     <Compile Include="View\ItemFilter.xaml.cs">
@@ -69,7 +70,6 @@
     <Compile Include="Model\WorkSheets\WorkSheetQAktUIDesign.cs" />
     <Compile Include="Model\WorkspaceObjects\GroupType.cs" />
     <Compile Include="Model\WorkspaceObjects\ItemType.cs" />
-    <Compile Include="Model\WorkspaceObjects\LanguageType.cs" />
     <Compile Include="Model\WorkspaceObjects\PageType.cs" />
     <Compile Include="Model\WorkSheets\WorkSheetktExaminedGroup.cs" />
     <Compile Include="Model\WorkSheets\WorkSheetktResources.cs" />
@@ -96,6 +96,9 @@
     </Compile>
     <Compile Include="View\ImportExportExcel.xaml.cs">
       <DependentUpon>ImportExportExcel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\LanguageUserControl.xaml.cs">
+      <DependentUpon>LanguageUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\SpecialFields.xaml.cs">
       <DependentUpon>SpecialFields.xaml</DependentUpon>
@@ -124,6 +127,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\ImportExportExcel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\LanguageUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -168,6 +175,14 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Ressources\Delete-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Ressources\Dk-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Ressources\Uk_icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
