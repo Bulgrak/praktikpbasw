@@ -12,10 +12,8 @@ namespace TreatPraktik.Model.WorkspaceObjects
         public string PageTypeID { get; set; }
         public string GroupTypeID { get; set; }                         //Group ID
         //private string _groupName { get; set; }                         //Group name
-        public double GroupOrder { get; set; }                          //Group order on the page
         private string groupHeader { get; set; }                         //The real name for the group
         private double groupOrder { get; set; }                          //Group order on the page
-        public string GroupHeader { get; set; }                         //The real name for the group
         public string DepartmentID { get; set; }                        //Department ID for the group
         public ObservableCollection<ItemType> Items { get; set; }       //Items in the group
         private string languageID { get; set; }
@@ -75,18 +73,6 @@ namespace TreatPraktik.Model.WorkspaceObjects
                 }
             }
         }
-        //public string GroupName
-        //{
-        //    get
-        //    {
-        //        return _groupName;
-        //    }
-        //    set
-        //    {
-        //        _groupName = value;
-        //        OnPropertyChanged("GroupName");
-        //    }
-        //}
 
         public double GroupOrder
         {

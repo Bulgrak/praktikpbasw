@@ -36,6 +36,20 @@ namespace TreatPraktik.Model.WorkspaceObjects
                 handler(this, new PropertyChangedEventArgs(propertyName));
             }
         }
+        #endregion
+
+        public string Header
+        {
+            get 
+            { 
+                return header;
+            }
+            set 
+            { 
+                header = value;
+                OnPropertyChanged("Header");
+            }
+        }
 
         public string LanguageID
         {
@@ -54,38 +68,5 @@ namespace TreatPraktik.Model.WorkspaceObjects
                 }
             }
         }
-
-        #endregion
-
-        public string Header
-        {
-            get 
-            { 
-                return header;
-            }
-            set 
-            { 
-                header = value;
-                OnPropertyChanged("Header");
-            }
-        }
-
-        //public string LanguageID
-        //{
-        //    get
-        //    {
-        //        return LanguageID;
-        //    }
-        //    set
-        //    {
-        //        LanguageID = value;
-        //        if(LanguageID == 1)
-        //        {
-        //        header = English
-        //        }
-        //        yyy
-        //        OnPropertyChanged("Header");
-        //    }
-        //}
     }
 }
