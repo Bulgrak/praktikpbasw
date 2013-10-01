@@ -36,9 +36,10 @@ namespace TreatPraktik.View
             {
                 PageType pt = pageTypeList[i];
                 TabItem ti = new TabItem();
-                ti.Header = pt.PageName;
                 ti.DataContext = pt;
-
+                ti.SetBinding(TabItem.HeaderProperty, "PageName");
+                //ti.Header = pt.PageName;
+                
                 if (pt.PageTypeID.Equals("15") || pt.PageTypeID.Equals("16") || pt.PageTypeID.Equals("17")) //burde nok gøres i LINQ
                 {
                     Group ucGroup = new Group();

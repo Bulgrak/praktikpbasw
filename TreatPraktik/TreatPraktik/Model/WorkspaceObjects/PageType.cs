@@ -9,14 +9,48 @@ namespace TreatPraktik.Model.WorkspaceObjects
 {
     public class PageType : INotifyPropertyChanged
     {
+        public string ResourceType { get; set; }
         public string PageTypeID { get; set; }                          //The page ID
-        public string PageName { get; set; }                          //The page name
+        private string pageName;                                        //The page name
+        private string languageID { get; set; }
+        public string DanishTranslationText { get; set; }
+        public string EnglishTranslationText { get; set; }
         public ObservableCollection<GroupType> Groups { get; set; }     //List of groups on the page
-
 
         public PageType()
         {
             Groups = new ObservableCollection<GroupType>();
+        }
+
+        public string PageName
+        {
+            get
+            {
+                return pageName;
+            }
+            set
+            {
+                pageName = value;
+                OnPropertyChanged("PageName");
+            }
+        }
+
+        public string LanguageID
+        {
+            get
+            {
+                return languageID;
+            }
+            set
+            {
+                this.languageID = value;
+                switch (languageID)
+                {
+                    case "1": PageName = EnglishTranslationText; break;
+                    case "2": PageName = DanishTranslationText; break;
+                    default: PageName = EnglishTranslationText; break;
+                }
+            }
         }
 
         #region INotifyPropertyChanged

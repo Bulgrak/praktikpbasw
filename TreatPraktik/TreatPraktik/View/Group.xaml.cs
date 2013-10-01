@@ -436,7 +436,6 @@ namespace TreatPraktik.View
                 if (it.DesignID != null && it.DesignID.Equals("198"))
                 {
                     it.DesignID = null;
-                    it.DatabaseFieldName = null;
                     it.Header = null;
                     it.ItemOrder = 0;
                     cleared = true;

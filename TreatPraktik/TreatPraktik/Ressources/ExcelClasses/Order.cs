@@ -89,11 +89,11 @@ namespace TreatPraktik.Ressources.ExcelClasses
             headerCell3.CellValue = new CellValue(index3.ToString());
             headerCell3.DataType = new EnumValue<CellValues>(CellValues.SharedString);
 
-            string header4 = "PageTypeID";
-            int index4 = sharedResources.InsertSharedStringItem(header4, shareStringPart);
-            Cell headerCell4 = sharedResources.InsertCellInWorksheet("D", 1, worksheetPart);
-            headerCell4.CellValue = new CellValue(index4.ToString());
-            headerCell4.DataType = new EnumValue<CellValues>(CellValues.SharedString);
+            //string header4 = "PageTypeID";
+            //int index4 = sharedResources.InsertSharedStringItem(header4, shareStringPart);
+            //Cell headerCell4 = sharedResources.InsertCellInWorksheet("D", 1, worksheetPart);
+            //headerCell4.CellValue = new CellValue(index4.ToString());
+            //headerCell4.DataType = new EnumValue<CellValues>(CellValues.SharedString);
 
             string header5 = "IncludedTypeID";
             int index5 = sharedResources.InsertSharedStringItem(header5, shareStringPart);
@@ -137,11 +137,11 @@ namespace TreatPraktik.Ressources.ExcelClasses
                         cell3.DataType = CellValues.Number;
                         columnCount++;
 
-                        string text4 = page.PageTypeID;
-                        Cell cell4 = sharedResources.InsertCellInWorksheet(sharedResources.Number2String(columnCount, true), rowCount, worksheetPart);
-                        cell4.CellValue = new CellValue(text4.ToString());
-                        cell4.DataType = CellValues.Number;
-                        columnCount++;
+                        //string text4 = page.PageTypeID;
+                        //Cell cell4 = sharedResources.InsertCellInWorksheet(sharedResources.Number2String(columnCount, true), rowCount, worksheetPart);
+                        //cell4.CellValue = new CellValue(text4.ToString());
+                        //cell4.DataType = CellValues.Number;
+                        //columnCount++;
 
                         //string text5 = item.IncludedTypeID;
                         //Cell cell5 = sharedResources.InsertCellInWorksheet(sharedResources.Number2String(columnCount, true), rowCount, worksheetPart);

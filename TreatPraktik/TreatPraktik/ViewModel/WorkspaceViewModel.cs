@@ -16,9 +16,11 @@ namespace TreatPraktik.ViewModel
 
         public ImportExcel excel;
 
+        //private string languageType;
+
         public ObservableCollection<PageType> PageList { get; set; }
-        public ObservableCollection<GroupType> GroupList { get; set; }
-        public ObservableCollection<ItemType> ItemList { get; set; }
+        private ObservableCollection<GroupType> GroupList { get; set; }
+        private ObservableCollection<ItemType> ItemList { get; set; }
 
         public WorkspaceViewModel()
         {
@@ -30,6 +32,19 @@ namespace TreatPraktik.ViewModel
 
             LinkCollections(PageList, GroupList, ItemList);
         }
+
+        //public string LanguageType
+        //{
+        //    get
+        //    {
+        //        return languageType;
+        //    }
+        //    set
+        //    {
+        //        int i = 1;
+        //        languageType = ;
+        //    }
+        //}
 
         #region INotifyPropertyChanged
 
@@ -50,29 +65,46 @@ namespace TreatPraktik.ViewModel
         /// Gets all the PageTypes from Excel
         /// </summary>
         /// <returns>Collection of pages</returns>
-        public ObservableCollection<PageType> GetAllPages()
+        private ObservableCollection<PageType> GetAllPages()
         {
             //Pages
             //Sort on language 1=English and on ResourceType 7=SiteMapResource
             var query = (from aaa in excel.WorkSheetktResources.ktResourceList
-                         join bbb in excel.WorkSheetktResourceTranslation.ktResourceTranslationList.Where(d => d.LanguageID.Equals("1")) on aaa.ResourceID equals bbb.ResourceID
+                         join bbb in excel.WorkSheetktResourceTranslation.ktResourceTranslationList on aaa.ResourceID equals bbb.ResourceID
                          join ccc in excel.WorkSheetktResourceType.ktResourceTypeList.Where(d => d.ResourceTypeID.Equals("7")) on aaa.ResourceTypeID equals ccc.ResourceTypeID
                          select new
                           {
-                              aaa.ResourceID,
+                              bbb.LanguageID,
                               aaa.ResourceResxID,
-                              aaa.ResourceTypeID,
                               bbb.TranslationText
                           }).ToList();
 
             List<PageType> pageList = (from a in excel.WorkSheetktUIPageType.ktUIPageTypeList
-                                       join b in query on a.PageType + "_Title" equals b.ResourceResxID into page
-                                       from c in page.DefaultIfEmpty()
                                        select new PageType
                                        {
-                                           PageTypeID = a.PageTypeID,
-                                           PageName = (c == null) ? null : c.TranslationText
+                                           ResourceType = a.PageType + "_Title",
+                                           PageTypeID = a.PageTypeID
                                        }).ToList();
+
+            foreach (PageType page in pageList)
+            {
+                foreach (var item in query)
+                {
+                    if (item.ResourceResxID == page.ResourceType)
+                    {
+                        if (item.LanguageID.Equals("2"))
+	                    {
+		                    page.DanishTranslationText = item.TranslationText;
+
+	                    }
+                        else if (item.LanguageID.Equals("1"))
+	                    {
+                            page.EnglishTranslationText = item.TranslationText;
+	                    }
+                    }
+                }
+                page.LanguageID = "2";
+            }
 
             ObservableCollection<PageType> obsCol = new ObservableCollection<PageType>(pageList);
 
@@ -83,31 +115,49 @@ namespace TreatPraktik.ViewModel
         /// Gets all the GroupTypes from Excel
         /// </summary>
         /// <returns>Collection of groups</returns>
-        public ObservableCollection<GroupType> GetAllGroups()
+        private ObservableCollection<GroupType> GetAllGroups()
         {
             //Groups
             //Sort on language 1=English and on ResourceType 1=DataGroupHeading
             var query = (from aaa in excel.WorkSheetktResources.ktResourceList
-                          join bbb in excel.WorkSheetktResourceTranslation.ktResourceTranslationList.Where(d => d.LanguageID.Equals("1")) on aaa.ResourceID equals bbb.ResourceID
+                          join bbb in excel.WorkSheetktResourceTranslation.ktResourceTranslationList on aaa.ResourceID equals bbb.ResourceID
                           join ccc in excel.WorkSheetktResourceType.ktResourceTypeList.Where(d => d.ResourceTypeID.Equals("1")) on aaa.ResourceTypeID equals ccc.ResourceTypeID
                           select new
                           {
-                              aaa.ResourceID,
+                              bbb.LanguageID,
                               aaa.ResourceResxID,
-                              aaa.ResourceTypeID,
                               bbb.TranslationText
                           }).ToList();
 
             List<GroupType> groupList = (from a in excel.WorkSheetktUIGroupOrder.ktUIGroupOrderList.OrderBy(m => m.GroupOrder)
                                          join b in excel.WorkSheetExaminedGroup.ExaminedGroupList on a.GroupTypeID equals b.ID
-                                         join c in query on b.GroupType equals c.ResourceResxID
                                          select new GroupType
                                          {
+                                             ResourceType = b.GroupType,
                                              PageTypeID = a.PageTypeID,
                                              GroupTypeID = a.GroupTypeID,
-                                             GroupOrder = a.GroupOrder,
-                                             GroupHeader = c.TranslationText
+                                             GroupOrder = a.GroupOrder
                                          }).ToList();
+
+            foreach (GroupType group in groupList)
+            {
+                foreach (var item in query)
+                {
+                    if (item.ResourceResxID == group.ResourceType)
+                    {
+                        if (item.LanguageID.Equals("2"))
+                        {
+                            group.DanishTranslationText = item.TranslationText;
+
+                        }
+                        else if (item.LanguageID.Equals("1"))
+                        {
+                            group.EnglishTranslationText = item.TranslationText;
+                        }
+                    }
+                }
+                group.LanguageID = "2";
+            }
 
             ObservableCollection<GroupType> obsCol = new ObservableCollection<GroupType>(groupList);
 
@@ -118,34 +168,51 @@ namespace TreatPraktik.ViewModel
         /// Gets all the ItemTypes from Excel
         /// </summary>
         /// <returns>Collection of items</returns>
-        public ObservableCollection<ItemType> GetAllItems()
+        private ObservableCollection<ItemType> GetAllItems()
         {
             //Items
             //Sort on language 1=English and on ResourceType 2=DataItemHeading
             var query = (from aa in excel.WorkSheetktResources.ktResourceList
-                          join bb in excel.WorkSheetktResourceTranslation.ktResourceTranslationList.Where(d => d.LanguageID.Equals("1")) on aa.ResourceID equals bb.ResourceID
+                          join bb in excel.WorkSheetktResourceTranslation.ktResourceTranslationList on aa.ResourceID equals bb.ResourceID
                           join cc in excel.WorkSheetktResourceType.ktResourceTypeList.Where(d => d.ResourceTypeID.Equals("2")) on aa.ResourceTypeID equals cc.ResourceTypeID
                           select new
                           {
-                              aa.ResourceID,
+                              bb.LanguageID,
                               aa.ResourceResxID,
-                              aa.ResourceTypeID,
                               bb.TranslationText
                           }).ToList();
 
             List<ItemType> itemList = (from a in excel.WorkSheetktUIOrder.ktUIOrderList.OrderBy(m => m.GroupOrder)
                                        join b in excel.WorkSheetUIDesign.ktUIDesignList on a.DesignID equals b.DesignID
-                                       join c in query on b.ResxID equals c.ResourceResxID into g
-                                       from d in g.DefaultIfEmpty()
-                                       
                                        select new ItemType
                                        {
+                                           ResourceType = b.ResxID,
                                            GroupTypeID = a.GroupTypeID,
                                            DesignID = a.DesignID,
                                            ItemOrder = a.GroupOrder,
-                                           Header = (d == null) ? null : d.TranslationText
-                                           
+                                           IncludedTypeID = a.IncludedTypeID
                                        }).ToList();
+
+            foreach (ItemType itemType in itemList)
+            {
+                foreach (var item in query)
+                {
+                    if (item.ResourceResxID == itemType.ResourceType)
+                    {
+                        if (item.LanguageID.Equals("2"))
+                        {
+                            itemType.DanishTranslationText = item.TranslationText;
+
+                        }
+                        else if (item.LanguageID.Equals("1"))
+                        {
+                            itemType.EnglishTranslationText = item.TranslationText;
+                        }
+                    }
+                }
+                itemType.LanguageID = "2";
+            }
+
 
             ObservableCollection<ItemType> obsCol = new ObservableCollection<ItemType>(itemList);
 
@@ -155,7 +222,7 @@ namespace TreatPraktik.ViewModel
         /// <summary>
         /// Puts ItemTypes into GroupTypes, and GroupTypes into PageTypes
         /// </summary>
-        public void LinkCollections(ObservableCollection<PageType> pages, ObservableCollection<GroupType> groups, ObservableCollection<ItemType> items)
+        private void LinkCollections(ObservableCollection<PageType> pages, ObservableCollection<GroupType> groups, ObservableCollection<ItemType> items)
         {
             //Put items into groups
             for (int i = 0; i < groups.Count; i++)
