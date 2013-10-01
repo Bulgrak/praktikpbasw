@@ -114,7 +114,7 @@ namespace TreatPraktik.Ressources.ExcelClasses
                 {
                     foreach (ItemType item in group.Items)
                     {
-                        if (columnCount >= 5)
+                        if (columnCount >= 4)
                         {
                             columnCount = 1;
                         }
@@ -143,10 +143,10 @@ namespace TreatPraktik.Ressources.ExcelClasses
                         //cell4.DataType = CellValues.Number;
                         //columnCount++;
 
-                        //string text5 = item.IncludedTypeID;
-                        //Cell cell5 = sharedResources.InsertCellInWorksheet(sharedResources.Number2String(columnCount, true), rowCount, worksheetPart);
-                        //cell5.CellValue = new CellValue(text5.ToString());
-                        //cell5.DataType = CellValues.Number;
+                        string text5 = item.IncludedTypeID;
+                        Cell cell5 = sharedResources.InsertCellInWorksheet(sharedResources.Number2String(columnCount, true), rowCount, worksheetPart);
+                        cell5.CellValue = new CellValue(text5.ToString());
+                        cell5.DataType = CellValues.Number;
 
                         rowCount++;
                     }
