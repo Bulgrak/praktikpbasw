@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using TreatPraktik.Model;
 using TreatPraktik.Model.WorkspaceObjects;
 
 namespace TreatPraktik.ViewModel
@@ -9,10 +10,12 @@ namespace TreatPraktik.ViewModel
     class LanguageViewModel
     {
         private WorkspaceViewModel WorkspaceVM;
+        private ItemFilterViewModel itemFilterVM;
 
         public LanguageViewModel()
         {
             WorkspaceVM = WorkspaceViewModel.Instance;
+            itemFilterVM = ItemFilterViewModel.Instance;
         }
 
         public void ChangeLanguage(string languageID)
@@ -31,6 +34,7 @@ namespace TreatPraktik.ViewModel
                     }
                 }
             }
+            itemFilterVM.LanguageID = languageID;
         }
     }
 }

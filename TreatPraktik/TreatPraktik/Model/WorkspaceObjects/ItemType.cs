@@ -60,11 +60,14 @@ namespace TreatPraktik.Model.WorkspaceObjects
             set
             {
                 this.languageID = value;
-                switch (languageID)
+                if(DesignID != null && !DesignID.Equals("197") && !DesignID.Equals("198"))
                 {
-                    case "1": Header = EnglishTranslationText; break;
-                    case "2": Header = DanishTranslationText; break;
-                    default: Header = EnglishTranslationText; break;
+                    switch (languageID)
+                    {
+                        case "1": Header = EnglishTranslationText; break;
+                        case "2": Header = DanishTranslationText; break;
+                        default: Header = EnglishTranslationText; break;
+                    }
                 }
             }
         }

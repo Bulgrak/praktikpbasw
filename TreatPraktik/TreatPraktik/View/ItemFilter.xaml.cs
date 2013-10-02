@@ -28,7 +28,7 @@ namespace TreatPraktik.View
         public ItemFilter()
         {
             InitializeComponent();
-            DataContext = new ItemFilterViewModel();
+            DataContext = ItemFilterViewModel.Instance;
             Style itemContainerStyle = new Style(typeof(ListBoxItem));
             //itemContainerStyle.Setters.Add(new Setter(ListBoxItem.AllowDropProperty, true));
             //itemContainerStyle.Setters.Add(new EventSetter(ListBoxItem.PreviewMouseLeftButtonDownEvent, new MouseButtonEventHandler(List_PreviewMouseLeftButtonDown)));
@@ -46,34 +46,11 @@ namespace TreatPraktik.View
             {
 
                 ListBoxItem draggedItem = sender as ListBoxItem;
-                //TextBlock tb = new TextBlock();
-                //ToolboxItem tbi = (ToolboxItem)draggedItem.Content;
-                //tb.SetBinding(TextBlock.TextProperty, "Header");
-                //tb.Text = "HALLO";
-                //tb.Background = Brushes.Yellow;
-                //TextBlock tb = new TextBlock();
-                //tb.Text = (string)draggedItem.Content;
-                //Label lbl = new Label();
-                //lbl.Content = "Gert";
-                //Label lbl = new Label();
-                //lbl.Content = "Gert Hansen";
-                //lbl.Width = 100;
-                //lbl.Height = 100;
-                //Canvas canvas = new Canvas();
-                //canvas.Width = 100;
-                //canvas.Height = 100;
-                //canvas.Background = Brushes.Red;
                 draggedItem.IsSelected = true;
-                //adorner = new DragAdorner(draggedItem, e.GetPosition(draggedItem));
-                //adorner = new DragAdorner(draggedItem, Mouse.GetPosition((UIElement)this.Parent));
                 adorner = new DragAdorner(draggedItem, GetMousePosition());
-
-                //AdornerLayer.GetAdornerLayer(draggedItem).Add(adorner);
                 AdornerLayer.GetAdornerLayer(this).Add(adorner);
-                //AdornerLayer.GetAdornerLayer(this).Add(adorner);
                 DragDrop.DoDragDrop(draggedItem, draggedItem, DragDropEffects.Copy);
                 AdornerLayer.GetAdornerLayer(this).Remove(adorner);
-                //AdornerLayer.GetAdornerLayer(draggedItem).Remove(adorner);
             }
             startPoint = current;
         }
@@ -86,20 +63,9 @@ namespace TreatPraktik.View
                 var pos = lbl.PointFromScreen(GetMousePosition());
                 adorner.UpdatePosition(pos);
               //e.Handled = true;
-
             }
         }
 
-        //public void ToolboxItem_PreviewMouseMove(object sender, MouseEventArgs e)
-        //{
-        //    if (sender is ListBoxItem && e.LeftButton == MouseButtonState.Pressed)
-        //    {
-
-        //        ListBoxItem draggedItem = sender as ListBoxItem;
-        //        draggedItem.IsSelected = true;
-        //        DragDrop.DoDragDrop(draggedItem, draggedItem, DragDropEffects.Copy);
-        //    }
-        //}
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
         internal static extern bool GetCursorPos(ref Win32Point pt);
