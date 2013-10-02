@@ -24,11 +24,11 @@ namespace TreatPraktik.ViewModel
             {
                 page.LanguageID = languageID;
 
-                foreach (GroupType group in page.Groups)
+                foreach (GroupTypeOrder group in page.Groups)
                 {
-                    group.LanguageID = languageID;
+                    group.Group.LanguageID = languageID;
 
-                    foreach (ItemType item in group.Items)
+                    foreach (ItemType item in group.Group.Items)
                     {
                         item.LanguageID = languageID;
                     }

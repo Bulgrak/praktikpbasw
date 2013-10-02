@@ -111,13 +111,13 @@ namespace TreatPraktik.Ressources.ExcelClasses
 
             foreach (PageType page in workspaceVM.PageList)
             {
-                foreach (GroupType group in page.Groups)
+                foreach (GroupTypeOrder group in page.Groups)
                 {
-                    for (int i = 0; i < group.Items.Count; i++)
+                    for (int i = 0; i < group.Group.Items.Count; i++)
                     {
-                        if (!tempList.Any(x => x.GroupTypeID == group.Items[i].GroupTypeID))
+                        if (!tempList.Any(x => x.GroupTypeID == group.Group.Items[i].GroupTypeID))
                         {
-                            tempList.Add(group);
+                            tempList.Add(group.Group);
                         }
                     }
                 }

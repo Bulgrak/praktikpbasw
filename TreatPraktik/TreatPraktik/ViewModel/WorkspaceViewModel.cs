@@ -17,7 +17,7 @@ namespace TreatPraktik.ViewModel
         public ImportExcel excel;
 
         public ObservableCollection<PageType> PageList { get; set; }
-        private ObservableCollection<GroupType> GroupList { get; set; }
+        private ObservableCollection<GroupTypeOrder> GroupList { get; set; }
         private ObservableCollection<ItemType> ItemList { get; set; }
 
         //private ObservableCollection<GroupType> tempList { get; set; }
@@ -102,7 +102,7 @@ namespace TreatPraktik.ViewModel
         /// Gets all the GroupTypes from Excel
         /// </summary>
         /// <returns>Collection of groups</returns>
-        private ObservableCollection<GroupType> GetAllGroups()
+        private ObservableCollection<GroupTypeOrder> GetAllGroups()
         {
             //Groups
             //Sort on language 1=English and on ResourceType 1=DataGroupHeading
@@ -165,7 +165,7 @@ namespace TreatPraktik.ViewModel
                 group.LanguageID = "2";
             }
 
-            ObservableCollection<GroupType> obsCol = new ObservableCollection<GroupType>(groupList);
+            ObservableCollection<GroupTypeOrder> obsCol = new ObservableCollection<GroupTypeOrder>(groupOrderList);
 
             return obsCol;
         }
@@ -229,7 +229,7 @@ namespace TreatPraktik.ViewModel
         /// <summary>
         /// Puts ItemTypes into GroupTypes, and GroupTypes into PageTypes
         /// </summary>
-        private void LinkCollections(ObservableCollection<PageType> pages, ObservableCollection<GroupType> groups, ObservableCollection<ItemType> items)
+        private void LinkCollections(ObservableCollection<PageType> pages, ObservableCollection<GroupTypeOrder> groups, ObservableCollection<ItemType> items)
         {
             //Put items into groups
             for (int i = 0; i < groups.Count; i++)
@@ -238,7 +238,7 @@ namespace TreatPraktik.ViewModel
                 {
                     if (groups[i].GroupTypeID.Equals(items[k].GroupTypeID))
                     {
-                        groups[i].Items.Add(items[k]);
+                        groups[i].Group.Items.Add(items[k]);
                     }
                 }
             }

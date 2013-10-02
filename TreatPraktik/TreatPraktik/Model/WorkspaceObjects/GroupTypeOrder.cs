@@ -5,7 +5,7 @@ using System.Text;
 
 namespace TreatPraktik.Model.WorkspaceObjects
 {
-    class GroupTypeOrder
+    public class GroupTypeOrder
     {
         public string DepartmentID { get; set; }
         public string PageTypeID { get; set; }

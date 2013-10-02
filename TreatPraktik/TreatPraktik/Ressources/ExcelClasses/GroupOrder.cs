@@ -140,7 +140,7 @@ namespace TreatPraktik.Ressources.ExcelClasses
             {
                 if (page.PageTypeID.Equals("15") || page.PageTypeID.Equals("16") || page.PageTypeID.Equals("17"))
 	            {
-                    foreach (GroupType group in page.Groups)
+                    foreach (GroupTypeOrder group in page.Groups)
 	                {
                         if (columnCount >= 4)
                         {
