@@ -16,8 +16,6 @@ namespace TreatPraktik.ViewModel
 
         public ImportExcel excel;
 
-        //private string languageType;
-
         public ObservableCollection<PageType> PageList { get; set; }
         private ObservableCollection<GroupType> GroupList { get; set; }
         private ObservableCollection<ItemType> ItemList { get; set; }
@@ -32,19 +30,6 @@ namespace TreatPraktik.ViewModel
 
             LinkCollections(PageList, GroupList, ItemList);
         }
-
-        //public string LanguageType
-        //{
-        //    get
-        //    {
-        //        return languageType;
-        //    }
-        //    set
-        //    {
-        //        int i = 1;
-        //        languageType = ;
-        //    }
-        //}
 
         #region INotifyPropertyChanged
 
@@ -213,7 +198,6 @@ namespace TreatPraktik.ViewModel
                 itemType.LanguageID = "2";
             }
 
-
             ObservableCollection<ItemType> obsCol = new ObservableCollection<ItemType>(itemList);
 
             return obsCol;
@@ -247,40 +231,6 @@ namespace TreatPraktik.ViewModel
                     }
                 }
             }
-
-
-            //int i = 0;
-
-            //while (i < groups.Count)
-
-
-            
-            ////for (int i = 0; i < groups.Count; i++)
-            //{
-            //    bool hej = true;
-            //    int k = 0;
-
-            //    while (hej)
-            //    {
-            //        if (items.Count < k)
-            //        {
-            //            hej = false;
-            //        }
-
-            //        if (groups[i].GroupTypeID == items[k].GroupTypeID)
-            //        {
-            //            groups[i].Items.Add(items[k]);
-            //            k++;
-            //        }
-            //        else
-            //        {
-            //            k++;
-            //        }
-            //    }
-            //    i++;
-            //}
-
-
         }
 
         //public ObservableCollection<PageType> GetAllPages()

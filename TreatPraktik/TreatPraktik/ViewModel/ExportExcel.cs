@@ -33,14 +33,8 @@ namespace TreatPraktik.ViewModel
         //WorkSheetQAktUIDesign qaDesign;
         //WorkSheetUIPageType pageType;
 
-        //The TabControl is passed from the View.WorkspaceUserControl to myTab
-        public TabControl myTab { get; set; }
-
-        List<PageType> listOfPages;
-
         private ExportExcel()
         {
-            listOfPages = new List<PageType>();
         }
 
         /// <summary>
@@ -49,12 +43,6 @@ namespace TreatPraktik.ViewModel
         /// <param name="path">Defines the path to where the file should be placed</param>
         public void CreateNewExcel(string path)
         {
-
-            foreach (TabItem item in myTab.Items)
-            {
-                listOfPages.Add((PageType)item.DataContext);
-            }
-
             examinedGroup = new ExaminedGroup();
             resources = new Resources();
             groupOrder = new GroupOrder();
@@ -88,7 +76,7 @@ namespace TreatPraktik.ViewModel
                 //Add sheets to the Workbook
                 examinedGroup.CreateSheet(sheets, spreadsheetDocument, workbookpart);
                 resources.CreateSheet(sheets, spreadsheetDocument, workbookpart);
-                groupOrder.CreateSheet(sheets, spreadsheetDocument, workbookpart);
+                //groupOrder.CreateSheet(sheets, spreadsheetDocument, workbookpart);
                 order.CreateSheet(sheets, spreadsheetDocument, workbookpart);
 
                 workbookpart.Workbook.Save();

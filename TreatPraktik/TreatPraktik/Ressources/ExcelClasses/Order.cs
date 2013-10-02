@@ -19,8 +19,12 @@ namespace TreatPraktik.Ressources.ExcelClasses
         SharedRessources sharedResources;
         WorkspaceViewModel workspaceVM;
 
+        List<GroupType> tempList;
+
         public Order()
         {
+            tempList = new List<GroupType>();
+
             order = WorkSheetktUIOrder.Instance;
             sharedResources = SharedRessources.Instance;
             workspaceVM = WorkspaceViewModel.Instance;
@@ -95,43 +99,61 @@ namespace TreatPraktik.Ressources.ExcelClasses
             //headerCell4.CellValue = new CellValue(index4.ToString());
             //headerCell4.DataType = new EnumValue<CellValues>(CellValues.SharedString);
 
-            string header5 = "IncludedTypeID";
-            int index5 = sharedResources.InsertSharedStringItem(header5, shareStringPart);
-            Cell headerCell5 = sharedResources.InsertCellInWorksheet("E", 1, worksheetPart);
-            headerCell5.CellValue = new CellValue(index5.ToString());
-            headerCell5.DataType = new EnumValue<CellValues>(CellValues.SharedString);
+            string header4 = "IncludedTypeID";
+            int index4 = sharedResources.InsertSharedStringItem(header4, shareStringPart);
+            Cell headerCell4 = sharedResources.InsertCellInWorksheet("D", 1, worksheetPart);
+            headerCell4.CellValue = new CellValue(index4.ToString());
+            headerCell4.DataType = new EnumValue<CellValues>(CellValues.SharedString);
 
             #endregion
 
-            int columnCount = 1;
-            uint rowCount = 2;
-
-            #region Columns and rows from altered page 15, 16, 17
+            #region Create temporary list containing the items needed to create the ktUIOrder excel sheet
 
             foreach (PageType page in workspaceVM.PageList)
             {
                 foreach (GroupType group in page.Groups)
                 {
-                    foreach (ItemType item in group.Items)
+                    for (int i = 0; i < group.Items.Count; i++)
                     {
-                        if (columnCount >= 4)
+                        if (!tempList.Any(x => x.GroupTypeID == group.Items[i].GroupTypeID))
                         {
-                            columnCount = 1;
+                            tempList.Add(group);
                         }
+                    }
+                }
+            }
 
-                        string text1 = item.DesignID;
+            #endregion
+
+            #region insert the items from the temporary list into the ktUIOrder excel sheet
+
+            int columnCount = 1;
+            uint rowCount = 2;
+
+            foreach (GroupType group in tempList)
+            {
+                for (int i = 0; i < group.Items.Count; i++)
+                {
+                    if (columnCount >= 4)
+                    {
+                        columnCount = 1;
+                    }
+                        //tempList = group.Items.Select(i => i)
+
+                        string text1 = group.Items[i].DesignID;
                         Cell cell1 = sharedResources.InsertCellInWorksheet(sharedResources.Number2String(columnCount, true), rowCount, worksheetPart);
                         cell1.CellValue = new CellValue(text1.ToString());
                         cell1.DataType = CellValues.Number;
                         columnCount++;
 
-                        double text2 = item.ItemOrder;
+                        double text2 = group.Items[i].ItemOrder;
                         Cell cell2 = sharedResources.InsertCellInWorksheet(sharedResources.Number2String(columnCount, true), rowCount, worksheetPart);
-                        cell2.CellValue = new CellValue(text2.ToString());
                         cell2.DataType = CellValues.Number;
+                        cell2.CellValue = new CellValue(DoubleValue.FromDouble(text2));
+                        
                         columnCount++;
 
-                        string text3 = group.GroupTypeID;
+                        string text3 = group.Items[i].GroupTypeID;
                         Cell cell3 = sharedResources.InsertCellInWorksheet(sharedResources.Number2String(columnCount, true), rowCount, worksheetPart);
                         cell3.CellValue = new CellValue(text3.ToString());
                         cell3.DataType = CellValues.Number;
@@ -143,16 +165,15 @@ namespace TreatPraktik.Ressources.ExcelClasses
                         //cell4.DataType = CellValues.Number;
                         //columnCount++;
 
-                        string text5 = item.IncludedTypeID;
+                        string text5 = group.Items[i].IncludedTypeID;
                         Cell cell5 = sharedResources.InsertCellInWorksheet(sharedResources.Number2String(columnCount, true), rowCount, worksheetPart);
                         cell5.CellValue = new CellValue(text5.ToString());
                         cell5.DataType = CellValues.Number;
 
                         rowCount++;
-                    }
-                }//
+                }
             }
-
+            
             #endregion
 
             worksheetPart.Worksheet.Save();

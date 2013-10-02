@@ -50,11 +50,6 @@ namespace TreatPraktik.View
                     myTabControl.Items.Add(ti);
                 }
             }
-
-            //Create instance of the ExportExcel class,
-            //and pass the current TabControl to it.
-            exExcel = ExportExcel.Instance;
-            exExcel.myTab = myTabControl;
         }
     }
 }

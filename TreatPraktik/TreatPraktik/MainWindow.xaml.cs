@@ -26,13 +26,6 @@ namespace TreatPraktik
         public MainWindow()
         {
             InitializeComponent();
-            //WorkspaceViewModel d = new WorkspaceViewModel();
-            //ObservableCollection<PageType> obsCol = d.PageList;
-
-            //WorkspaceViewModel d = new WorkspaceViewModel();
-            //ObservableCollection<GroupType> obsCol = d.GetGroupForPage("15");
-
-            //int i = 1;
         }
     }
 }
