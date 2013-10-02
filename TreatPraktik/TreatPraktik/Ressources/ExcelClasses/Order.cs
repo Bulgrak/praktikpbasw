@@ -19,11 +19,11 @@ namespace TreatPraktik.Ressources.ExcelClasses
         SharedRessources sharedResources;
         WorkspaceViewModel workspaceVM;
 
-        List<GroupType> tempList;
+        List<GroupTypeOrder> tempList;
 
         public Order()
         {
-            tempList = new List<GroupType>();
+            tempList = new List<GroupTypeOrder>();
 
             order = WorkSheetktUIOrder.Instance;
             sharedResources = SharedRessources.Instance;
@@ -115,9 +115,9 @@ namespace TreatPraktik.Ressources.ExcelClasses
                 {
                     for (int i = 0; i < group.Group.Items.Count; i++)
                     {
-                        if (!tempList.Any(x => x.GroupTypeID == group.Group.Items[i].GroupTypeID))
+                        if (!tempList.Any(x => x.GroupTypeID == group.GroupTypeID))
                         {
-                            tempList.Add(group.Group);
+                            tempList.Add(group);
                         }
                     }
                 }
@@ -130,47 +130,46 @@ namespace TreatPraktik.Ressources.ExcelClasses
             int columnCount = 1;
             uint rowCount = 2;
 
-            foreach (GroupType group in tempList)
+            foreach (GroupTypeOrder group in tempList)
             {
-                for (int i = 0; i < group.Items.Count; i++)
+                for (int i = 0; i < group.Group.Items.Count; i++)
                 {
                     if (columnCount >= 4)
                     {
                         columnCount = 1;
                     }
-                        //tempList = group.Items.Select(i => i)
 
-                        string text1 = group.Items[i].DesignID;
-                        Cell cell1 = sharedResources.InsertCellInWorksheet(sharedResources.Number2String(columnCount, true), rowCount, worksheetPart);
-                        cell1.CellValue = new CellValue(text1.ToString());
-                        cell1.DataType = CellValues.Number;
-                        columnCount++;
+                    string text1 = group.Group.Items[i].DesignID;
+                    Cell cell1 = sharedResources.InsertCellInWorksheet(sharedResources.Number2String(columnCount, true), rowCount, worksheetPart);
+                    cell1.CellValue = new CellValue(text1.ToString());
+                    cell1.DataType = CellValues.Number;
+                    columnCount++;
 
-                        double text2 = group.Items[i].ItemOrder;
-                        Cell cell2 = sharedResources.InsertCellInWorksheet(sharedResources.Number2String(columnCount, true), rowCount, worksheetPart);
-                        cell2.DataType = CellValues.Number;
-                        cell2.CellValue = new CellValue(DoubleValue.FromDouble(text2));
-                        
-                        columnCount++;
+                    double text2 = group.Group.Items[i].ItemOrder;
+                    Cell cell2 = sharedResources.InsertCellInWorksheet(sharedResources.Number2String(columnCount, true), rowCount, worksheetPart);
+                    cell2.DataType = CellValues.Number;
+                    cell2.CellValue = new CellValue(DoubleValue.FromDouble(text2));
 
-                        string text3 = group.Items[i].GroupTypeID;
-                        Cell cell3 = sharedResources.InsertCellInWorksheet(sharedResources.Number2String(columnCount, true), rowCount, worksheetPart);
-                        cell3.CellValue = new CellValue(text3.ToString());
-                        cell3.DataType = CellValues.Number;
-                        columnCount++;
+                    columnCount++;
 
-                        //string text4 = page.PageTypeID;
-                        //Cell cell4 = sharedResources.InsertCellInWorksheet(sharedResources.Number2String(columnCount, true), rowCount, worksheetPart);
-                        //cell4.CellValue = new CellValue(text4.ToString());
-                        //cell4.DataType = CellValues.Number;
-                        //columnCount++;
+                    string text3 = group.Group.Items[i].GroupTypeID;
+                    Cell cell3 = sharedResources.InsertCellInWorksheet(sharedResources.Number2String(columnCount, true), rowCount, worksheetPart);
+                    cell3.CellValue = new CellValue(text3.ToString());
+                    cell3.DataType = CellValues.Number;
+                    columnCount++;
 
-                        string text5 = group.Items[i].IncludedTypeID;
-                        Cell cell5 = sharedResources.InsertCellInWorksheet(sharedResources.Number2String(columnCount, true), rowCount, worksheetPart);
-                        cell5.CellValue = new CellValue(text5.ToString());
-                        cell5.DataType = CellValues.Number;
+                    //string text4 = page.PageTypeID;
+                    //Cell cell4 = sharedResources.InsertCellInWorksheet(sharedResources.Number2String(columnCount, true), rowCount, worksheetPart);
+                    //cell4.CellValue = new CellValue(text4.ToString());
+                    //cell4.DataType = CellValues.Number;
+                    //columnCount++;
 
-                        rowCount++;
+                    string text5 = group.Group.Items[i].IncludedTypeID;
+                    Cell cell5 = sharedResources.InsertCellInWorksheet(sharedResources.Number2String(columnCount, true), rowCount, worksheetPart);
+                    cell5.CellValue = new CellValue(text5.ToString());
+                    cell5.DataType = CellValues.Number;
+
+                    rowCount++;
                 }
             }
             
