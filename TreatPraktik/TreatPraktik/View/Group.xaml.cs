@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Data;
 using System.Linq;
 using System.Text;
@@ -64,7 +65,14 @@ namespace TreatPraktik.View
                 //Create stackpanel
                 Button btnGroupMoveUp = new Button();
                 btnGroupMoveUp.Name = "btnGroupMoveUp";
-                btnGroupMoveUp.Content = "Up";
+                btnGroupMoveUp.Height = 17;
+                btnGroupMoveUp.Width = 17;
+                var uriSource = new Uri(@"/TreatPraktik;component/Ressources/Arrow-up.ico", UriKind.Relative);
+                BitmapImage logo = new BitmapImage();
+                Image img = new Image();
+                img.Source = new BitmapImage(uriSource);
+                //btnGroupMoveUp.Content = "Up";
+                btnGroupMoveUp.Content = img;
                 btnGroupMoveUp.Click += btnGroupMoveUp_Click;
                 btnGroupMoveUp.FontSize = 9;
                 btnGroupMoveUp.DataContext = gridGroup; //i = rowNo
@@ -74,7 +82,14 @@ namespace TreatPraktik.View
                 }
                 Button btnGroupMoveDown = new Button();
                 btnGroupMoveDown.Name = "btnGroupMoveDown";
-                btnGroupMoveDown.Content = "Down";
+                btnGroupMoveDown.Height = 17;
+                btnGroupMoveDown.Width = 17;
+                var uriSource2 = new Uri(@"/TreatPraktik;component/Ressources/Arrow-down.ico", UriKind.Relative);
+                BitmapImage logo2 = new BitmapImage();
+                Image img2 = new Image();
+                img2.Source = new BitmapImage(uriSource2);
+                //btnGroupMoveDown.Content = "Down";
+                btnGroupMoveDown.Content = img2;
                 btnGroupMoveDown.Click += btnGroupMoveDown_Click;
                 btnGroupMoveDown.FontSize = 9;
                 btnGroupMoveDown.DataContext = gridGroup; //i == rowNo
@@ -789,21 +804,24 @@ namespace TreatPraktik.View
                 Border borderCell = (Border)gridCell.Parent;
                 int row = Grid.GetRow(borderCell);
                 Grid grid = (Grid)borderCell.Parent;
+                GroupType gt = (GroupType)grid.DataContext;
                 bool containsRow = CheckForNewLineItem(grid, row);
-                if (designID == 198 && !containsRow)
-                {
+                //if (designID == 198 && !containsRow)
+                //{
 
-                }
-                else
-                {
+                //}
+                //else
+                //{
                     if (designID != 0 /*&& designID != 197*/)
                     {
                         ItemType newItemType = new ItemType();
                         newItemType.DesignID = tbi.DesignID;
                         newItemType.Header = tbi.Header;
                         newItemType.ItemOrder = itToBeMoved.ItemOrder;
+                        newItemType.DanishTranslationText = tbi.DanishTranslationText;
+                        newItemType.EnglishTranslationText = tbi.EnglishTranslationText;
+                        newItemType.LanguageID = tbi.LanguageID;
 
-                        GroupType gt = GetGroupType(grid);
                         List<ItemType> itemTypeList = GetItemTypes(grid);
                         int startPosition = itemTypeList.IndexOf(itToBeMoved);
                         moveItemsForward(startPosition, itemTypeList, grid, newItemType, gt);
@@ -813,6 +831,9 @@ namespace TreatPraktik.View
                     {
                         itToBeMoved.DesignID = tbi.DesignID;
                         itToBeMoved.Header = tbi.Header;
+                        itToBeMoved.DanishTranslationText = tbi.DanishTranslationText;
+                        itToBeMoved.EnglishTranslationText = tbi.EnglishTranslationText;
+                        itToBeMoved.LanguageID = tbi.LanguageID;
                         Border bTarget = (Border)gridCell.Parent;
                         int col = Grid.GetColumn(bTarget);
                         if (row == grid.RowDefinitions.Count - 1)
@@ -838,8 +859,9 @@ namespace TreatPraktik.View
                             //DisableAllowDrop(startColumnPosition, row, grid);
                             DisableAllowDropByNewLineItem(grid);
                         }
+                        gt.Items.Add(itToBeMoved);
                     }
-                }
+                //}
             }
         }
 

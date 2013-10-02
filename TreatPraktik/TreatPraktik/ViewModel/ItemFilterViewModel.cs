@@ -12,53 +12,96 @@ using TreatPraktik.Model.ExcelObjects;
 
 namespace TreatPraktik.ViewModel
 {
-    class ItemFilterViewModel
+    public class ItemFilterViewModel : INotifyPropertyChanged
     {
         //private ICollectionView designItemsView;
         private string filterString;
         private string textSearchDescription;
-        public string Language { get; set; }
-        public string TextNoToolboxItemsFound { get; set; }
+        public string languageID { get; set; }
+        public string textNoToolboxItemsFound;
         //public string TextSearchDescription { get; set; } //Beskrivelse
         public ICollectionView DesignItemsView { get; set; }
+        public List<ToolboxItem> ToolboxItemList { get; set; }
+        private static ItemFilterViewModel instance;
 
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected void OnPropertyChanged(string name)
+        protected void OnPropertyChanged(string propertyName)
         {
             PropertyChangedEventHandler handler = PropertyChanged;
             if (handler != null)
             {
-                handler(this, new PropertyChangedEventArgs(name));
+                handler(this, new PropertyChangedEventArgs(propertyName));
             }
         }
         #endregion
 
-        public ItemFilterViewModel()
+        private ItemFilterViewModel()
         {
-            Language = "English";
+            ToolboxItemList = new List<ToolboxItem>();
             //TextNoToolboxItemsFound = "No items to display";
-            TextNoToolboxItemsFound = "No results found";
-            TextSearchDescription = "Search for item or in description";
+            
+            //LanguageID = "2";
+            LanguageID = "2";
             filterString = "";
             PopulateToolbox();
         }
 
-        public void ChangeLanguage(string language)
+        public static ItemFilterViewModel Instance
         {
-            Language = language;
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new ItemFilterViewModel();
+                }
+                return instance;
+            }
+        }
+
+        public string LanguageID
+        {
+            get 
+            { 
+                return languageID; 
+            }
+            set
+            {
+                languageID = value;
+                switch (LanguageID)
+                {
+                    case "1":
+                        TextSearchDescription = "Search for item or in description";
+                        TextNoToolboxItemsFound = "No results found";
+                        break;
+                    case "2":
+                        TextSearchDescription = "Søg efter item eller i beskrivelsen";
+                        TextNoToolboxItemsFound = "Ingen resultater fundet";
+                        break;
+                }
+                foreach (ToolboxItem tbi in ToolboxItemList)
+                {
+                    tbi.LanguageID = languageID;
+                }
+                if (DesignItemsView != null)
+                {
+                    DesignItemsView.Refresh();
+                }
+            }
         }
 
         public void PopulateToolbox()
         {
-            List<ToolboxItem> toolboxItemList = new List<ToolboxItem>();
-            toolboxItemList = CreateToolboxItems();
+            ToolboxItemList = CreateToolboxItems();
 
-            DesignItemsView = CollectionViewSource.GetDefaultView(toolboxItemList);
+            DesignItemsView = CollectionViewSource.GetDefaultView(ToolboxItemList);
             DesignItemsView.GroupDescriptions.Add(new PropertyGroupDescription("Category"));
             DesignItemsView.SortDescriptions.Add(
+    new SortDescription("Group", ListSortDirection.Ascending));
+            DesignItemsView.SortDescriptions.Add(
                 new SortDescription("Header", ListSortDirection.Ascending));
+
             DesignItemsView.Filter = ItemFilter;
         }
 
@@ -90,10 +133,42 @@ namespace TreatPraktik.ViewModel
                     DesignID = a.DesignID,
                     ResourceID = b.ResourceID,
                     ResxID = a.ResxID,
+                    ResourceType = b.ResourceTypeID,
                     Header = c.TranslationText,
                     ToolTip = g.TranslationText,
                     Category = j.Type
                 }).ToList();
+
+            var query = (from aa in ie.WorkSheetktResources.ktResourceList
+                         join bb in ie.WorkSheetktResourceTranslation.ktResourceTranslationList on aa.ResourceID equals bb.ResourceID
+                         join cc in ie.WorkSheetktResourceType.ktResourceTypeList.Where(d => d.ResourceTypeID.Equals("2")) on aa.ResourceTypeID equals cc.ResourceTypeID
+                         select new
+                         {
+                             bb.LanguageID,
+                             aa.ResourceResxID,
+                             bb.TranslationText
+                         }).ToList();
+
+            foreach (ToolboxItem itemType in toolboxItemList)
+            {
+                foreach (var item in query)
+                {
+                    if (item.ResourceResxID == itemType.ResxID)
+                    {
+                        if (item.LanguageID.Equals("2"))
+                        {
+                            itemType.DanishTranslationText = item.TranslationText;
+
+                        }
+                        else if (item.LanguageID.Equals("1"))
+                        {
+                            itemType.EnglishTranslationText = item.TranslationText;
+                        }
+                    }
+                }
+                itemType.LanguageID = "2";
+            }
+
             return toolboxItemList;
         }
 
@@ -115,6 +190,16 @@ namespace TreatPraktik.ViewModel
             {
                 textSearchDescription = value;
                 OnPropertyChanged("TextSearchDescription");
+            }
+        }
+
+        public string TextNoToolboxItemsFound
+        {
+            get { return textNoToolboxItemsFound; }
+            set
+            {
+                textNoToolboxItemsFound = value;
+                OnPropertyChanged("TextNoToolboxItemsFound");
             }
         }
 
