@@ -43,7 +43,7 @@ namespace TreatPraktik.View
                 if (pt.PageTypeID.Equals("15") || pt.PageTypeID.Equals("16") || pt.PageTypeID.Equals("17")) //burde nok gøres i LINQ
                 {
                     Group ucGroup = new Group();
-                    ucGroup.groups = pageTypeList[i].Groups;
+                    ucGroup.groups = pt.Groups;
                     ucGroup.CreateGroupTables();
                     ti.Content = ucGroup;
 

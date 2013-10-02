@@ -20,6 +20,7 @@ namespace TreatPraktik.Model.WorkspaceObjects
         public string DanishTranslationText { get; set; }
         public string EnglishTranslationText { get; set; }
         public string ResourceType { get; set; }
+
         
 
 

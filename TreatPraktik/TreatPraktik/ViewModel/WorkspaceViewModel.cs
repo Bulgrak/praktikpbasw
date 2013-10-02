@@ -20,6 +20,8 @@ namespace TreatPraktik.ViewModel
         private ObservableCollection<GroupType> GroupList { get; set; }
         private ObservableCollection<ItemType> ItemList { get; set; }
 
+        //private ObservableCollection<GroupType> tempList { get; set; }
+
         public WorkspaceViewModel()
         {
             excel = ImportExcel.Instance;
@@ -114,15 +116,34 @@ namespace TreatPraktik.ViewModel
                               bbb.TranslationText
                           }).ToList();
 
-            List<GroupType> groupList = (from a in excel.WorkSheetktUIGroupOrder.ktUIGroupOrderList.OrderBy(m => m.GroupOrder)
-                                         join b in excel.WorkSheetExaminedGroup.ExaminedGroupList on a.GroupTypeID equals b.ID
-                                         select new GroupType
+            List<GroupTypeOrder> groupOrderList = (from a in excel.WorkSheetktUIGroupOrder.ktUIGroupOrderList.OrderBy(m => m.GroupOrder)
+                                         //join b in excel.WorkSheetExaminedGroup.ExaminedGroupList on a.GroupTypeID equals b.ID
+                                         select new GroupTypeOrder
                                          {
-                                             ResourceType = b.GroupType,
+                                             DepartmentID = a.DepartmentID,
                                              PageTypeID = a.PageTypeID,
                                              GroupTypeID = a.GroupTypeID,
                                              GroupOrder = a.GroupOrder
                                          }).ToList();
+
+            List<GroupType> groupList = (from a in excel.WorkSheetExaminedGroup.ExaminedGroupList
+                                         select new GroupType
+                                         {
+                                             GroupTypeID = a.ID,
+                                             ResourceType = a.GroupType
+                                         }).ToList();
+
+            for (int i = 0; i < groupOrderList.Count; i++)
+            {
+                foreach(GroupType group in groupList)
+                {
+                    if (groupOrderList[i].GroupTypeID.Equals(group.GroupTypeID))
+                    {
+                        groupOrderList[i].Group = group;
+                    }
+                }
+            }
+
 
             foreach (GroupType group in groupList)
             {
@@ -203,6 +224,8 @@ namespace TreatPraktik.ViewModel
             return obsCol;
         }
 
+
+
         /// <summary>
         /// Puts ItemTypes into GroupTypes, and GroupTypes into PageTypes
         /// </summary>
@@ -220,6 +243,18 @@ namespace TreatPraktik.ViewModel
                 }
             }
 
+            ////Put a GroupTypeID reference into pages
+            //for (int i = 0; i < pages.Count; i++)
+            //{
+            //    for (int k = 0; k < groups.Count; k++)
+            //    {
+            //        if (pages[i].PageTypeID.Equals(groups[k].PageTypeID))
+            //        {
+            //            pages[i].GroupTypeIDs.Add(groups[k].GroupTypeID);
+            //        }
+            //    }
+            //}
+
             //Put groups into pages
             for (int i = 0; i < pages.Count; i++)
             {
@@ -232,6 +267,23 @@ namespace TreatPraktik.ViewModel
                 }
             }
         }
+
+        //public ObservableCollection<GroupType> GetGroupTypeFromID(List<string> groupTypeIDs)
+        //{
+        //    tempList = new ObservableCollection<GroupType>();
+
+        //    foreach (GroupType group in GroupList)
+        //    {
+        //        foreach (string id in groupTypeIDs)
+        //        {
+        //            if (group.GroupTypeID.Equals(id))
+        //            {
+        //                tempList.Add(group);
+        //            }
+        //        }
+        //    }
+        //    return tempList;
+        //}
 
         //public ObservableCollection<PageType> GetAllPages()
         //{

@@ -15,10 +15,12 @@ namespace TreatPraktik.Model.WorkspaceObjects
         private string languageID { get; set; }
         public string DanishTranslationText { get; set; }
         public string EnglishTranslationText { get; set; }
+        //public List<string> GroupTypeIDs { get; set; }
         public ObservableCollection<GroupType> Groups { get; set; }     //List of groups on the page
 
         public PageType()
         {
+            //GroupTypeIDs = new List<string>();
             Groups = new ObservableCollection<GroupType>();
         }
 
