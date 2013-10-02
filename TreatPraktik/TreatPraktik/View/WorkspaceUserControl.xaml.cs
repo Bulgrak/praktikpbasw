@@ -42,13 +42,13 @@ namespace TreatPraktik.View
                 
                 if (pt.PageTypeID.Equals("15") || pt.PageTypeID.Equals("16") || pt.PageTypeID.Equals("17")) //burde nok gøres i LINQ
                 {
-                    ObservableCollection<GroupType> groupType = new ObservableCollection<GroupType>();
-                    foreach (GroupTypeOrder gto in pt.Groups)
-                    {
-                        groupType.Add(gto.Group);
-                    }
+                    //ObservableCollection<GroupType> groupType = new ObservableCollection<GroupType>();
+                    //foreach (GroupTypeOrder gto in pt.Groups)
+                    //{
+                    //    groupType.Add(gto.Group);
+                    //}
                     Group ucGroup = new Group();
-                    ucGroup.groups = groupType;
+                    ucGroup.groups = pt.Groups;
                     ucGroup.CreateGroupTables();
                     ti.Content = ucGroup;
 

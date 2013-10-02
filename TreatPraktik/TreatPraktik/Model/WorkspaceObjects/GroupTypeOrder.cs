@@ -1,16 +1,47 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 
 namespace TreatPraktik.Model.WorkspaceObjects
 {
-    public class GroupTypeOrder
+    public class GroupTypeOrder : INotifyPropertyChanged
     {
         public string DepartmentID { get; set; }
         public string PageTypeID { get; set; }
         public string GroupTypeID { get; set; }
         public GroupType Group { get; set; }
-        public double GroupOrder { get; set; }
+        private double groupOrder { get; set; }
+
+
+        #region INotifyPropertyChanged
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged(string propertyName)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
+        #endregion
+
+
+        public double GroupOrder
+        {
+            get
+            {
+                return groupOrder;
+            }
+            set
+            {
+                groupOrder = value;
+                OnPropertyChanged("GroupOrder");
+            }
+        }
     }
 }

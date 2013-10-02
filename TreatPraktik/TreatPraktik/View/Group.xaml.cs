@@ -25,7 +25,7 @@ namespace TreatPraktik.View
     /// </summary>
     public partial class Group : UserControl
     {
-        public ObservableCollection<GroupType> groups { get; set; }
+        public ObservableCollection<GroupTypeOrder> groups { get; set; }
 
         public Group()
         {
@@ -36,9 +36,9 @@ namespace TreatPraktik.View
         {
             for (int i = 0; i < groups.Count; i++)
             {
-                GroupType gt = groups[i];
+                GroupType gt = groups[i].Group;
                 Grid gridGroup = new Grid();
-                gridGroup.DataContext = gt;
+                gridGroup.DataContext = groups[i];
 
                 PopulateGroupTable(gt, gridGroup);
 
@@ -50,7 +50,7 @@ namespace TreatPraktik.View
                 TextBlock tbGroupNumber = new TextBlock();
                 Grid.SetRow(tbGroupNumber, i);
                 Grid.SetColumn(tbGroupNumber, 0);
-                tbGroupNumber.DataContext = gt;
+                tbGroupNumber.DataContext = groups[i];
                 tbGroupNumber.SetBinding(TextBlock.TextProperty, "GroupOrder");
 
                 //tbGroupNumber.Text = Convert.ToString(gt.GroupOrder);
@@ -139,7 +139,7 @@ namespace TreatPraktik.View
                 Grid.SetRow(uie, row);
             }
             TextBlock tb = (TextBlock)uieListMoveUp[0];
-            GroupType gt = (GroupType)tb.DataContext;
+            GroupTypeOrder gt = (GroupTypeOrder)tb.DataContext;
             //int groupNumber = Convert.ToInt32(gt.GroupOrder);
             gt.GroupOrder--;
             //gt.GroupOrder =
@@ -167,7 +167,7 @@ namespace TreatPraktik.View
                 Grid.SetRow(uie, row + 1);
             }
             TextBlock tb = (TextBlock)uieListMoveDown[0];
-            GroupType gt = (GroupType)tb.DataContext;
+            GroupTypeOrder gt = (GroupTypeOrder)tb.DataContext;
             //int groupNumber = Convert.ToInt32(gt.GroupOrder);
             gt.GroupOrder++;
 
@@ -623,7 +623,8 @@ namespace TreatPraktik.View
         private void GenerateEmptyFields(Grid groupTable, int row, bool wholeRow)
         {
             List<ItemType> itemTypeListCheck = GetItemsByRow(groupTable, row);
-            GroupType gt = (GroupType)groupTable.DataContext;
+            GroupTypeOrder gto = (GroupTypeOrder)groupTable.DataContext;
+            GroupType gt = gto.Group;
             bool newLineItemExist = CheckForNewLineItem(groupTable, row);
             bool addEmptyfields = false;
             int i = itemTypeListCheck.Count - 1;
@@ -654,6 +655,8 @@ namespace TreatPraktik.View
                 {
                     itemType.DesignID = "197";
                     itemType.Header = "<EmptyField>";
+                    itemType.GroupTypeID = gt.GroupTypeID;
+                    itemType.IncludedTypeID = "1";
                     gt.Items.Add(itemType);
                 }
 
@@ -661,6 +664,8 @@ namespace TreatPraktik.View
                 {
                     itemType.DesignID = "197";
                     itemType.Header = "<EmptyField>";
+                    itemType.GroupTypeID = gt.GroupTypeID;
+                    itemType.IncludedTypeID = "1";
                     gt.Items.Add(itemType);
                 }
                 i--;
@@ -804,7 +809,8 @@ namespace TreatPraktik.View
                 Border borderCell = (Border)gridCell.Parent;
                 int row = Grid.GetRow(borderCell);
                 Grid grid = (Grid)borderCell.Parent;
-                GroupType gt = (GroupType)grid.DataContext;
+                GroupTypeOrder gto = (GroupTypeOrder)grid.DataContext;
+                GroupType gt = gto.Group;
                 bool containsRow = CheckForNewLineItem(grid, row);
                 //if (designID == 198 && !containsRow)
                 //{
@@ -821,6 +827,8 @@ namespace TreatPraktik.View
                         newItemType.DanishTranslationText = tbi.DanishTranslationText;
                         newItemType.EnglishTranslationText = tbi.EnglishTranslationText;
                         newItemType.LanguageID = tbi.LanguageID;
+                        newItemType.GroupTypeID = gt.GroupTypeID;
+                        newItemType.IncludedTypeID = "1";
 
                         List<ItemType> itemTypeList = GetItemTypes(grid);
                         int startPosition = itemTypeList.IndexOf(itToBeMoved);
@@ -834,6 +842,8 @@ namespace TreatPraktik.View
                         itToBeMoved.DanishTranslationText = tbi.DanishTranslationText;
                         itToBeMoved.EnglishTranslationText = tbi.EnglishTranslationText;
                         itToBeMoved.LanguageID = tbi.LanguageID;
+                        itToBeMoved.GroupTypeID = gt.GroupTypeID;
+                        itToBeMoved.IncludedTypeID = "1";
                         Border bTarget = (Border)gridCell.Parent;
                         int col = Grid.GetColumn(bTarget);
                         if (row == grid.RowDefinitions.Count - 1)
