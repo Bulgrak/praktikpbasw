@@ -18,6 +18,7 @@ namespace TreatPraktik.ViewModel
 
         public ObservableCollection<PageType> PageList { get; set; }
         private ObservableCollection<GroupTypeOrder> GroupList { get; set; }
+        private ObservableCollection<GroupType> Groups { get; set; }
         private ObservableCollection<ItemType> ItemList { get; set; }
 
         //private ObservableCollection<GroupType> tempList { get; set; }
@@ -30,7 +31,7 @@ namespace TreatPraktik.ViewModel
             GroupList = GetAllGroups();
             ItemList = GetAllItems();
 
-            LinkCollections(PageList, GroupList, ItemList);
+            LinkCollections(PageList, Groups, GroupList,ItemList);
         }
 
         #region INotifyPropertyChanged
@@ -164,7 +165,8 @@ namespace TreatPraktik.ViewModel
                 }
                 group.LanguageID = "2";
             }
-
+            
+            Groups = new ObservableCollection<GroupType>(groupList);
             ObservableCollection<GroupTypeOrder> obsCol = new ObservableCollection<GroupTypeOrder>(groupOrderList);
 
             return obsCol;
@@ -229,7 +231,7 @@ namespace TreatPraktik.ViewModel
         /// <summary>
         /// Puts ItemTypes into GroupTypes, and GroupTypes into PageTypes
         /// </summary>
-        private void LinkCollections(ObservableCollection<PageType> pages, ObservableCollection<GroupTypeOrder> groups, ObservableCollection<ItemType> items)
+        private void LinkCollections(ObservableCollection<PageType> pages, ObservableCollection<GroupType> groups, ObservableCollection<GroupTypeOrder> groupOrderTypes, ObservableCollection<ItemType> items)
         {
             //Put items into groups
             for (int i = 0; i < groups.Count; i++)
@@ -238,7 +240,7 @@ namespace TreatPraktik.ViewModel
                 {
                     if (groups[i].GroupTypeID.Equals(items[k].GroupTypeID))
                     {
-                        groups[i].Group.Items.Add(items[k]);
+                        groups[i].Items.Add(items[k]);
                     }
                 }
             }
@@ -258,11 +260,11 @@ namespace TreatPraktik.ViewModel
             //Put groups into pages
             for (int i = 0; i < pages.Count; i++)
             {
-                for (int k = 0; k < groups.Count; k++)
+                for (int k = 0; k < groupOrderTypes.Count; k++)
                 {
-                    if (pages[i].PageTypeID.Equals(groups[k].PageTypeID))
+                    if (pages[i].PageTypeID.Equals(groupOrderTypes[k].PageTypeID))
                     {
-                        pages[i].Groups.Add(groups[k]);
+                        pages[i].Groups.Add(groupOrderTypes[k]);
                     }
                 }
             }
