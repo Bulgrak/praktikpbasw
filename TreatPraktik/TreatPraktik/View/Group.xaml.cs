@@ -364,7 +364,8 @@ namespace TreatPraktik.View
             gridGroupTable.RemoveRow(gridGroupTable.RowDefinitions.Count - 1);
             int row = Grid.GetRow(border);
             Grid groupTable = (Grid)border.Parent;
-            GroupType gt = (GroupType)gridGroupTable.DataContext;
+            GroupTypeOrder gto = (GroupTypeOrder)gridGroupTable.DataContext;
+            GroupType gt = gto.Group;
             TextBlock tb = (TextBlock)gridCell.Children[1];
 
             ItemType itToBeDeleted = (ItemType)tb.DataContext;
