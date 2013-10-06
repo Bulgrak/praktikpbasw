@@ -44,18 +44,18 @@ namespace TreatPraktik.View
             return uieList;
         }
 
-        //public static List<UIElement> GetGridCellChildrenListByRowT(this Grid grid, int row)
-        //{
-        //    List<UIElement> uieList = new List<UIElement>();
-        //    int i = 0;
-        //    while (i < grid.ColumnDefinitions.Count)
-        //    {
-        //        List<UIElement> uieTempList = grid.GetGridCellChildList(row, i);
-        //        uieList.AddRange(uieTempList);
-        //        i++;
-        //    }
-        //    return uieList;
-        //}
+        public static List<UIElement> GetAllGridCellChildrenListByRow(this Grid grid, int row)
+        {
+            List<UIElement> uieList = new List<UIElement>();
+            int i = 0;
+            while (i < grid.ColumnDefinitions.Count)
+            {
+                List<UIElement> uieTempList = grid.GetGridCellChildList(row, i);
+                uieList.AddRange(uieTempList);
+                i++;
+            }
+            return uieList;
+        }
 
         /// <summary>
         /// Updates items row position in the grid from a certain row number

@@ -112,8 +112,8 @@ namespace TreatPraktik.View
             StackPanel sp = (StackPanel)btn.Parent;
             Grid gridGroup = (Grid)btn.DataContext;
             int row = Grid.GetRow(sp);
-            List<UIElement> uieListMoveDown = myGrid.GetGridCellChildrenByRow(row);
-            List<UIElement> uieListMoveUp = myGrid.GetGridCellChildrenByRow(row + 1);
+            List<UIElement> uieListMoveDown = myGrid.GetAllGridCellChildrenListByRow(row);
+            List<UIElement> uieListMoveUp = myGrid.GetAllGridCellChildrenListByRow(row + 1);
             MoveGroupUp(uieListMoveUp, row);
             MoveGroupDown(uieListMoveDown, row);
         }
@@ -173,8 +173,8 @@ namespace TreatPraktik.View
             Button btn = sender as Button;
             StackPanel sp = (StackPanel)btn.Parent;
             int row = Grid.GetRow(sp);
-            List<UIElement> uieListMoveDown = myGrid.GetGridCellChildrenByRow(row - 1);
-            List<UIElement> uieListMoveUp = myGrid.GetGridCellChildrenByRow(row);
+            List<UIElement> uieListMoveDown = myGrid.GetAllGridCellChildrenListByRow(row - 1);
+            List<UIElement> uieListMoveUp = myGrid.GetAllGridCellChildrenListByRow(row);
             MoveGroupUp(uieListMoveUp, row - 1);
             MoveGroupDown(uieListMoveDown, row - 1);
         }
@@ -568,30 +568,30 @@ namespace TreatPraktik.View
 
         void CheckDroppedItem(object sender, DragEventArgs e)
         {
-            if (sender is ListBoxItem)
+            if (e.Data.GetData("System.Windows.Controls.ListBoxItem") is ListBoxItem)
             {
                 TextBlock tb = null;
                 Grid gridCell = null;
                 if (e.Source is Border)
                 {
                     Border target = e.Source as Border;
-                    gridCell = (Grid) target.Child;
-                    tb = (TextBlock) gridCell.Children[1];
+                    gridCell = (Grid)target.Child;
+                    tb = (TextBlock)gridCell.Children[1];
                 }
                 else
                 {
                     tb = e.Source as TextBlock;
-                    gridCell = (Grid) tb.Parent;
+                    gridCell = (Grid)tb.Parent;
                 }
                 ListBoxItem lbi = e.Data.GetData("System.Windows.Controls.ListBoxItem") as ListBoxItem;
                 ListBoxItem draggedItem = e.Data.GetData("System.Windows.Controls.ListBoxItem") as ListBoxItem;
-                ToolboxItem tbi = (ToolboxItem) lbi.Content;
+                ToolboxItem tbi = (ToolboxItem)lbi.Content;
 
-                ItemType itToBeMoved = (ItemType) tb.DataContext;
+                ItemType itToBeMoved = (ItemType)tb.DataContext;
                 int designID = Convert.ToInt32(itToBeMoved.DesignID);
-                Border borderCell = (Border) gridCell.Parent;
+                Border borderCell = (Border)gridCell.Parent;
                 int row = Grid.GetRow(borderCell);
-                Grid grid = (Grid) borderCell.Parent;
+                Grid grid = (Grid)borderCell.Parent;
                 bool containsRow = CheckForNewLineItem(grid, row);
                 if (tbi.DesignID.Equals("198") && containsRow)
                 {
@@ -680,6 +680,46 @@ namespace TreatPraktik.View
                     }
                     gt.Items.Add(itToBeMoved);
                 }
+            }
+            if (e.Data.GetData("System.Windows.Controls.Border") is Border) //drag and drop mellem items
+            {
+                //dragged item
+                Border target = null;
+                Grid gridCell = null;
+                TextBlock tb = null;
+                ItemType it = null;
+                if (e.Source is Border)
+                {
+                target = e.Source as Border;
+                gridCell = (Grid)target.Child;
+                tb = (TextBlock)gridCell.Children[1];
+                it = (ItemType)tb.DataContext;
+                }
+                else
+                {
+                    tb = e.Source as TextBlock;
+                    it = (ItemType)tb.DataContext;
+                }
+
+                //item that will switch place with dragged item
+ 
+
+                    Border target2 = e.Data.GetData("System.Windows.Controls.Border") as Border;
+                    Grid gridCell2 = (Grid)target2.Child;
+                    TextBlock tb2 = (TextBlock)gridCell2.Children[1];
+                    ItemType it2 = (ItemType)tb2.DataContext;
+
+                
+
+                double draggedItemTypeNo = it.ItemOrder;
+                double itemTypeSwitch = it2.ItemOrder;
+
+                //Switch items
+                it.ItemOrder = itemTypeSwitch;
+                it2.ItemOrder = draggedItemTypeNo;
+
+                tb.DataContext = it2;
+                tb2.DataContext = it;
             }
         }
 
@@ -819,13 +859,23 @@ namespace TreatPraktik.View
             Point current = e.GetPosition(this);
             if (sender is Border && e.LeftButton == MouseButtonState.Pressed)
             {
-
+                
                 Border draggedItem = sender as Border;
-                //draggedItem.IsSelected = true;
-                adorner = new DragAdornerItem(draggedItem, e.GetPosition(draggedItem));
-                AdornerLayer.GetAdornerLayer(this).Add(adorner);
-                DragDrop.DoDragDrop(draggedItem, draggedItem, DragDropEffects.Move);
-                AdornerLayer.GetAdornerLayer(this).Remove(adorner);
+                if (!(draggedItem.Child is TextBlock)) //Prevent dragging if GroupType
+                {
+
+                    Grid gridCell = (Grid)draggedItem.Child;
+                    TextBlock tb = (TextBlock)gridCell.Children[1];
+                    ItemType it = (ItemType)tb.DataContext;
+                    if (it.Header != null)
+                    {
+                        //draggedItem.IsSelected = true;
+                        adorner = new DragAdornerItem(draggedItem, e.GetPosition(draggedItem));
+                        AdornerLayer.GetAdornerLayer(this).Add(adorner);
+                        DragDrop.DoDragDrop(draggedItem, draggedItem, DragDropEffects.Move);
+                        AdornerLayer.GetAdornerLayer(this).Remove(adorner);
+                    }
+                }
             }
             startPoint = current;
         }
