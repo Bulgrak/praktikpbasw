@@ -19,13 +19,13 @@ namespace TreatPraktik.View
         /// <param name="row"></param>
         /// <param name="col"></param>
         /// <returns></returns>
-        public static UIElement GetGridCellChildren(this Grid grid, int row, int col)
+        public static UIElement GetGridCellChildUIElement(this Grid grid, int row, int col)
         {
             return grid.Children.Cast<UIElement>().First(
                                 x => Grid.GetRow(x) == row && Grid.GetColumn(x) == col);
         }
 
-        public static List<UIElement> GetGridCellChildrenList(this Grid grid, int row, int col)
+        public static List<UIElement> GetGridCellChildList(this Grid grid, int row, int col)
         {
             return grid.Children.Cast<UIElement>().Where(
                                 x => Grid.GetRow(x) == row && Grid.GetColumn(x) == col).ToList();
@@ -37,25 +37,25 @@ namespace TreatPraktik.View
             int i = 0;
             while (i < grid.ColumnDefinitions.Count)
             {
-                UIElement uie = grid.GetGridCellChildren(row, i);
+                UIElement uie = grid.GetGridCellChildUIElement(row, i);
                 uieList.Add(uie);
                 i++;
             }
             return uieList;
         }
 
-        public static List<UIElement> GetGridCellChildrenListByRow(this Grid grid, int row)
-        {
-            List<UIElement> uieList = new List<UIElement>();
-            int i = 0;
-            while (i < grid.ColumnDefinitions.Count)
-            {
-                List<UIElement> uieTempList = grid.GetGridCellChildrenList(row, i);
-                uieList.AddRange(uieTempList);
-                i++;
-            }
-            return uieList;
-        }
+        //public static List<UIElement> GetGridCellChildrenListByRowT(this Grid grid, int row)
+        //{
+        //    List<UIElement> uieList = new List<UIElement>();
+        //    int i = 0;
+        //    while (i < grid.ColumnDefinitions.Count)
+        //    {
+        //        List<UIElement> uieTempList = grid.GetGridCellChildList(row, i);
+        //        uieList.AddRange(uieTempList);
+        //        i++;
+        //    }
+        //    return uieList;
+        //}
 
         /// <summary>
         /// Updates items row position in the grid from a certain row number
@@ -70,8 +70,8 @@ namespace TreatPraktik.View
                 {
                     for (int j = 0; j < grid.ColumnDefinitions.Count; j++)
                     {
-                        UIElement uie = grid.GetGridCellChildren(i, j);
-                        //List<UIElement> children = grid.GetGridCellChildren(i, j);
+                        UIElement uie = grid.GetGridCellChildUIElement(i, j);
+                        //List<UIElement> children = grid.GetGridCellChildUIElement(i, j);
                         //foreach (UIElement uie in children)
                         //{
                         Grid.SetRow(uie, i - 1);
@@ -89,7 +89,7 @@ namespace TreatPraktik.View
                 {
                     for (int j = 0; j < grid.ColumnDefinitions.Count; j++)
                     {
-                        List<UIElement> children = grid.GetGridCellChildrenList(i, j);
+                        List<UIElement> children = grid.GetGridCellChildList(i, j);
                         foreach (UIElement uie in children)
                         {
                             Grid.SetRow(uie, i - 1);
@@ -101,13 +101,8 @@ namespace TreatPraktik.View
 
         public static void RemoveGridCellChildrenByRow(this Grid grid, int row)
         {
-            List<UIElement> elementsToRemove = new List<UIElement>();
+            List<UIElement> elementsToRemove = grid.Children.Cast<UIElement>().Where(element => Grid.GetRow(element) == row).ToList();
 
-            foreach (UIElement element in grid.Children)
-            {
-                if (Grid.GetRow(element) == row)
-                    elementsToRemove.Add(element);
-            }
             foreach (UIElement element in elementsToRemove)
                 grid.Children.Remove(element);
         }

@@ -41,7 +41,7 @@ namespace TreatPraktik.View
 
                 ListBoxItem draggedItem = sender as ListBoxItem;
                 draggedItem.IsSelected = true;
-                adorner = new DragAdorner(draggedItem, GetMousePosition());
+                adorner = new DragAdornerToolboxItem(draggedItem, GetMousePosition());
                 AdornerLayer.GetAdornerLayer(this).Add(adorner);
                 DragDrop.DoDragDrop(draggedItem, draggedItem, DragDropEffects.Copy);
                 AdornerLayer.GetAdornerLayer(this).Remove(adorner);
@@ -90,6 +90,6 @@ namespace TreatPraktik.View
         }
 
         private Point startPoint;
-        private DragAdorner adorner;
+        private DragAdornerToolboxItem adorner;
     }
 }

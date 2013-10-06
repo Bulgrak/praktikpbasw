@@ -73,7 +73,8 @@
     <Compile Include="ViewModel\LanguageViewModel.cs" />
     <Compile Include="ViewModel\SpecialFieldsViewModel.cs" />
     <Compile Include="Ressources\ExcelClasses\Order.cs" />
-    <Compile Include="View\DragAdorner.cs" />
+    <Compile Include="View\DragAdornerItem.cs" />
+    <Compile Include="View\DragAdornerToolboxItem.cs" />
     <Compile Include="View\ItemFilter.xaml.cs">
       <DependentUpon>ItemFilter.xaml</DependentUpon>
     </Compile>
@@ -106,7 +107,6 @@
     <Compile Include="ViewModel\ImportExcel.cs" />
     <Compile Include="ViewModel\ItemFilterViewModel.cs" />
     <Compile Include="ViewModel\WorkspaceViewModel.cs" />
-    <Compile Include="View\DataGridExtensions.cs" />
     <Compile Include="View\GridExtensions.cs" />
     <Compile Include="View\Group.xaml.cs">
       <DependentUpon>Group.xaml</DependentUpon>

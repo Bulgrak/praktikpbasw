@@ -48,7 +48,7 @@ namespace TreatPraktik.View
                     //    groupType.Add(gto.Group);
                     //}
                     Group ucGroup = new Group();
-                    ucGroup.groups = pt.Groups;
+                    ucGroup.Groups = pt.Groups;
                     ucGroup.CreateGroupTables();
                     ti.Content = ucGroup;
 
