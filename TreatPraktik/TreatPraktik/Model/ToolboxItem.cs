@@ -12,7 +12,7 @@ namespace TreatPraktik.Model
         public string ResourceID { get; set; }
         public string ResxID { get; set; }
         public string ResourceType { get; set; }
-        public string header { get; set; }
+        private string header { get; set; }
         public string ToolTip { get; set; }
         public string Category { get; set; }
         private string languageID { get; set; }
@@ -23,7 +23,6 @@ namespace TreatPraktik.Model
         {
 
         }
-
 
         #region INotifyPropertyChanged
 

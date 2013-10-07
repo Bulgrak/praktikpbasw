@@ -1,22 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Data;
 using System.Linq;
-using System.Text;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using TreatPraktik.Model;
 using TreatPraktik.Model.WorkspaceObjects;
-using TreatPraktik.ViewModel;
 
 namespace TreatPraktik.View
 {
@@ -25,7 +19,8 @@ namespace TreatPraktik.View
     /// </summary>
     public partial class Group : UserControl
     {
-        public ObservableCollection<GroupTypeOrder> groups { get; set; }
+        public ObservableCollection<GroupTypeOrder> Groups { get; set; }
+        public bool DisableDrop { get; set; }
 
         public Group()
         {
@@ -34,11 +29,10 @@ namespace TreatPraktik.View
 
         public void CreateGroupTables()
         {
-            for (int i = 0; i < groups.Count; i++)
+            for (int i = 0; i < Groups.Count; i++)
             {
-                GroupType gt = groups[i].Group;
-                Grid gridGroup = new Grid();
-                gridGroup.DataContext = groups[i];
+                GroupType gt = Groups[i].Group;
+                Grid gridGroup = new Grid { DataContext = Groups[i] };
 
                 PopulateGroupTable(gt, gridGroup);
 
@@ -47,68 +41,67 @@ namespace TreatPraktik.View
                 Grid.SetRow(gridGroup, i);
                 Grid.SetColumn(gridGroup, 1);
                 myGrid.Children.Add(gridGroup);
-                TextBlock tbGroupNumber = new TextBlock();
+                TextBlock tbGroupNumber = new TextBlock
+                {
+                    DataContext = Groups[i],
+                    FontSize = 18,
+                    FontWeight = FontWeights.ExtraBold,
+                    Foreground = Brushes.LightSlateGray
+                };
+                tbGroupNumber.SetBinding(TextBlock.TextProperty, "GroupOrder");
                 Grid.SetRow(tbGroupNumber, i);
                 Grid.SetColumn(tbGroupNumber, 0);
-                tbGroupNumber.DataContext = groups[i];
-                tbGroupNumber.SetBinding(TextBlock.TextProperty, "GroupOrder");
-
-                //tbGroupNumber.Text = Convert.ToString(gt.GroupOrder);
-                tbGroupNumber.FontSize = 18;
-                tbGroupNumber.FontWeight = FontWeights.ExtraBold;
-                tbGroupNumber.Foreground = Brushes.LightSlateGray;
-
-
-
                 myGrid.Children.Add(tbGroupNumber);
 
-                //Create stackpanel
-                Button btnGroupMoveUp = new Button();
-                btnGroupMoveUp.Name = "btnGroupMoveUp";
-                btnGroupMoveUp.Height = 17;
-                btnGroupMoveUp.Width = 17;
-                var uriSource = new Uri(@"/TreatPraktik;component/Ressources/Arrow-up.ico", UriKind.Relative);
-                BitmapImage logo = new BitmapImage();
-                Image img = new Image();
-                img.Source = new BitmapImage(uriSource);
-                //btnGroupMoveUp.Content = "Up";
-                btnGroupMoveUp.Content = img;
+                var uriSourceGroupMoveUpIcon = new Uri(@"/TreatPraktik;component/Ressources/Arrow-up.ico", UriKind.Relative);
+                Image imgBtnGroupMoveUpIcon = new Image { Source = new BitmapImage(uriSourceGroupMoveUpIcon) };
+                Button btnGroupMoveUp = new Button
+                {
+                    Name = "btnGroupMoveUp",
+                    Height = 17,
+                    Width = 17,
+                    Content = imgBtnGroupMoveUpIcon,
+                    FontSize = 9,
+                    DataContext = gridGroup
+                };
+
                 btnGroupMoveUp.Click += btnGroupMoveUp_Click;
-                btnGroupMoveUp.FontSize = 9;
-                btnGroupMoveUp.DataContext = gridGroup; //i = rowNo
+
                 if (i == 0)
                 {
                     btnGroupMoveUp.IsEnabled = false;
                 }
-                Button btnGroupMoveDown = new Button();
-                btnGroupMoveDown.Name = "btnGroupMoveDown";
-                btnGroupMoveDown.Height = 17;
-                btnGroupMoveDown.Width = 17;
-                var uriSource2 = new Uri(@"/TreatPraktik;component/Ressources/Arrow-down.ico", UriKind.Relative);
-                BitmapImage logo2 = new BitmapImage();
-                Image img2 = new Image();
-                img2.Source = new BitmapImage(uriSource2);
-                //btnGroupMoveDown.Content = "Down";
-                btnGroupMoveDown.Content = img2;
+
+                var uriSourceGroupMoveDownIcon = new Uri(@"/TreatPraktik;component/Ressources/Arrow-down.ico", UriKind.Relative);
+                Image imgBtnGroupMoveDownIcon = new Image { Source = new BitmapImage(uriSourceGroupMoveDownIcon) };
+
+                Button btnGroupMoveDown = new Button
+                {
+                    Name = "btnGroupMoveDown",
+                    Height = 17,
+                    Width = 17,
+                    Content = imgBtnGroupMoveDownIcon,
+                    DataContext = gridGroup,
+                    FontSize = 9
+                };
                 btnGroupMoveDown.Click += btnGroupMoveDown_Click;
-                btnGroupMoveDown.FontSize = 9;
-                btnGroupMoveDown.DataContext = gridGroup; //i == rowNo
-                if (i == groups.Count - 1)
+
+                if (i == Groups.Count - 1)
                 {
                     btnGroupMoveDown.IsEnabled = false;
                 }
-                StackPanel sp = new StackPanel();
-                sp.Name = "spBtnUpDown";
-                Grid.SetRow(sp, i);
-                Grid.SetColumn(sp, 0);
-                sp.Orientation = Orientation.Vertical;
-                sp.HorizontalAlignment = HorizontalAlignment.Left;
-                sp.VerticalAlignment = VerticalAlignment.Bottom;
-                //sp.Margin = new Thickness(0, 0, 10, 0);
+                StackPanel sp = new StackPanel
+                {
+                    Name = "spBtnUpDown",
+                    Orientation = Orientation.Vertical,
+                    HorizontalAlignment = HorizontalAlignment.Left,
+                    VerticalAlignment = VerticalAlignment.Bottom
+                };
+
                 sp.Children.Add(btnGroupMoveUp);
                 sp.Children.Add(btnGroupMoveDown);
-                //End create stackpanel
-
+                Grid.SetRow(sp, i);
+                Grid.SetColumn(sp, 0);
                 myGrid.Children.Add(sp);
 
             }
@@ -120,19 +113,13 @@ namespace TreatPraktik.View
             StackPanel sp = (StackPanel)btn.Parent;
             Grid gridGroup = (Grid)btn.DataContext;
             int row = Grid.GetRow(sp);
-            //Grid.SetRow(gridGroup, row + 1);
-            List<UIElement> uieListMoveDown = myGrid.GetGridCellChildrenListByRow(row);
-            List<UIElement> uieListMoveUp = myGrid.GetGridCellChildrenListByRow(row + 1);
+            List<UIElement> uieListMoveDown = myGrid.GetAllGridCellChildrenListByRow(row);
+            List<UIElement> uieListMoveUp = myGrid.GetAllGridCellChildrenListByRow(row + 1);
             MoveGroupUp(uieListMoveUp, row);
             MoveGroupDown(uieListMoveDown, row);
-
-
-            //UIElementCollection test = myGrid.Children;
-            //int i = 0;
-            //throw new NotImplementedException();
         }
 
-        void MoveGroupUp(List<UIElement> uieListMoveUp, int row)
+        void MoveGroupUp(IList<UIElement> uieListMoveUp, int row)
         {
             foreach (UIElement uie in uieListMoveUp)
             {
@@ -140,9 +127,7 @@ namespace TreatPraktik.View
             }
             TextBlock tb = (TextBlock)uieListMoveUp[0];
             GroupTypeOrder gt = (GroupTypeOrder)tb.DataContext;
-            //int groupNumber = Convert.ToInt32(gt.GroupOrder);
             gt.GroupOrder--;
-            //gt.GroupOrder =
             StackPanel sp = (StackPanel)uieListMoveUp[1];
             Button btnUp = (Button)sp.Children[0];
             Button btnDown = (Button)sp.Children[1];
@@ -160,7 +145,7 @@ namespace TreatPraktik.View
 
 
 
-        void MoveGroupDown(List<UIElement> uieListMoveDown, int row)
+        void MoveGroupDown(IList<UIElement> uieListMoveDown, int row)
         {
             foreach (UIElement uie in uieListMoveDown)
             {
@@ -168,17 +153,14 @@ namespace TreatPraktik.View
             }
             TextBlock tb = (TextBlock)uieListMoveDown[0];
             GroupTypeOrder gt = (GroupTypeOrder)tb.DataContext;
-            //int groupNumber = Convert.ToInt32(gt.GroupOrder);
             gt.GroupOrder++;
 
             StackPanel sp = (StackPanel)uieListMoveDown[1];
             Button btnDown = (Button)sp.Children[1];
             Button btnUp = (Button)sp.Children[0];
-            if (gt.GroupOrder == groups.Count)
+            if (gt.GroupOrder == Groups.Count)
             {
-
                 btnDown.IsEnabled = false;
-               
             }
             else
             {
@@ -191,15 +173,11 @@ namespace TreatPraktik.View
         {
             Button btn = sender as Button;
             StackPanel sp = (StackPanel)btn.Parent;
-            Grid gridGroup = (Grid)btn.DataContext;
             int row = Grid.GetRow(sp);
-            //Grid.SetRow(gridGroup, row + 1);
-            List<UIElement> uieListMoveDown = myGrid.GetGridCellChildrenListByRow(row - 1);
-            List<UIElement> uieListMoveUp = myGrid.GetGridCellChildrenListByRow(row);
+            List<UIElement> uieListMoveDown = myGrid.GetAllGridCellChildrenListByRow(row - 1);
+            List<UIElement> uieListMoveUp = myGrid.GetAllGridCellChildrenListByRow(row);
             MoveGroupUp(uieListMoveUp, row - 1);
             MoveGroupDown(uieListMoveDown, row - 1);
-            
-            
         }
 
         public void PopulateGroupTable(GroupType gt, Grid groupTable)
@@ -208,7 +186,6 @@ namespace TreatPraktik.View
             int counterRow = 0;
             int counterColumn = 0;
             AddNewGroupRow(groupTable);
-            TextBlock groupHeaderName = new TextBlock();
             InsertGroupItem(groupTable, gt, 0, 0, false);
             int skipped = 0;
             for (int j = 0; j < gt.Items.Count - skipped; j++)
@@ -276,8 +253,6 @@ namespace TreatPraktik.View
             }
         }
 
-
-
         public GroupType GetGroupType(Grid grid)
         {
             Border b = (Border)grid.GetCellChild(0, 0);
@@ -290,10 +265,9 @@ namespace TreatPraktik.View
         {
             List<ItemType> itemTypeList = new List<ItemType>();
             int i = 1;
-            int j = 0;
             while (i < groupTable.RowDefinitions.Count)
             {
-                j = 0;
+                int j = 0;
                 while (j < groupTable.ColumnDefinitions.Count)
                 {
                     Border b = (Border)groupTable.GetCellChild(i, j);
@@ -377,26 +351,9 @@ namespace TreatPraktik.View
             ItemType itemType = new ItemType();
             tb.DataContext = itemType;
 
-            //if (CheckForEmptyRow(groupTable, row))
-            //{
-            //    if (row != 1)
-            //    {
-            //        ClearNewRowItems(groupTable, row - 1);
-            //    }
-            //    ClearNewRowItems(groupTable, row);
-            //    groupTable.RemoveRow(row);
 
-            //}
-            //else
-            //{
-            //    if(!itToBeDeleted.DesignID.Equals("197"))
-            //    CheckForEmptyFields(groupTable, row);
-            //}
             List<ItemType> itemTypeList = GetItemTypes(groupTable);
-            //groupTable.RemoveRow(row);
-            //////////////
             bool stopCounting = false;
-            // CheckRow(grid, row - 1);
 
             while (i < itemTypeList.Count && !stopCounting)
             {
@@ -419,24 +376,13 @@ namespace TreatPraktik.View
             int n = 1;
             while (n < groupTable.RowDefinitions.Count - 2)
             {
-                //CheckRow(groupTable, n, false);
                 n++;
             }
             if (itToBeDeleted.DesignID.Equals("198"))
             {
-                //CheckForEmptyFields(groupTable, row);
-                //CheckRow(groupTable, row, false);
                 if (row == groupTable.RowDefinitions.Count - 2)
                     ClearNewRowItems(groupTable, groupTable.RowDefinitions.Count - 2);
             }
-            //CheckForEmptyFields(groupTable, row);
-            //CheckRow(groupTable, row -1, true);
-            //n = 1;
-            //while (n < groupTable.RowDefinitions.Count - 2)
-            //{
-            //    CheckRow(groupTable, n, false);
-            //    n++;
-            //}
             DisableAllowDropByNewLineItem(groupTable);
         }
 
@@ -445,7 +391,6 @@ namespace TreatPraktik.View
 
             List<ItemType> itemTypeListCheck = GetItemsByRow(groupTable, row);
             int i = 0;
-            bool cleared = false;
             while (i < itemTypeListCheck.Count)
             {
                 ItemType it = itemTypeListCheck[i];
@@ -454,7 +399,6 @@ namespace TreatPraktik.View
                     it.DesignID = null;
                     it.Header = null;
                     it.ItemOrder = 0;
-                    cleared = true;
                 }
                 i++;
             }
@@ -478,85 +422,6 @@ namespace TreatPraktik.View
             return itemTypeListCheck;
         }
 
-        private void CheckForEmptyFields(Grid groupTable, int row)
-        {
-            List<ItemType> itemTypeListCheck = GetItemsByRow(groupTable, row);
-            bool deleteEmptyField = true;
-            int i = itemTypeListCheck.Count - 1;
-            while (i >= 0)
-            {
-                string designID = itemTypeListCheck[i].DesignID;
-                //if (itemTypeListCheck[3].DesignID != null && !itemTypeListCheck[3].DesignID.Equals("198"))
-                //{
-                //    deleteEmptyField = false;
-                //}
-                if (designID != null && designID.Equals("198"))
-                {
-                    deleteEmptyField = false;
-                }
-
-                if (deleteEmptyField && designID != null && designID.Equals("197"))
-                {
-                    itemTypeListCheck[i].DesignID = null;
-                    itemTypeListCheck[i].Header = null;
-                }
-                i--;
-            }
-        }
-
-
-        //private bool CheckForEmptyRow(Grid groupTable, int row)
-        //{
-        //    List<ItemType> itemTypeList = GetItemsByRow(groupTable, row);
-        //    int i = 0;
-        //    bool isEmpty = true;
-        //    while (i < itemTypeList.Count && isEmpty)
-        //    {
-        //        string designID = itemTypeList[i].DesignID;
-        //        if (designID == null || designID.Equals("198") || designID.Equals("197"))
-        //            i++;
-        //        else
-        //            isEmpty = false;
-        //    }
-        //    return isEmpty;
-        //}
-
-        private void CheckRow(Grid groupTable, int row, bool addEmptyFieldsOnly)
-        {
-            List<ItemType> itemTypeListCheck = GetItemsByRow(groupTable, row);
-            bool addNewRowItem = true;
-            int i = itemTypeListCheck.Count - 1;
-            while (i >= 0)
-            {
-                string designID = itemTypeListCheck[i].DesignID;
-                if (itemTypeListCheck[3].DesignID != null && !itemTypeListCheck[3].DesignID.Equals("198"))
-                {
-                    addNewRowItem = false;
-                }
-                if (designID != null && designID.Equals("198"))
-                {
-                    addNewRowItem = false;
-                }
-
-                if (addNewRowItem && designID != null && !designID.Equals("197"))
-                {
-                    if (!addEmptyFieldsOnly)
-                    {
-                        itemTypeListCheck[i + 1].DesignID = "198";
-                        itemTypeListCheck[i + 1].Header = "<NewRowItem>";
-                    }
-                    addNewRowItem = false;
-                }
-
-                if (!addNewRowItem && designID == null)
-                {
-                    itemTypeListCheck[i].DesignID = "197";
-                    itemTypeListCheck[i].Header = "<EmptyFieldItem>";
-                }
-                i--;
-            }
-        }
-
         private bool CheckForNewLineItem(Grid groupTable, int row)
         {
             List<ItemType> itemTypeListCheck = GetItemsByRow(groupTable, row);
@@ -573,53 +438,6 @@ namespace TreatPraktik.View
             }
             return newLineItemFound;
         }
-
-        //private void GenerateEmptyFields(Grid groupTable, int row, bool wholeRow)
-        //{
-        //    List<ItemType> itemTypeListCheck = GetItemsByRow(groupTable, row);
-        //    bool newLineItemExist = CheckForNewLineItem(groupTable, row);
-        //    bool addEmptyfields = false;
-        //    int i = itemTypeListCheck.Count - 1;
-
-        //    while (i >= 0)
-        //    {
-        //        string designID = itemTypeListCheck[i].DesignID;
-
-        //        if (newLineItemExist && !wholeRow)
-        //        {
-        //            addEmptyfields = false;
-        //        }
-
-        //        if (newLineItemExist && designID != null && itemTypeListCheck[i].DesignID.Equals("198") && !wholeRow)
-        //        {
-        //            addEmptyfields = true;
-        //            newLineItemExist = false;
-        //            wholeRow = false;
-        //        }
-
-        //        if (!newLineItemExist && !addEmptyfields && designID != null && !wholeRow)
-        //        {
-        //            addEmptyfields = true;
-        //        }
-
-        //        if (addEmptyfields && designID == null && !wholeRow)
-        //        {
-        //            itemTypeListCheck[i].DesignID = "197";
-        //            itemTypeListCheck[i].Header = "<EmptyField>";
-        //        }
-
-        //        if (wholeRow && designID == null && !newLineItemExist)
-        //        {
-        //            itemTypeListCheck[i].DesignID = "197";
-        //            itemTypeListCheck[i].Header = "<EmptyField>";
-        //        }
-
-
-        //        i--;
-        //    }
-        //}
-
-
 
         private void GenerateEmptyFields(Grid groupTable, int row, bool wholeRow)
         {
@@ -674,7 +492,6 @@ namespace TreatPraktik.View
         }
 
 
-
         private void AddNewGroupRow(Grid grid)
         {
             RowDefinition rd = new RowDefinition();
@@ -700,9 +517,7 @@ namespace TreatPraktik.View
         private Border CreateGroupCell(Color borderBrush, Color background)
         {
             Border border = CreateBorderContainer(borderBrush, background);
-            TextBlock tb = new TextBlock();
-            tb.FontWeight = FontWeights.Bold;
-            tb.FontSize = 14.0;
+            TextBlock tb = new TextBlock { FontWeight = FontWeights.Bold, FontSize = 14.0 };
             border.Child = tb;
             return border;
         }
@@ -717,11 +532,13 @@ namespace TreatPraktik.View
             border.DragEnter += border_DragEnter;
             border.DragLeave += border_DragLeave;
             border.DragOver += border_DragOver;
-            TextBlock tb = new TextBlock();
-            tb.FontSize = 14.0;
-            tb.HorizontalAlignment = HorizontalAlignment.Stretch;
-            tb.VerticalAlignment = VerticalAlignment.Stretch;
-            tb.DataContext = itemType;
+            TextBlock tb = new TextBlock
+            {
+                FontSize = 14.0,
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                VerticalAlignment = VerticalAlignment.Stretch,
+                DataContext = itemType
+            };
             tb.SetBinding(TextBlock.TextProperty, "Header");
 
             Grid gridCell = new Grid();
@@ -737,51 +554,106 @@ namespace TreatPraktik.View
 
         void border_DragLeave(object sender, DragEventArgs e)
         {
+
             CheckDroppedItem(sender, e); //prevents cursor from flickering when dropping an item
+            e.Handled = true;
         }
 
         void border_DragEnter(object sender, DragEventArgs e)
         {
+
             CheckDroppedItem(sender, e); //prevents cursor from flickering when dropping an item
+            e.Handled = true;
         }
 
         void border_DragOver(object sender, DragEventArgs e)
         {
+
             CheckDroppedItem(sender, e); //prevents cursor from flickering when dropping an item
+            e.Handled = true;
         }
 
         void CheckDroppedItem(object sender, DragEventArgs e)
         {
-            TextBlock tb = null;
-            Grid gridCell = null;
-            if (e.Source is Border)
+            if (e.Data.GetData("System.Windows.Controls.ListBoxItem") is ListBoxItem)
             {
-                Border target = e.Source as Border;
-                gridCell = (Grid)target.Child;
-                tb = (TextBlock)gridCell.Children[1];
-            }
-            else
-            {
-                tb = e.Source as TextBlock;
-                gridCell = (Grid)tb.Parent;
-            }
-            ListBoxItem lbi = e.Data.GetData("System.Windows.Controls.ListBoxItem") as ListBoxItem;
-            ListBoxItem draggedItem = e.Data.GetData("System.Windows.Controls.ListBoxItem") as ListBoxItem;
-            ToolboxItem tbi = (ToolboxItem)lbi.Content;
+                TextBlock tb = null;
+                Grid gridCell = null;
+                if (e.Source is Border)
+                {
+                    Border target = e.Source as Border;
+                    gridCell = (Grid)target.Child;
+                    tb = (TextBlock)gridCell.Children[1];
+                }
+                else
+                {
+                    tb = e.Source as TextBlock;
+                    gridCell = (Grid)tb.Parent;
+                }
+                ListBoxItem lbi = e.Data.GetData("System.Windows.Controls.ListBoxItem") as ListBoxItem;
+                ListBoxItem draggedItem = e.Data.GetData("System.Windows.Controls.ListBoxItem") as ListBoxItem;
+                ToolboxItem tbi = (ToolboxItem)lbi.Content;
 
-            ItemType itToBeMoved = (ItemType)tb.DataContext;
-            int designID = Convert.ToInt32(itToBeMoved.DesignID);
-            Border borderCell = (Border)gridCell.Parent;
-            int row = Grid.GetRow(borderCell);
-            Grid grid = (Grid)borderCell.Parent;
-            bool containsRow = CheckForNewLineItem(grid, row);
-            if (tbi.DesignID.Equals("198") && containsRow)
-            {
-                e.Effects = DragDropEffects.None;
+                ItemType itToBeMoved = (ItemType)tb.DataContext;
+                int designID = Convert.ToInt32(itToBeMoved.DesignID);
+                Border borderCell = (Border)gridCell.Parent;
+                int row = Grid.GetRow(borderCell);
+                Grid grid = (Grid)borderCell.Parent;
+                bool containsRow = CheckForNewLineItem(grid, row);
+                if (tbi.DesignID.Equals("198") && containsRow)
+                {
+                    e.Effects = DragDropEffects.None;
+
+                }
+                else
+                {
+                    e.Effects = DragDropEffects.Copy;
+                }
             }
-            else
+            if (e.Data.GetData("System.Windows.Controls.Border") is Border)
             {
-                e.Effects = DragDropEffects.Copy;
+                TextBlock tb = null;
+                Grid gridCell = null;
+                Grid groupTable = null;
+                Border borderCell = null;
+                ItemType it = null;
+                int row = 0;
+                if (e.Source is Border)
+                {
+                    borderCell = e.Source as Border;
+
+                    groupTable = (Grid)borderCell.Parent;
+                    gridCell = (Grid)borderCell.Child;
+                    tb = (TextBlock)gridCell.Children[1];
+                }
+                else
+                {
+                    tb = e.Source as TextBlock;
+                    gridCell = (Grid)tb.Parent;
+                    borderCell = (Border)gridCell.Parent;
+                    groupTable = (Grid)borderCell.Parent;
+                }
+                row = Grid.GetRow(borderCell);
+                Border draggedBorderCell = (Border)e.Data.GetData("System.Windows.Controls.Border");
+                Grid draggedGridCell = (Grid)draggedBorderCell.Child;
+                TextBlock draggedTextBlock = (TextBlock)draggedGridCell.Children[1];
+                int draggedItemRow = Grid.GetRow(draggedBorderCell);
+
+                it = (ItemType)draggedTextBlock.DataContext;
+
+
+
+                bool containsRow = CheckForNewLineItem(groupTable, row);
+                if (it.DesignID.Equals("198") && containsRow && draggedItemRow != row)
+                {
+                    DisableDrop = true;
+                    e.Effects = DragDropEffects.None;
+                }
+                else
+                {
+                    DisableDrop = false;
+                    e.Effects = DragDropEffects.Move;
+                }
             }
         }
 
@@ -812,79 +684,139 @@ namespace TreatPraktik.View
                 Grid grid = (Grid)borderCell.Parent;
                 GroupTypeOrder gto = (GroupTypeOrder)grid.DataContext;
                 GroupType gt = gto.Group;
-                bool containsRow = CheckForNewLineItem(grid, row);
-                //if (designID == 198 && !containsRow)
-                //{
+                if (designID != 0)
+                {
+                    ItemType newItemType = new ItemType();
+                    newItemType.DesignID = tbi.DesignID;
+                    newItemType.Header = tbi.Header;
+                    newItemType.ItemOrder = itToBeMoved.ItemOrder;
+                    newItemType.DanishTranslationText = tbi.DanishTranslationText;
+                    newItemType.EnglishTranslationText = tbi.EnglishTranslationText;
+                    newItemType.LanguageID = tbi.LanguageID;
+                    newItemType.GroupTypeID = gt.GroupTypeID;
+                    newItemType.IncludedTypeID = "1";
 
-                //}
-                //else
-                //{
-                    if (designID != 0 /*&& designID != 197*/)
+                    List<ItemType> itemTypeList = GetItemTypes(grid);
+                    int startPosition = itemTypeList.IndexOf(itToBeMoved);
+                    MoveItemsForward(startPosition, itemTypeList, grid, newItemType, gt);
+                    DisableAllowDropByNewLineItem(grid);
+                    grid.ClearGrid();
+                    PopulateGroupTable(gt, grid);
+                }
+                else
+                {
+                    itToBeMoved.DesignID = tbi.DesignID;
+                    itToBeMoved.Header = tbi.Header;
+                    itToBeMoved.DanishTranslationText = tbi.DanishTranslationText;
+                    itToBeMoved.EnglishTranslationText = tbi.EnglishTranslationText;
+                    itToBeMoved.LanguageID = tbi.LanguageID;
+                    itToBeMoved.GroupTypeID = gt.GroupTypeID;
+                    itToBeMoved.IncludedTypeID = "1";
+                    if (row == grid.RowDefinitions.Count - 1)
                     {
-                        ItemType newItemType = new ItemType();
-                        newItemType.DesignID = tbi.DesignID;
-                        newItemType.Header = tbi.Header;
-                        newItemType.ItemOrder = itToBeMoved.ItemOrder;
-                        newItemType.DanishTranslationText = tbi.DanishTranslationText;
-                        newItemType.EnglishTranslationText = tbi.EnglishTranslationText;
-                        newItemType.LanguageID = tbi.LanguageID;
-                        newItemType.GroupTypeID = gt.GroupTypeID;
-                        newItemType.IncludedTypeID = "1";
-
-                        List<ItemType> itemTypeList = GetItemTypes(grid);
-                        int startPosition = itemTypeList.IndexOf(itToBeMoved);
-                        moveItemsForward(startPosition, itemTypeList, grid, newItemType, gt);
+                        GenerateEmptyFields(grid, row, false);
+                        if (grid.RowDefinitions.Count != 2)
+                        {
+                            GenerateEmptyFields(grid, row - 1, true);
+                        }
+                        AddNewEmptyItemRow(grid);
+                    }
+                    if (row + 1 == grid.RowDefinitions.Count - 1)
+                    {
+                        GenerateEmptyFields(grid, row, false);
+                        if (grid.RowDefinitions.Count != 3)
+                        {
+                            GenerateEmptyFields(grid, row - 1, true);
+                        }
+                    }
+                    if (tbi.DesignID.Equals("198"))
+                    {
                         DisableAllowDropByNewLineItem(grid);
                     }
-                    else
-                    {
-                        itToBeMoved.DesignID = tbi.DesignID;
-                        itToBeMoved.Header = tbi.Header;
-                        itToBeMoved.DanishTranslationText = tbi.DanishTranslationText;
-                        itToBeMoved.EnglishTranslationText = tbi.EnglishTranslationText;
-                        itToBeMoved.LanguageID = tbi.LanguageID;
-                        itToBeMoved.GroupTypeID = gt.GroupTypeID;
-                        itToBeMoved.IncludedTypeID = "1";
-                        Border bTarget = (Border)gridCell.Parent;
-                        int col = Grid.GetColumn(bTarget);
-                        if (row == grid.RowDefinitions.Count - 1)
-                        {
-                            GenerateEmptyFields(grid, row, false);
-                            if (grid.RowDefinitions.Count != 2)
-                            {
-                                GenerateEmptyFields(grid, row - 1, true);
-                            }
-                            AddNewEmptyItemRow(grid);
-                        }
-                        if (row + 1 == grid.RowDefinitions.Count - 1)
-                        {
-                            GenerateEmptyFields(grid, row, false);
-                            if (grid.RowDefinitions.Count != 3)
-                            {
-                                GenerateEmptyFields(grid, row - 1, true);
-                            }
-                        }
-                        if (tbi.DesignID.Equals("198"))
-                        {
-                            int startColumnPosition = Grid.GetColumn(borderCell);
-                            //DisableAllowDrop(startColumnPosition, row, grid);
-                            DisableAllowDropByNewLineItem(grid);
-                        }
-                        gt.Items.Add(itToBeMoved);
-                    }
-                //}
+                    gt.Items.Add(itToBeMoved);
+                    grid.ClearGrid();
+                    PopulateGroupTable(gt, grid);
+
+                }
+            }
+            if (e.Data.GetData("System.Windows.Controls.Border") is Border) //drag and drop mellem items
+            {
+                //dragged item
+                Border target = null;
+                Grid gridCell = null;
+                TextBlock tb = null;
+                ItemType it = null;
+                if (e.Source is Border)
+                {
+                    target = e.Source as Border;
+                    gridCell = (Grid)target.Child;
+                    tb = (TextBlock)gridCell.Children[1];
+                    it = (ItemType)tb.DataContext;
+                }
+                else
+                {
+                    tb = e.Source as TextBlock;
+                    it = (ItemType)tb.DataContext;
+                }
+
+                //item that will switch place with dragged item
+
+
+                Border target2 = e.Data.GetData("System.Windows.Controls.Border") as Border;
+                Grid gridCell2 = (Grid)target2.Child;
+                TextBlock tb2 = (TextBlock)gridCell2.Children[1];
+                ItemType it2 = (ItemType)tb2.DataContext;
+                Grid groupTable = (Grid) target2.Parent;
+
+
+                double draggedItemTypeNo = it.ItemOrder;
+                double itemTypeSwitch = it2.ItemOrder;
+
+                //Switch items
+                it.ItemOrder = itemTypeSwitch;
+                it2.ItemOrder = draggedItemTypeNo;
+
+                tb.DataContext = it2;
+                tb2.DataContext = it;
+                if (it2.DesignID.Equals("198"))
+                {
+                    DisableAllowDropByNewLineItem(groupTable);
+                }
+                GroupType gt = GetGroupType(groupTable);
+              //  groupTable.ClearGrid();
+              //  PopulateGroupTable(gt, groupTable);
             }
         }
 
-
         void DisableAllowDrop(int startColumnPosition, int row, Grid groupTable)
         {
-
             int i = startColumnPosition + 1;
             while (i < groupTable.ColumnDefinitions.Count)
             {
                 Border borderCell = (Border)groupTable.GetCellChild(row, i);
                 borderCell.AllowDrop = false;
+                i++;
+            }
+        }
+
+        void DisableAllowDropNewLine(int startColumnPosition, int row, Grid groupTable)
+        {
+            int i = startColumnPosition;
+            while (i < groupTable.ColumnDefinitions.Count)
+            {
+                Border borderCell = (Border)groupTable.GetCellChild(row, i);
+                borderCell.AllowDrop = false;
+                i++;
+            }
+        }
+
+        void EnableAllowDropNewLine(int startColumnPosition, int row, Grid groupTable)
+        {
+            int i = startColumnPosition;
+            while (i < groupTable.ColumnDefinitions.Count)
+            {
+                Border borderCell = (Border)groupTable.GetCellChild(row, i);
+                borderCell.AllowDrop = true;
                 i++;
             }
         }
@@ -910,7 +842,6 @@ namespace TreatPraktik.View
                     }
                 }
 
-
                 while (i < groupTable.ColumnDefinitions.Count && found)
                 {
                     Border borderCell = (Border)groupTable.GetCellChild(row, i);
@@ -921,17 +852,10 @@ namespace TreatPraktik.View
             }
         }
 
-        void moveItemsForward(int startPosition, List<ItemType> itemTypeList, Grid grid, ItemType newItemType, GroupType gt)
+        void MoveItemsForward(int startPosition, List<ItemType> itemTypeList, Grid grid, ItemType newItemType, GroupType gt)
         {
-
             bool stopCounting = false;
             int i = startPosition;
-            int n = 0;
-            while (n < grid.RowDefinitions.Count - 1)
-            {
-                //CheckRow(grid, row, false);
-                n++;
-            }
             while (i < itemTypeList.Count && !stopCounting)
             {
                 if (itemTypeList[i].DesignID.Equals("198"))
@@ -991,31 +915,119 @@ namespace TreatPraktik.View
 
         public Border CreateBorderContainer(Color borderBrush, Color background)
         {
-            Border border = new Border();
-            border.BorderBrush = new SolidColorBrush(borderBrush);
-            border.Background = new SolidColorBrush(background);
-            border.BorderThickness = new Thickness(1);
-            border.Height = 27.0;
-            border.MaxHeight = 27.0;
-            border.HorizontalAlignment = HorizontalAlignment.Stretch;
+            Border border = new Border
+            {
+                BorderBrush = new SolidColorBrush(borderBrush),
+                Background = new SolidColorBrush(background),
+                BorderThickness = new Thickness(1),
+                Height = 27.0,
+                MaxHeight = 27.0,
+                HorizontalAlignment = HorizontalAlignment.Stretch
+            };
+            border.MouseMove += border_MouseMove;
+            border.GiveFeedback += border_GiveFeedback;
             return border;
+        }
+
+        void border_GiveFeedback(object sender, GiveFeedbackEventArgs e)
+        {
+            if (adorner != null)
+            {
+                Border lbl = sender as Border;
+                var pos = lbl.PointFromScreen(GetMousePosition());
+                adorner.UpdatePosition(pos);
+                //e.Handled = true;
+            }
+        }
+
+        void border_MouseMove(object sender, MouseEventArgs e)
+        {
+            Point current = e.GetPosition(this);
+            if (sender is Border && e.LeftButton == MouseButtonState.Pressed)
+            {
+
+                Border draggedItem = sender as Border;
+                if (!(draggedItem.Child is TextBlock)) //Prevent dragging if GroupType
+                {
+                    Grid groupTable = (Grid) draggedItem.Parent;
+                    Grid gridCell = (Grid)draggedItem.Child;
+                    TextBlock tb = (TextBlock)gridCell.Children[1];
+                    ItemType it = (ItemType)tb.DataContext;
+                    if (it.Header != null)
+                    {
+                        adorner = new DragAdornerItem(draggedItem, e.GetPosition(draggedItem));
+                        AdornerLayer.GetAdornerLayer(this).Add(adorner);
+                        if (it.DesignID.Equals("198"))
+                        {
+                            int row = Grid.GetRow(draggedItem);
+                            EnableAllowDropNewLine(0, row, groupTable);
+                        }
+                        //Border targetBorderCell = null;
+                        //if (e.Source is Border)
+                        //{
+                        //    targetBorderCell = e.Source as Border;
+                        //}
+                        //if (e.Source is TextBlock)
+                        //{
+                        //    TextBlock targetTb = e.Source as TextBlock;
+                        //    Grid targetGridCell = (Grid)targetTb.Parent;
+                        //    targetBorderCell = (Border)targetGridCell.Parent;
+                        //}
+                        //Grid groupTable = (Grid)targetBorderCell.Parent;
+                        //int row = Grid.GetRow(targetBorderCell);
+
+                        DragDrop.DoDragDrop(draggedItem, draggedItem, DragDropEffects.None | DragDropEffects.Move);
+                        //if (DisableDrop)
+                        //{
+                        //    DragDrop.DoDragDrop(draggedItem, draggedItem, DragDropEffects.None);
+                        //}
+                        AdornerLayer.GetAdornerLayer(this).Remove(adorner);
+                    }
+                }
+            }
+            startPoint = current;
         }
 
         public Button CreateClearCellBtn()
         {
-            Button btnClearCell = new Button();
-            btnClearCell.Width = 16.0;
-            btnClearCell.Height = 16.0;
-            btnClearCell.HorizontalAlignment = HorizontalAlignment.Right;
-            btnClearCell.VerticalAlignment = VerticalAlignment.Top;
             var uriSource = new Uri(@"/TreatPraktik;component/Ressources/Delete-icon.png", UriKind.Relative);
             BitmapImage logo = new BitmapImage();
-            Image img = new Image();
-            img.Source = new BitmapImage(uriSource);
-            btnClearCell.Content = img;
-            btnClearCell.Visibility = Visibility.Hidden;
+            Image imgRemoveIcon = new Image();
+            imgRemoveIcon.Source = new BitmapImage(uriSource);
+
+            Button btnClearCell = new Button
+            {
+                Width = 16.0,
+                Height = 16.0,
+                HorizontalAlignment = HorizontalAlignment.Right,
+                VerticalAlignment = VerticalAlignment.Top,
+                Content = imgRemoveIcon,
+                Visibility = Visibility.Hidden
+            };
             btnClearCell.Click += btnRemove_Click;
+
             return btnClearCell;
         }
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        internal static extern bool GetCursorPos(ref Win32Point pt);
+
+        [StructLayout(LayoutKind.Sequential)]
+        internal struct Win32Point
+        {
+            public Int32 X;
+            public Int32 Y;
+        };
+
+        public static Point GetMousePosition()
+        {
+            Win32Point w32Mouse = new Win32Point();
+            GetCursorPos(ref w32Mouse);
+            return new Point(w32Mouse.X, w32Mouse.Y);
+        }
+
+        private Point startPoint;
+        private DragAdornerItem adorner;
     }
 }
