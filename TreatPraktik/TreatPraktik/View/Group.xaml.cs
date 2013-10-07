@@ -20,6 +20,7 @@ namespace TreatPraktik.View
     public partial class Group : UserControl
     {
         public ObservableCollection<GroupTypeOrder> Groups { get; set; }
+        public bool DisableDrop { get; set; }
 
         public Group()
         {
@@ -553,17 +554,23 @@ namespace TreatPraktik.View
 
         void border_DragLeave(object sender, DragEventArgs e)
         {
+
             CheckDroppedItem(sender, e); //prevents cursor from flickering when dropping an item
+            e.Handled = true;
         }
 
         void border_DragEnter(object sender, DragEventArgs e)
         {
+
             CheckDroppedItem(sender, e); //prevents cursor from flickering when dropping an item
+            e.Handled = true;
         }
 
         void border_DragOver(object sender, DragEventArgs e)
         {
+
             CheckDroppedItem(sender, e); //prevents cursor from flickering when dropping an item
+            e.Handled = true;
         }
 
         void CheckDroppedItem(object sender, DragEventArgs e)
@@ -596,10 +603,56 @@ namespace TreatPraktik.View
                 if (tbi.DesignID.Equals("198") && containsRow)
                 {
                     e.Effects = DragDropEffects.None;
+
                 }
                 else
                 {
                     e.Effects = DragDropEffects.Copy;
+                }
+            }
+            if (e.Data.GetData("System.Windows.Controls.Border") is Border)
+            {
+                TextBlock tb = null;
+                Grid gridCell = null;
+                Grid groupTable = null;
+                Border borderCell = null;
+                ItemType it = null;
+                int row = 0;
+                if (e.Source is Border)
+                {
+                    borderCell = e.Source as Border;
+
+                    groupTable = (Grid)borderCell.Parent;
+                    gridCell = (Grid)borderCell.Child;
+                    tb = (TextBlock)gridCell.Children[1];
+                }
+                else
+                {
+                    tb = e.Source as TextBlock;
+                    gridCell = (Grid)tb.Parent;
+                    borderCell = (Border)gridCell.Parent;
+                    groupTable = (Grid)borderCell.Parent;
+                }
+                row = Grid.GetRow(borderCell);
+                Border draggedBorderCell = (Border)e.Data.GetData("System.Windows.Controls.Border");
+                Grid draggedGridCell = (Grid)draggedBorderCell.Child;
+                TextBlock draggedTextBlock = (TextBlock)draggedGridCell.Children[1];
+                int draggedItemRow = Grid.GetRow(draggedBorderCell);
+
+                it = (ItemType)draggedTextBlock.DataContext;
+
+
+
+                bool containsRow = CheckForNewLineItem(groupTable, row);
+                if (it.DesignID.Equals("198") && containsRow && draggedItemRow != row)
+                {
+                    DisableDrop = true;
+                    e.Effects = DragDropEffects.None;
+                }
+                else
+                {
+                    DisableDrop = false;
+                    e.Effects = DragDropEffects.Move;
                 }
             }
         }
@@ -647,6 +700,8 @@ namespace TreatPraktik.View
                     int startPosition = itemTypeList.IndexOf(itToBeMoved);
                     MoveItemsForward(startPosition, itemTypeList, grid, newItemType, gt);
                     DisableAllowDropByNewLineItem(grid);
+                    grid.ClearGrid();
+                    PopulateGroupTable(gt, grid);
                 }
                 else
                 {
@@ -679,6 +734,9 @@ namespace TreatPraktik.View
                         DisableAllowDropByNewLineItem(grid);
                     }
                     gt.Items.Add(itToBeMoved);
+                    grid.ClearGrid();
+                    PopulateGroupTable(gt, grid);
+
                 }
             }
             if (e.Data.GetData("System.Windows.Controls.Border") is Border) //drag and drop mellem items
@@ -690,10 +748,10 @@ namespace TreatPraktik.View
                 ItemType it = null;
                 if (e.Source is Border)
                 {
-                target = e.Source as Border;
-                gridCell = (Grid)target.Child;
-                tb = (TextBlock)gridCell.Children[1];
-                it = (ItemType)tb.DataContext;
+                    target = e.Source as Border;
+                    gridCell = (Grid)target.Child;
+                    tb = (TextBlock)gridCell.Children[1];
+                    it = (ItemType)tb.DataContext;
                 }
                 else
                 {
@@ -702,14 +760,14 @@ namespace TreatPraktik.View
                 }
 
                 //item that will switch place with dragged item
- 
 
-                    Border target2 = e.Data.GetData("System.Windows.Controls.Border") as Border;
-                    Grid gridCell2 = (Grid)target2.Child;
-                    TextBlock tb2 = (TextBlock)gridCell2.Children[1];
-                    ItemType it2 = (ItemType)tb2.DataContext;
 
-                
+                Border target2 = e.Data.GetData("System.Windows.Controls.Border") as Border;
+                Grid gridCell2 = (Grid)target2.Child;
+                TextBlock tb2 = (TextBlock)gridCell2.Children[1];
+                ItemType it2 = (ItemType)tb2.DataContext;
+                Grid groupTable = (Grid) target2.Parent;
+
 
                 double draggedItemTypeNo = it.ItemOrder;
                 double itemTypeSwitch = it2.ItemOrder;
@@ -720,6 +778,13 @@ namespace TreatPraktik.View
 
                 tb.DataContext = it2;
                 tb2.DataContext = it;
+                if (it2.DesignID.Equals("198"))
+                {
+                    DisableAllowDropByNewLineItem(groupTable);
+                }
+                GroupType gt = GetGroupType(groupTable);
+              //  groupTable.ClearGrid();
+              //  PopulateGroupTable(gt, groupTable);
             }
         }
 
@@ -730,6 +795,28 @@ namespace TreatPraktik.View
             {
                 Border borderCell = (Border)groupTable.GetCellChild(row, i);
                 borderCell.AllowDrop = false;
+                i++;
+            }
+        }
+
+        void DisableAllowDropNewLine(int startColumnPosition, int row, Grid groupTable)
+        {
+            int i = startColumnPosition;
+            while (i < groupTable.ColumnDefinitions.Count)
+            {
+                Border borderCell = (Border)groupTable.GetCellChild(row, i);
+                borderCell.AllowDrop = false;
+                i++;
+            }
+        }
+
+        void EnableAllowDropNewLine(int startColumnPosition, int row, Grid groupTable)
+        {
+            int i = startColumnPosition;
+            while (i < groupTable.ColumnDefinitions.Count)
+            {
+                Border borderCell = (Border)groupTable.GetCellChild(row, i);
+                borderCell.AllowDrop = true;
                 i++;
             }
         }
@@ -839,7 +926,6 @@ namespace TreatPraktik.View
             };
             border.MouseMove += border_MouseMove;
             border.GiveFeedback += border_GiveFeedback;
-
             return border;
         }
 
@@ -859,20 +945,42 @@ namespace TreatPraktik.View
             Point current = e.GetPosition(this);
             if (sender is Border && e.LeftButton == MouseButtonState.Pressed)
             {
-                
+
                 Border draggedItem = sender as Border;
                 if (!(draggedItem.Child is TextBlock)) //Prevent dragging if GroupType
                 {
-
+                    Grid groupTable = (Grid) draggedItem.Parent;
                     Grid gridCell = (Grid)draggedItem.Child;
                     TextBlock tb = (TextBlock)gridCell.Children[1];
                     ItemType it = (ItemType)tb.DataContext;
                     if (it.Header != null)
                     {
-                        //draggedItem.IsSelected = true;
                         adorner = new DragAdornerItem(draggedItem, e.GetPosition(draggedItem));
                         AdornerLayer.GetAdornerLayer(this).Add(adorner);
-                        DragDrop.DoDragDrop(draggedItem, draggedItem, DragDropEffects.Move);
+                        if (it.DesignID.Equals("198"))
+                        {
+                            int row = Grid.GetRow(draggedItem);
+                            EnableAllowDropNewLine(0, row, groupTable);
+                        }
+                        //Border targetBorderCell = null;
+                        //if (e.Source is Border)
+                        //{
+                        //    targetBorderCell = e.Source as Border;
+                        //}
+                        //if (e.Source is TextBlock)
+                        //{
+                        //    TextBlock targetTb = e.Source as TextBlock;
+                        //    Grid targetGridCell = (Grid)targetTb.Parent;
+                        //    targetBorderCell = (Border)targetGridCell.Parent;
+                        //}
+                        //Grid groupTable = (Grid)targetBorderCell.Parent;
+                        //int row = Grid.GetRow(targetBorderCell);
+
+                        DragDrop.DoDragDrop(draggedItem, draggedItem, DragDropEffects.None | DragDropEffects.Move);
+                        //if (DisableDrop)
+                        //{
+                        //    DragDrop.DoDragDrop(draggedItem, draggedItem, DragDropEffects.None);
+                        //}
                         AdornerLayer.GetAdornerLayer(this).Remove(adorner);
                     }
                 }
