@@ -1,12 +1,9 @@
-﻿using DocumentFormat.OpenXml;
+﻿using System.Globalization;
+using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
-using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using TreatPraktik.Model;
 using TreatPraktik.Model.WorkSheets;
 using TreatPraktik.Model.WorkspaceObjects;
 using TreatPraktik.ViewModel;
@@ -15,19 +12,19 @@ namespace TreatPraktik.Ressources.ExcelClasses
 {
     class Order
     {
-        WorkSheetktUIOrder order;
-        SharedRessources sharedResources;
-        WorkspaceViewModel workspaceVM;
+        readonly WorkSheetktUIOrder _order;
+        readonly SharedRessources _sharedResources;
+        readonly WorkspaceViewModel _workspaceVm;
 
-        List<GroupTypeOrder> tempList;
+        readonly List<GroupTypeOrder> _tempList;
 
         public Order()
         {
-            tempList = new List<GroupTypeOrder>();
+            _tempList = new List<GroupTypeOrder>();
 
-            order = WorkSheetktUIOrder.Instance;
-            sharedResources = SharedRessources.Instance;
-            workspaceVM = WorkspaceViewModel.Instance;
+            _order = WorkSheetktUIOrder.Instance;
+            _sharedResources = SharedRessources.Instance;
+            _workspaceVm = WorkspaceViewModel.Instance;
         }
 
         /// <summary>
@@ -42,29 +39,28 @@ namespace TreatPraktik.Ressources.ExcelClasses
             WorksheetPart worksheetPart = workbookPart.AddNewPart<WorksheetPart>();
             worksheetPart.Worksheet = new Worksheet(new SheetData());
 
-            Sheet sheet = new Sheet()
+            Sheet sheet = new Sheet
             {
                 Id = spreadsheetDocument.WorkbookPart.GetIdOfPart(worksheetPart),
-                SheetId = (UInt32Value)4U,
-                Name = order.SheetName
+                SheetId = 2U,
+                Name = _order.SheetName
             };
             sheets.Append(sheet);
 
             //Add cells to the sheet
-            InsertTextIntoCells(spreadsheetDocument, sheet, worksheetPart);
+            InsertTextIntoCells(spreadsheetDocument, worksheetPart);
         }
 
         /// <summary>
         /// Creates the content of the shet (columns, rows, cells)
         /// </summary>
         /// <param name="spreadsheetDocument">The spreadsheet containing the sheets</param>
-        /// <param name="sheet">The sheet for this item</param>
         /// <param name="worksheetPart">The worksheetpart for this item</param>
-        private void InsertTextIntoCells(SpreadsheetDocument spreadsheetDocument, Sheet sheet, WorksheetPart worksheetPart)
+        private void InsertTextIntoCells(SpreadsheetDocument spreadsheetDocument, WorksheetPart worksheetPart)
         {
             // Get the SharedStringTablePart. If it does not exist, create a new one.
             SharedStringTablePart shareStringPart;
-            if (spreadsheetDocument.WorkbookPart.GetPartsOfType<SharedStringTablePart>().Count() > 0)
+            if (spreadsheetDocument.WorkbookPart.GetPartsOfType<SharedStringTablePart>().Any())
             {
                 shareStringPart = spreadsheetDocument.WorkbookPart.GetPartsOfType<SharedStringTablePart>().First();
             }
@@ -76,50 +72,48 @@ namespace TreatPraktik.Ressources.ExcelClasses
             #region Excel headers
 
             string header1 = "DesignID";
-            int index1 = sharedResources.InsertSharedStringItem(header1, shareStringPart);
-            Cell headerCell1 = sharedResources.InsertCellInWorksheet("A", 1, worksheetPart);
-            headerCell1.CellValue = new CellValue(index1.ToString());
+            int index1 = _sharedResources.InsertSharedStringItem(header1, shareStringPart);
+            Cell headerCell1 = _sharedResources.InsertCellInWorksheet("A", 1, worksheetPart);
+            headerCell1.CellValue = new CellValue(index1.ToString(CultureInfo.InvariantCulture));
             headerCell1.DataType = new EnumValue<CellValues>(CellValues.SharedString);
 
             string header2 = "GroupOrder";
-            int index2 = sharedResources.InsertSharedStringItem(header2, shareStringPart);
-            Cell headerCell2 = sharedResources.InsertCellInWorksheet("B", 1, worksheetPart);
-            headerCell2.CellValue = new CellValue(index2.ToString());
+            int index2 = _sharedResources.InsertSharedStringItem(header2, shareStringPart);
+            Cell headerCell2 = _sharedResources.InsertCellInWorksheet("B", 1, worksheetPart);
+            headerCell2.CellValue = new CellValue(index2.ToString(CultureInfo.InvariantCulture));
             headerCell2.DataType = new EnumValue<CellValues>(CellValues.SharedString);
 
             string header3 = "GroupTypeID";
-            int index3 = sharedResources.InsertSharedStringItem(header3, shareStringPart);
-            Cell headerCell3 = sharedResources.InsertCellInWorksheet("C", 1, worksheetPart);
-            headerCell3.CellValue = new CellValue(index3.ToString());
+            int index3 = _sharedResources.InsertSharedStringItem(header3, shareStringPart);
+            Cell headerCell3 = _sharedResources.InsertCellInWorksheet("C", 1, worksheetPart);
+            headerCell3.CellValue = new CellValue(index3.ToString(CultureInfo.InvariantCulture));
             headerCell3.DataType = new EnumValue<CellValues>(CellValues.SharedString);
 
-            //string header4 = "PageTypeID";
-            //int index4 = sharedResources.InsertSharedStringItem(header4, shareStringPart);
-            //Cell headerCell4 = sharedResources.InsertCellInWorksheet("D", 1, worksheetPart);
-            //headerCell4.CellValue = new CellValue(index4.ToString());
-            //headerCell4.DataType = new EnumValue<CellValues>(CellValues.SharedString);
-
             string header4 = "IncludedTypeID";
-            int index4 = sharedResources.InsertSharedStringItem(header4, shareStringPart);
-            Cell headerCell4 = sharedResources.InsertCellInWorksheet("D", 1, worksheetPart);
-            headerCell4.CellValue = new CellValue(index4.ToString());
+            int index4 = _sharedResources.InsertSharedStringItem(header4, shareStringPart);
+            Cell headerCell4 = _sharedResources.InsertCellInWorksheet("D", 1, worksheetPart);
+            headerCell4.CellValue = new CellValue(index4.ToString(CultureInfo.InvariantCulture));
             headerCell4.DataType = new EnumValue<CellValues>(CellValues.SharedString);
 
             #endregion
 
             #region Create temporary list containing the items needed to create the ktUIOrder excel sheet
 
-            foreach (PageType page in workspaceVM.PageList)
+            foreach (PageType page in _workspaceVm.PageList)
             {
                 foreach (GroupTypeOrder group in page.Groups)
                 {
-                    for (int i = 0; i < group.Group.Items.Count; i++)
+                    if (group.Group != null)
                     {
-                        if (!tempList.Any(x => x.GroupTypeID == group.GroupTypeID))
+                        for (int i = 0; i < group.Group.Items.Count; i++)
                         {
-                            tempList.Add(group);
+                            if (!_tempList.Any(x => x.GroupTypeID == group.GroupTypeID))
+                            {
+                                _tempList.Add(group);
+                            }
                         }
                     }
+
                 }
             }
 
@@ -130,7 +124,7 @@ namespace TreatPraktik.Ressources.ExcelClasses
             int columnCount = 1;
             uint rowCount = 2;
 
-            foreach (GroupTypeOrder group in tempList)
+            foreach (GroupTypeOrder group in _tempList)
             {
                 for (int i = 0; i < group.Group.Items.Count; i++)
                 {
@@ -140,33 +134,26 @@ namespace TreatPraktik.Ressources.ExcelClasses
                     }
 
                     string text1 = group.Group.Items[i].DesignID;
-                    Cell cell1 = sharedResources.InsertCellInWorksheet(sharedResources.Number2String(columnCount, true), rowCount, worksheetPart);
-                    cell1.CellValue = new CellValue(text1.ToString());
+                    Cell cell1 = _sharedResources.InsertCellInWorksheet(_sharedResources.Number2String(columnCount, true), rowCount, worksheetPart);
+                    cell1.CellValue = new CellValue(text1);
                     cell1.DataType = CellValues.Number;
                     columnCount++;
 
                     double text2 = group.Group.Items[i].ItemOrder;
-                    Cell cell2 = sharedResources.InsertCellInWorksheet(sharedResources.Number2String(columnCount, true), rowCount, worksheetPart);
+                    Cell cell2 = _sharedResources.InsertCellInWorksheet(_sharedResources.Number2String(columnCount, true), rowCount, worksheetPart);
                     cell2.DataType = CellValues.Number;
                     cell2.CellValue = new CellValue(DoubleValue.FromDouble(text2));
-
                     columnCount++;
 
                     string text3 = group.Group.Items[i].GroupTypeID;
-                    Cell cell3 = sharedResources.InsertCellInWorksheet(sharedResources.Number2String(columnCount, true), rowCount, worksheetPart);
-                    cell3.CellValue = new CellValue(text3.ToString());
+                    Cell cell3 = _sharedResources.InsertCellInWorksheet(_sharedResources.Number2String(columnCount, true), rowCount, worksheetPart);
+                    cell3.CellValue = new CellValue(text3);
                     cell3.DataType = CellValues.Number;
                     columnCount++;
 
-                    //string text4 = page.PageTypeID;
-                    //Cell cell4 = sharedResources.InsertCellInWorksheet(sharedResources.Number2String(columnCount, true), rowCount, worksheetPart);
-                    //cell4.CellValue = new CellValue(text4.ToString());
-                    //cell4.DataType = CellValues.Number;
-                    //columnCount++;
-
                     string text5 = group.Group.Items[i].IncludedTypeID;
-                    Cell cell5 = sharedResources.InsertCellInWorksheet(sharedResources.Number2String(columnCount, true), rowCount, worksheetPart);
-                    cell5.CellValue = new CellValue(text5.ToString());
+                    Cell cell5 = _sharedResources.InsertCellInWorksheet(_sharedResources.Number2String(columnCount, true), rowCount, worksheetPart);
+                    cell5.CellValue = new CellValue(text5);
                     cell5.DataType = CellValues.Number;
 
                     rowCount++;

@@ -1,9 +1,8 @@
-﻿using DocumentFormat.OpenXml.Packaging;
+﻿using System.Globalization;
+using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace TreatPraktik.Ressources.ExcelClasses
 {
@@ -102,7 +101,7 @@ namespace TreatPraktik.Ressources.ExcelClasses
         public String Number2String(int number, bool isCaps)
         {
             Char c = (Char)((isCaps ? 65 : 97) + (number - 1));
-            return c.ToString();
+            return c.ToString(CultureInfo.InvariantCulture);
         }
 
         /// <summary>

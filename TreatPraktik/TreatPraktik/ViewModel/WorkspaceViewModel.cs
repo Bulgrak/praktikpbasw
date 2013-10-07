@@ -114,7 +114,8 @@ namespace TreatPraktik.ViewModel
                           {
                               bbb.LanguageID,
                               aaa.ResourceResxID,
-                              bbb.TranslationText
+                              bbb.TranslationText,
+                              aaa.ResourceTypeID
                           }).ToList();
 
             List<GroupTypeOrder> groupOrderList = (from a in excel.WorkSheetktUIGroupOrder.ktUIGroupOrderList.OrderBy(m => m.GroupOrder)
@@ -128,11 +129,45 @@ namespace TreatPraktik.ViewModel
                                          }).ToList();
 
             List<GroupType> groupList = (from a in excel.WorkSheetExaminedGroup.ExaminedGroupList
+                                         join b in excel.WorkSheetktResources.ktResourceList on a.GroupType equals b.ResourceResxID into hej
+                                         from c in hej.DefaultIfEmpty()
                                          select new GroupType
                                          {
                                              GroupTypeID = a.ID,
                                              ResourceType = a.GroupType
                                          }).ToList();
+                
+                //from a in excel.WorkSheetktResources.ktResourceList.Where(x => x.ResourceTypeID.Equals("1"))
+                //                         join b in excel.WorkSheetExaminedGroup.ExaminedGroupList on a.ResourceResxID equals b.GroupType into yay
+                //                         from b in yay.DefaultIfEmpty()
+                //                            select new GroupType
+                //                            {
+                //                                GroupTypeID = b.ID,
+                //                                //GroupTypeID = (from b in excel.WorkSheetExaminedGroup.ExaminedGroupList.Where(x => x.GroupType.Equals(a.ResourceResxID))
+                //                                //               select b.ID).FirstOrDefault(),
+                //                                ResourceType = a.ResourceResxID,
+                //                                ResourceTypeID = a.ResourceTypeID
+                //                            }).ToList();
+
+            //foreach (GroupType groupType in groupList)
+            //{
+            //    if (groupType.GroupTypeID.Equals("58") || groupType.GroupTypeID.Equals("60"))
+            //    {
+            //        groupList.Remove(groupType);
+            //    }
+                
+            //    //Console.WriteLine(groupType.ResourceType + " " + groupType.GroupTypeID);
+            //}
+
+
+            //for (int i = 0; i < groupList.Count; i++)
+            //{
+            //    if (groupList[i].GroupTypeID.Equals("58") || groupList[i].GroupTypeID.Equals("60"))
+            //    {
+            //        groupList.Remove(groupList[i]);
+            //        i--;
+            //    }
+            //}
 
             for (int i = 0; i < groupOrderList.Count; i++)
             {
@@ -161,6 +196,8 @@ namespace TreatPraktik.ViewModel
                         {
                             group.EnglishTranslationText = item.TranslationText;
                         }
+
+                        group.ResourceTypeID = item.ResourceTypeID;
                     }
                 }
                 group.LanguageID = "2";
