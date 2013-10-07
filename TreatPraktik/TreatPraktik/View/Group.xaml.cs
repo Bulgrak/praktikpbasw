@@ -610,16 +610,19 @@ namespace TreatPraktik.View
             {
                 TextBlock tb = null;
                 Grid gridCell = null;
+                Border target = null;
                 if (e.Source is Border)
                 {
-                    Border target = e.Source as Border;
+                    target = e.Source as Border;
                     gridCell = (Grid)target.Child;
                     tb = (TextBlock)gridCell.Children[1];
                 }
                 else
                 {
+
                     tb = e.Source as TextBlock;
                     gridCell = (Grid)tb.Parent;
+                    target = (Border)gridCell.Parent;
                 }
                 ListBoxItem lbi = e.Data.GetData("System.Windows.Controls.ListBoxItem") as ListBoxItem;
                 ToolboxItem tbi = (ToolboxItem)lbi.Content;
@@ -631,7 +634,26 @@ namespace TreatPraktik.View
                 Grid grid = (Grid)borderCell.Parent;
                 GroupTypeOrder gto = (GroupTypeOrder)grid.DataContext;
                 GroupType gt = gto.Group;
-                if (designID != 0)
+                if (tbi.DesignID.Equals("198") && designID != 0)
+                {
+                    ItemType newItemType = new ItemType();
+                    newItemType.DesignID = tbi.DesignID;
+                    newItemType.Header = tbi.Header;
+                    newItemType.ItemOrder = itToBeMoved.ItemOrder;
+                    newItemType.DanishTranslationText = tbi.DanishTranslationText;
+                    newItemType.EnglishTranslationText = tbi.EnglishTranslationText;
+                    newItemType.LanguageID = tbi.LanguageID;
+                    newItemType.GroupTypeID = gt.GroupTypeID;
+                    newItemType.IncludedTypeID = "1";
+                    int index = gt.Items.IndexOf(itToBeMoved);
+
+                    gt.Items.Insert(index, newItemType);
+                    grid.ClearGrid();
+                    PopulateGroupTable(gt, grid);
+                    DisableAllowDropByNewLineItem(grid);
+
+                }
+                if (designID != 0 && !tbi.DesignID.Equals("198"))
                 {
                     ItemType newItemType = new ItemType();
                     newItemType.DesignID = tbi.DesignID;
@@ -646,9 +668,10 @@ namespace TreatPraktik.View
                     List<ItemType> itemTypeList = GetItemTypes(grid);
                     int startPosition = itemTypeList.IndexOf(itToBeMoved);
                     MoveItemsForward(startPosition, itemTypeList, grid, newItemType, gt);
+
                     DisableAllowDropByNewLineItem(grid);
                 }
-                else
+                if (designID == 0)
                 {
                     itToBeMoved.DesignID = tbi.DesignID;
                     itToBeMoved.Header = tbi.Header;
@@ -679,6 +702,8 @@ namespace TreatPraktik.View
                         DisableAllowDropByNewLineItem(grid);
                     }
                     gt.Items.Add(itToBeMoved);
+                    grid.ClearGrid();
+                    PopulateGroupTable(gt, grid);
                 }
             }
             if (e.Data.GetData("System.Windows.Controls.Border") is Border) //drag and drop mellem items
