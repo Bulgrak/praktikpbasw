@@ -1,22 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Windows.Input;
-using TreatPraktik.Model;
 using TreatPraktik.Model.WorkspaceObjects;
 
 namespace TreatPraktik.ViewModel
 {
     public class WorkspaceViewModel : INotifyPropertyChanged
     {
-        private static WorkspaceViewModel instance;
+        private static WorkspaceViewModel _instance;
 
-        public ImportExcel excel;
+        private readonly ImportExcel _excel;
 
-        public ObservableCollection<PageType> PageList { get; set; }
+        public ObservableCollection<PageType> PageList { get; private set; }
         private ObservableCollection<GroupTypeOrder> GroupList { get; set; }
         private ObservableCollection<GroupType> Groups { get; set; }
         private ObservableCollection<ItemType> ItemList { get; set; }
@@ -25,7 +21,7 @@ namespace TreatPraktik.ViewModel
 
         public WorkspaceViewModel()
         {
-            excel = ImportExcel.Instance;
+            _excel = ImportExcel.Instance;
 
             PageList = GetAllPages();
             GroupList = GetAllGroups();
@@ -57,9 +53,9 @@ namespace TreatPraktik.ViewModel
         {
             //Pages
             //Sort on language 1=English and on ResourceType 7=SiteMapResource
-            var query = (from aaa in excel.WorkSheetktResources.ktResourceList
-                         join bbb in excel.WorkSheetktResourceTranslation.ktResourceTranslationList on aaa.ResourceID equals bbb.ResourceID
-                         join ccc in excel.WorkSheetktResourceType.ktResourceTypeList.Where(d => d.ResourceTypeID.Equals("7")) on aaa.ResourceTypeID equals ccc.ResourceTypeID
+            var query = (from aaa in _excel.WorkSheetktResources.ktResourceList
+                         join bbb in _excel.WorkSheetktResourceTranslation.ktResourceTranslationList on aaa.ResourceID equals bbb.ResourceID
+                         join ccc in _excel.WorkSheetktResourceType.ktResourceTypeList.Where(d => d.ResourceTypeID.Equals("7")) on aaa.ResourceTypeID equals ccc.ResourceTypeID
                          select new
                           {
                               bbb.LanguageID,
@@ -67,7 +63,7 @@ namespace TreatPraktik.ViewModel
                               bbb.TranslationText
                           }).ToList();
 
-            List<PageType> pageList = (from a in excel.WorkSheetktUIPageType.ktUIPageTypeList
+            List<PageType> pageList = (from a in _excel.WorkSheetktUIPageType.ktUIPageTypeList
                                        select new PageType
                                        {
                                            ResourceType = a.PageType + "_Title",
@@ -107,9 +103,9 @@ namespace TreatPraktik.ViewModel
         {
             //Groups
             //Sort on language 1=English and on ResourceType 1=DataGroupHeading
-            var query = (from aaa in excel.WorkSheetktResources.ktResourceList
-                          join bbb in excel.WorkSheetktResourceTranslation.ktResourceTranslationList on aaa.ResourceID equals bbb.ResourceID
-                          join ccc in excel.WorkSheetktResourceType.ktResourceTypeList.Where(d => d.ResourceTypeID.Equals("1")) on aaa.ResourceTypeID equals ccc.ResourceTypeID
+            var query = (from aaa in _excel.WorkSheetktResources.ktResourceList
+                          join bbb in _excel.WorkSheetktResourceTranslation.ktResourceTranslationList on aaa.ResourceID equals bbb.ResourceID
+                          join ccc in _excel.WorkSheetktResourceType.ktResourceTypeList.Where(d => d.ResourceTypeID.Equals("1")) on aaa.ResourceTypeID equals ccc.ResourceTypeID
                           select new
                           {
                               bbb.LanguageID,
@@ -118,8 +114,7 @@ namespace TreatPraktik.ViewModel
                               aaa.ResourceTypeID
                           }).ToList();
 
-            List<GroupTypeOrder> groupOrderList = (from a in excel.WorkSheetktUIGroupOrder.ktUIGroupOrderList.OrderBy(m => m.GroupOrder)
-                                         //join b in excel.WorkSheetExaminedGroup.ExaminedGroupList on a.GroupTypeID equals b.ID
+            List<GroupTypeOrder> groupOrderList = (from a in _excel.WorkSheetktUIGroupOrder.ktUIGroupOrderList.OrderBy(m => m.GroupOrder)
                                          select new GroupTypeOrder
                                          {
                                              DepartmentID = a.DepartmentID,
@@ -128,46 +123,14 @@ namespace TreatPraktik.ViewModel
                                              GroupOrder = a.GroupOrder
                                          }).ToList();
 
-            List<GroupType> groupList = (from a in excel.WorkSheetExaminedGroup.ExaminedGroupList
-                                         join b in excel.WorkSheetktResources.ktResourceList on a.GroupType equals b.ResourceResxID into hej
+            List<GroupType> groupList = (from a in _excel.WorkSheetExaminedGroup.ExaminedGroupList
+                                         join b in _excel.WorkSheetktResources.ktResourceList on a.GroupType equals b.ResourceResxID into hej
                                          from c in hej.DefaultIfEmpty()
                                          select new GroupType
                                          {
                                              GroupTypeID = a.ID,
                                              ResourceType = a.GroupType
                                          }).ToList();
-                
-                //from a in excel.WorkSheetktResources.ktResourceList.Where(x => x.ResourceTypeID.Equals("1"))
-                //                         join b in excel.WorkSheetExaminedGroup.ExaminedGroupList on a.ResourceResxID equals b.GroupType into yay
-                //                         from b in yay.DefaultIfEmpty()
-                //                            select new GroupType
-                //                            {
-                //                                GroupTypeID = b.ID,
-                //                                //GroupTypeID = (from b in excel.WorkSheetExaminedGroup.ExaminedGroupList.Where(x => x.GroupType.Equals(a.ResourceResxID))
-                //                                //               select b.ID).FirstOrDefault(),
-                //                                ResourceType = a.ResourceResxID,
-                //                                ResourceTypeID = a.ResourceTypeID
-                //                            }).ToList();
-
-            //foreach (GroupType groupType in groupList)
-            //{
-            //    if (groupType.GroupTypeID.Equals("58") || groupType.GroupTypeID.Equals("60"))
-            //    {
-            //        groupList.Remove(groupType);
-            //    }
-                
-            //    //Console.WriteLine(groupType.ResourceType + " " + groupType.GroupTypeID);
-            //}
-
-
-            //for (int i = 0; i < groupList.Count; i++)
-            //{
-            //    if (groupList[i].GroupTypeID.Equals("58") || groupList[i].GroupTypeID.Equals("60"))
-            //    {
-            //        groupList.Remove(groupList[i]);
-            //        i--;
-            //    }
-            //}
 
             for (int i = 0; i < groupOrderList.Count; i++)
             {
@@ -217,9 +180,9 @@ namespace TreatPraktik.ViewModel
         {
             //Items
             //Sort on language 1=English and on ResourceType 2=DataItemHeading
-            var query = (from aa in excel.WorkSheetktResources.ktResourceList
-                          join bb in excel.WorkSheetktResourceTranslation.ktResourceTranslationList on aa.ResourceID equals bb.ResourceID
-                          join cc in excel.WorkSheetktResourceType.ktResourceTypeList.Where(d => d.ResourceTypeID.Equals("2")) on aa.ResourceTypeID equals cc.ResourceTypeID
+            var query = (from aa in _excel.WorkSheetktResources.ktResourceList
+                          join bb in _excel.WorkSheetktResourceTranslation.ktResourceTranslationList on aa.ResourceID equals bb.ResourceID
+                          join cc in _excel.WorkSheetktResourceType.ktResourceTypeList.Where(d => d.ResourceTypeID.Equals("2")) on aa.ResourceTypeID equals cc.ResourceTypeID
                           select new
                           {
                               bb.LanguageID,
@@ -227,8 +190,8 @@ namespace TreatPraktik.ViewModel
                               bb.TranslationText
                           }).ToList();
 
-            List<ItemType> itemList = (from a in excel.WorkSheetktUIOrder.ktUIOrderList.OrderBy(m => m.GroupOrder)
-                                       join b in excel.WorkSheetUIDesign.ktUIDesignList on a.DesignID equals b.DesignID
+            List<ItemType> itemList = (from a in _excel.WorkSheetktUIOrder.ktUIOrderList.OrderBy(m => m.GroupOrder)
+                                       join b in _excel.WorkSheetUIDesign.ktUIDesignList on a.DesignID equals b.DesignID
                                        select new ItemType
                                        {
                                            ResourceType = b.ResxID,
@@ -401,11 +364,11 @@ namespace TreatPraktik.ViewModel
         {
             get
             {
-                if (instance == null)
+                if (_instance == null)
                 {
-                    instance = new WorkspaceViewModel();
+                    _instance = new WorkspaceViewModel();
                 }
-                return instance;
+                return _instance;
             }
         }
     }
