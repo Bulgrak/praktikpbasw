@@ -1,29 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
 
 namespace TreatPraktik.Model.WorkspaceObjects
 {
     public class GroupType : INotifyPropertyChanged
     {
-        //public string PageTypeID { get; set; }
         public string GroupTypeID { get; set; }                         //Group ID
-        //private string _groupName { get; set; }                         //Group name
-        private string groupHeader { get; set; }                         //The real name for the group
-        //private double groupOrder { get; set; }                          //Group order on the page
-        //public string DepartmentID { get; set; }                        //Department ID for the group
+        private string _groupHeader;                                    //The real name for the group
         public ObservableCollection<ItemType> Items { get; set; }       //Items in the group
-        private string languageID { get; set; }
+        private string _languageID;
         public string DanishTranslationText { get; set; }
         public string EnglishTranslationText { get; set; }
         public string ResourceType { get; set; }
         public string ResourceTypeID { get; set; }
-
-        
-
+        public string ResourceID { get; set; }
 
         public GroupType()
         {
@@ -49,11 +39,11 @@ namespace TreatPraktik.Model.WorkspaceObjects
         {
             get
             {
-                return groupHeader;
+                return _groupHeader;
             }
             set
             {
-                groupHeader = value;
+                _groupHeader = value;
                 OnPropertyChanged("GroupHeader");
             }
         }
@@ -62,12 +52,12 @@ namespace TreatPraktik.Model.WorkspaceObjects
         {
             get
             {
-                return languageID;
+                return _languageID;
             }
             set
             {
-                this.languageID = value;
-                switch (languageID)
+                _languageID = value;
+                switch (_languageID)
                 {
                     case "1": GroupHeader = EnglishTranslationText; break;
                     case "2": GroupHeader = DanishTranslationText; break;
@@ -75,18 +65,5 @@ namespace TreatPraktik.Model.WorkspaceObjects
                 }
             }
         }
-
-        //public double GroupOrder
-        //{
-        //    get 
-        //    { 
-        //        return groupOrder; 
-        //    }
-        //    set 
-        //    {
-        //        groupOrder = value;
-        //        OnPropertyChanged("GroupOrder");
-        //    }
-        //}
     }
 }

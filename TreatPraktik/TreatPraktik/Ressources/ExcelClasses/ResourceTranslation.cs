@@ -150,7 +150,7 @@ namespace TreatPraktik.Ressources.ExcelClasses
                         cell1.DataType = CellValues.Number;
                         columnCount++;
 
-                        string text2 = gtOrder.Group.ResourceTypeID;
+                        string text2 = gtOrder.Group.ResourceID;
                         Cell cell2 =
                             _sharedResources.InsertCellInWorksheet(
                                 _sharedResources.Number2String(columnCount, true), rowCount, worksheetPart);

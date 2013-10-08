@@ -128,7 +128,7 @@ namespace TreatPraktik.Ressources.ExcelClasses
                             columnCount = 1;
                         }
 
-                        string text1 = gtOrder.Group.ResourceTypeID;
+                        string text1 = gtOrder.Group.ResourceID;
                         Cell cell1 =
                             _sharedResources.InsertCellInWorksheet(
                                 _sharedResources.Number2String(columnCount, true), rowCount, worksheetPart);
@@ -136,7 +136,7 @@ namespace TreatPraktik.Ressources.ExcelClasses
                         cell1.DataType = CellValues.Number;
                         columnCount++;
 
-                        string text2 = "1";
+                        string text2 = gtOrder.Group.ResourceTypeID;
                         Cell cell2 =
                             _sharedResources.InsertCellInWorksheet(
                                 _sharedResources.Number2String(columnCount, true), rowCount, worksheetPart);

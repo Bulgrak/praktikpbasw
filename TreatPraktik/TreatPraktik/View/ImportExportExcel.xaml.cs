@@ -21,11 +21,13 @@ namespace TreatPraktik.View
     public partial class ImportExportExcel : UserControl
     {
         private ExportExcel exExcel;
+        private WorkspaceViewModel _workspaceVM;
 
         public ImportExportExcel()
         {
             InitializeComponent();
             exExcel = ExportExcel.Instance;
+            _workspaceVM = WorkspaceViewModel.Instance;
         }
 
         /// <summary>
@@ -33,7 +35,9 @@ namespace TreatPraktik.View
         /// </summary>
         private void ImportExcel_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Ikke implementeret");
+            _workspaceVM.CreateGroup("15", "1", 8.0, "New group", "Ny gruppe");
+            
+            //MessageBox.Show("Ikke implementeret");
         }
 
         /// <summary>
