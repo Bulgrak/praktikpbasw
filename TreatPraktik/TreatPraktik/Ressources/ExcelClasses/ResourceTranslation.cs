@@ -197,6 +197,8 @@ namespace TreatPraktik.Ressources.ExcelClasses
             }
 
             #endregion
+
+            worksheetPart.Worksheet.Save();
         }
     }
 }
