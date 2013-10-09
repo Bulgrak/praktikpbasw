@@ -825,6 +825,8 @@ namespace TreatPraktik.View
                 if (e.Source is TextBlock)
                 {
                     tb = e.Source as TextBlock;
+                    gridCell = (Grid)tb.Parent;
+                    target = (Border)gridCell.Parent;
                     it = (ItemType)tb.DataContext;
                 }
                 if (e.Source is Image)
@@ -832,6 +834,7 @@ namespace TreatPraktik.View
                     img = e.Source as Image;
                     btn = (Button) img.Parent;
                     gridCell = (Grid) btn.Parent;
+                    target = (Border)gridCell.Parent;
                     tb = (TextBlock) gridCell.Children[1];
                     it = (ItemType)tb.DataContext;
                 }
@@ -868,11 +871,18 @@ namespace TreatPraktik.View
                         newit.ItemOrder = it2.ItemOrder;
 
                         it2.ItemOrder = it.ItemOrder;
+                        int row = Grid.GetRow(target);
+                        int column = Grid.GetColumn(target);
                                                     groupTable.ClearGrid();
                         PopulateGroupTable(gt, groupTable);
-                        tb.DataContext = it2;
+
+                        Border newTarget = (Border)GetCellItem(groupTable, row, column);
+                        Grid newGridCell = (Grid)newTarget.Child;
+                        TextBlock newtb = (TextBlock)newGridCell.Children[1];
+                        newtb.DataContext = it2;
+                        //tb.DataContext = it2;
                         
-                        tb2.DataContext = newit;
+                        //tb2.DataContext = newit;
 
                         
                         i = 1;
@@ -885,7 +895,7 @@ namespace TreatPraktik.View
                             }
                             i++;
                         }
-                        GenerateEmptyFields(groupTable, groupTable.RowDefinitions.Count - 2, false);
+                        GenerateEmptyFields(groupTable, groupTable.RowDefinitions.Count - 2, true);
                         GenerateEmptyFields(groupTable, groupTable.RowDefinitions.Count - 1, false);
                         gt.Items.Add(it2);
                         List<ItemType> itemTypeList = gt.Items.ToList();
