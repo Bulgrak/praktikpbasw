@@ -838,6 +838,15 @@ namespace TreatPraktik.View
                     tb = (TextBlock) gridCell.Children[1];
                     it = (ItemType)tb.DataContext;
                 }
+                if (e.Source is Button)
+                {
+                    btn = e.Source as Button;
+                    gridCell = (Grid)btn.Parent;
+                    target = (Border)gridCell.Parent;
+                    tb = (TextBlock)gridCell.Children[1];
+                    it = (ItemType)tb.DataContext;
+
+                }
 
                 //item that will switch place with dragged item
 
@@ -873,10 +882,29 @@ namespace TreatPraktik.View
                         it2.ItemOrder = it.ItemOrder;
                         int row = Grid.GetRow(target);
                         int column = Grid.GetColumn(target);
+                        int rowCount = groupTable.RowDefinitions.Count;
+                        int lastRow = groupTable.RowDefinitions.Count - 1;
                                                     groupTable.ClearGrid();
                         PopulateGroupTable(gt, groupTable);
-
-                        Border newTarget = (Border)GetCellItem(groupTable, row, column);
+                        Border newTarget = null;
+                        if (rowCount == groupTable.RowDefinitions.Count + 1)
+                        {
+                             AddNewEmptyItemRow(groupTable);
+                            if (row == lastRow)
+                            {
+                                newTarget =
+                                    (Border) GetCellItem(groupTable, groupTable.RowDefinitions.Count - 1, column);
+                            }
+                            else
+                            {
+                                newTarget =
+                                    (Border)GetCellItem(groupTable, groupTable.RowDefinitions.Count - 2, column);
+                            }
+                        }
+                        else
+                        {
+                            newTarget = (Border)GetCellItem(groupTable, row, column);
+                        }
                         Grid newGridCell = (Grid)newTarget.Child;
                         TextBlock newtb = (TextBlock)newGridCell.Children[1];
                         newtb.DataContext = it2;
@@ -895,7 +923,14 @@ namespace TreatPraktik.View
                             }
                             i++;
                         }
-                        GenerateEmptyFields(groupTable, groupTable.RowDefinitions.Count - 2, true);
+                        if (!(row == groupTable.RowDefinitions.Count - 2))
+                        {
+                            GenerateEmptyFields(groupTable, groupTable.RowDefinitions.Count - 2, true);
+                        }
+                        else
+                        {
+                            GenerateEmptyFields(groupTable, groupTable.RowDefinitions.Count - 2, false);
+                        }
                         GenerateEmptyFields(groupTable, groupTable.RowDefinitions.Count - 1, false);
                         gt.Items.Add(it2);
                         List<ItemType> itemTypeList = gt.Items.ToList();
