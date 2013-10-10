@@ -858,8 +858,8 @@ namespace TreatPraktik.View
                 Grid groupTable = (Grid)target2.Parent;
 
                 GroupType gt = GetGroupType(groupTable);
-                double draggedItemTypeNo = it.ItemOrder;
-                double itemTypeSwitch = it2.ItemOrder;
+                double draggedItemTypeNo = it.ItemOrder; //affected item
+                double itemTypeSwitch = it2.ItemOrder; //dragged item
 
                 //Switch items
                 //it.ItemOrder = itemTypeSwitch;
@@ -876,8 +876,8 @@ namespace TreatPraktik.View
                             gt.Items[i].ItemOrder--;
                             i++;
                         }
-                        ItemType newit = new ItemType();
-                        newit.ItemOrder = it2.ItemOrder;
+                        //ItemType newit = new ItemType();
+                        //newit.ItemOrder = it2.ItemOrder;
 
                         it2.ItemOrder = it.ItemOrder;
                         int row = Grid.GetRow(target);
@@ -942,8 +942,14 @@ namespace TreatPraktik.View
                         PopulateGroupTable(gt, groupTable);
                         DisableAllowDropByNewLineItem(groupTable);
                     }
-                    else
+                    if (it2.DesignID.Equals("198"))
                     {
+                        ItemType newit = new ItemType();
+                        newit.ItemOrder = it2.ItemOrder;
+                        tb2.DataContext = newit;
+                        tb.DataContext = it2;
+                        //gt.Items.Remove(it);
+                        gt.Items.Remove(it2);
                         if (position != -1)
                         {
 
@@ -955,7 +961,7 @@ namespace TreatPraktik.View
                             // {
                             gt.Items.Insert(position, it2);
                             //}
-                            gt.Items[position].ItemOrder = position;
+                            gt.Items[position].ItemOrder = draggedItemTypeNo;
                         }
                         it2.ItemOrder = draggedItemTypeNo;
 
@@ -983,6 +989,107 @@ namespace TreatPraktik.View
                         groupTable.ClearGrid();
                         PopulateGroupTable(gt, groupTable);
                         DisableAllowDropByNewLineItem(groupTable);
+                    }
+                    if (it.DesignID != null && it.DesignID.Equals("197"))
+                    {
+                        ItemType newit = new ItemType();
+                        newit.ItemOrder = it2.ItemOrder;
+                        tb2.DataContext = newit;
+                        it2.ItemOrder = draggedItemTypeNo;
+                        tb.DataContext = it2;
+                        gt.Items.Remove(it2);
+                        gt.Items.Remove(it);
+                        if (position != -1)
+                        {
+
+                            // if (position < 2)
+                            // {
+                            //     gt.Items.Insert(position - 1, it2);
+                            // }
+                            //else
+                            // {
+                            gt.Items.Insert(position, it2);
+                            //gt.Items.Add(it2);
+                            //}
+                            //gt.Items[position].ItemOrder = draggedItemTypeNo;
+                        }
+                        //it2.ItemOrder = draggedItemTypeNo;
+
+                        //grid.ClearGrid();
+                        //PopulateGroupTable(gt, grid);
+                        //DisableAllowDropByNewLineItem(grid)
+
+                        int i = 1;
+                        while (i < groupTable.RowDefinitions.Count - 2)
+                        {
+
+                            if (!CheckIfRowIsEmpty(groupTable, i))
+                            {
+                                GenerateEmptyFields(groupTable, i, true);
+                            }
+                            i++;
+                        }
+                        GenerateEmptyFields(groupTable, groupTable.RowDefinitions.Count - 2, false);
+                        GenerateEmptyFields(groupTable, groupTable.RowDefinitions.Count - 1, false);
+                        List<ItemType> itemTypeList = gt.Items.ToList();
+                        itemTypeList = itemTypeList.OrderBy(o => o.ItemOrder).ToList();
+                        ObservableCollection<ItemType> ocItemTypeList = new ObservableCollection<ItemType>(itemTypeList);
+                        gt.Items = ocItemTypeList;
+
+                        groupTable.ClearGrid();
+                        PopulateGroupTable(gt, groupTable);
+                        DisableAllowDropByNewLineItem(groupTable);
+                    }
+                    if(it.DesignID != null && it2.DesignID != null  &&!it.DesignID.Equals("197") && !it2.DesignID.Equals("198"))
+                    {
+ 
+                            //ItemType newit = new ItemType();
+                            //newit.ItemOrder = it2.ItemOrder;
+                            //tb2.DataContext = newit;
+                            //it2.ItemOrder = draggedItemTypeNo;
+                            //tb.DataContext = it2;
+                            //gt.Items.Remove(it2);
+                            //gt.Items.Remove(it);
+                            if (position != -1)
+                            {
+
+                                // if (position < 2)
+                                // {
+                                //     gt.Items.Insert(position - 1, it2);
+                                // }
+                                //else
+                                // {
+                                gt.Items.Insert(position, it2);
+                                //gt.Items.Add(it2);
+                                //}
+                                //gt.Items[position].ItemOrder = draggedItemTypeNo;
+                            }
+                            it2.ItemOrder = draggedItemTypeNo;
+
+                            //grid.ClearGrid();
+                            //PopulateGroupTable(gt, grid);
+                            //DisableAllowDropByNewLineItem(grid)
+
+                            int i = 1;
+                            while (i < groupTable.RowDefinitions.Count - 2)
+                            {
+
+                                if (!CheckIfRowIsEmpty(groupTable, i))
+                                {
+                                    GenerateEmptyFields(groupTable, i, true);
+                                }
+                                i++;
+                            }
+                            GenerateEmptyFields(groupTable, groupTable.RowDefinitions.Count - 2, false);
+                            GenerateEmptyFields(groupTable, groupTable.RowDefinitions.Count - 1, false);
+                            List<ItemType> itemTypeList = gt.Items.ToList();
+                            itemTypeList = itemTypeList.OrderBy(o => o.ItemOrder).ToList();
+                            ObservableCollection<ItemType> ocItemTypeList = new ObservableCollection<ItemType>(itemTypeList);
+                            gt.Items = ocItemTypeList;
+
+                            groupTable.ClearGrid();
+                            PopulateGroupTable(gt, groupTable);
+                            DisableAllowDropByNewLineItem(groupTable);
                     }
                 }
             }
