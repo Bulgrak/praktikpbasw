@@ -963,6 +963,10 @@ namespace TreatPraktik.View
                             //}
                             gt.Items[position].ItemOrder = draggedItemTypeNo;
                         }
+                        if (it.DesignID == null)
+                        {
+                            gt.Items.Add(it2);
+                        }
                         it2.ItemOrder = draggedItemTypeNo;
 
                         //grid.ClearGrid();
