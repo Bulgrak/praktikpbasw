@@ -75,6 +75,7 @@
     <Compile Include="ViewModel\LanguageViewModel.cs" />
     <Compile Include="ViewModel\SpecialFieldsViewModel.cs" />
     <Compile Include="Ressources\ExcelClasses\Order.cs" />
+    <Compile Include="View\DragAdornerGroup.cs" />
     <Compile Include="View\DragAdornerItem.cs" />
     <Compile Include="View\DragAdornerToolboxItem.cs" />
     <Compile Include="View\ItemFilter.xaml.cs">
