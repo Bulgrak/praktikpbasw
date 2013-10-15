@@ -92,6 +92,10 @@ namespace TreatPraktik.Model.WorkSheets
                 }
                 return instance;
             }
+            set
+            {
+                instance = value;
+            }
         }
     }
 }

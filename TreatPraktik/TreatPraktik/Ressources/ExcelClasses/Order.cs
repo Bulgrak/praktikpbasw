@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
@@ -97,7 +98,7 @@ namespace TreatPraktik.Ressources.ExcelClasses
 
             #endregion
 
-            #region Create temporary list containing the items needed to create the ktUIOrder excel sheet
+            #region Create temporary list containing the groups needed to create the ktUIOrder excel sheet
 
             foreach (PageType page in _workspaceVm.PageList)
             {

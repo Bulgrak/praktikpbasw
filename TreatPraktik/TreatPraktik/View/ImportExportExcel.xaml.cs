@@ -1,16 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using TreatPraktik.ViewModel;
 
 namespace TreatPraktik.View
@@ -20,13 +9,13 @@ namespace TreatPraktik.View
     /// </summary>
     public partial class ImportExportExcel : UserControl
     {
-        private ExportExcel exExcel;
+        private readonly ExportExcel _exExcel;
         private WorkspaceViewModel _workspaceVM;
 
         public ImportExportExcel()
         {
             InitializeComponent();
-            exExcel = ExportExcel.Instance;
+            _exExcel = ExportExcel.Instance;
             _workspaceVM = WorkspaceViewModel.Instance;
         }
 
@@ -35,9 +24,12 @@ namespace TreatPraktik.View
         /// </summary>
         private void ImportExcel_Click(object sender, RoutedEventArgs e)
         {
-            _workspaceVM.CreateGroup("15", "1", 8.0, "New group", "Ny gruppe");
+            //_workspaceVM.CreateGroup("15", "1", 8.0, "New group", "Ny gruppe");
+            //_workspaceVM.CreateGroup("15", "1", 9.0, "Jesper", "Er sej");
+
+            _workspaceVM.RenameGroup("15", "0", "Rename group", "Omdøb gruppe");
             
-            //MessageBox.Show("Ikke implementeret");
+            MessageBox.Show("Ikke implementeret");
         }
 
         /// <summary>
@@ -52,7 +44,7 @@ namespace TreatPraktik.View
 
             if (saveFile.ShowDialog() == true)
             {
-                exExcel.CreateNewExcel(saveFile.FileName);
+                _exExcel.CreateNewExcel(saveFile.FileName);
             }
         }
     }

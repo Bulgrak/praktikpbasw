@@ -13,18 +13,25 @@ namespace TreatPraktik.ViewModel
     {
         private static WorkspaceViewModel _instance;
 
-        private readonly ImportExcel _excel;
+        private ImportExcel _excel;
 
-        public ObservableCollection<PageType> PageList { get; private set; }
+        public ObservableCollection<PageType> PageList { get; private set; } // <-- The only list that changes should be made in
         private ObservableCollection<GroupTypeOrder> GroupList { get; set; }
         private ObservableCollection<GroupType> Groups { get; set; }
         private ObservableCollection<ItemType> ItemList { get; set; }
 
-        private int GroupCounter;
+        private int _groupCounter;
 
         public WorkspaceViewModel()
         {
+            
+        }
+
+        public void LoadNewConfigurations(string path)
+        {
             _excel = ImportExcel.Instance;
+
+            _excel.ImportExcelConfiguration(path);
 
             PageList = GetAllPages();
             GroupList = GetAllGroups();
@@ -32,14 +39,41 @@ namespace TreatPraktik.ViewModel
 
             LinkCollections(PageList, Groups, GroupList, ItemList);
 
-            GroupCounter = 0;
+            _groupCounter = 0;
             int index = 0;
 
             while (index < WorkSheetktResources.Instance.ktResourceList.Count)
             {
-                if (Convert.ToInt32(WorkSheetktResources.Instance.ktResourceList[index].ResourceID) > GroupCounter)
+                if (Convert.ToInt32(WorkSheetktResources.Instance.ktResourceList[index].ResourceID) > _groupCounter)
                 {
-                    GroupCounter = Convert.ToInt32(WorkSheetktResources.Instance.ktResourceList[index].ResourceID);
+                    _groupCounter = Convert.ToInt32(WorkSheetktResources.Instance.ktResourceList[index].ResourceID);
+                }
+
+                index++;
+            }
+
+        }
+
+        public void LoadWorkspace(string path)
+        {
+            _excel = ImportExcel.Instance;
+
+            _excel.ImportExcelFromFile(path);
+
+            PageList = GetAllPages();
+            GroupList = GetAllGroups();
+            ItemList = GetAllItems();
+
+            LinkCollections(PageList, Groups, GroupList, ItemList);
+
+            _groupCounter = 0;
+            int index = 0;
+
+            while (index < WorkSheetktResources.Instance.ktResourceList.Count)
+            {
+                if (Convert.ToInt32(WorkSheetktResources.Instance.ktResourceList[index].ResourceID) > _groupCounter)
+                {
+                    _groupCounter = Convert.ToInt32(WorkSheetktResources.Instance.ktResourceList[index].ResourceID);
                 }
 
                 index++;
@@ -69,9 +103,9 @@ namespace TreatPraktik.ViewModel
         {
             //Pages
             //Sort on language 1=English and on ResourceType 7=SiteMapResource
-            var query = (from aaa in _excel.WorkSheetktResources.ktResourceList
-                         join bbb in _excel.WorkSheetktResourceTranslation.ktResourceTranslationList on aaa.ResourceID equals bbb.ResourceID
-                         join ccc in _excel.WorkSheetktResourceType.ktResourceTypeList.Where(d => d.ResourceTypeID.Equals("7")) on aaa.ResourceTypeID equals ccc.ResourceTypeID
+            var query = (from aaa in _excel._workSheetktResources.ktResourceList
+                         join bbb in _excel._workSheetktResourceTranslation.ktResourceTranslationList on aaa.ResourceID equals bbb.ResourceID
+                         join ccc in _excel._workSheetktResourceType.ktResourceTypeList.Where(d => d.ResourceTypeID.Equals("7")) on aaa.ResourceTypeID equals ccc.ResourceTypeID
                          select new
                           {
                               bbb.LanguageID,
@@ -79,7 +113,7 @@ namespace TreatPraktik.ViewModel
                               bbb.TranslationText
                           }).ToList();
 
-            List<PageType> pageList = (from a in _excel.WorkSheetktUIPageType.ktUIPageTypeList
+            List<PageType> pageList = (from a in _excel._workSheetktUIPageType.ktUIPageTypeList
                                        select new PageType
                                        {
                                            ResourceType = a.PageType + "_Title",
@@ -119,9 +153,9 @@ namespace TreatPraktik.ViewModel
         {
             //Groups
             //Sort on language 1=English and on ResourceType 1=DataGroupHeading
-            var query = (from aaa in _excel.WorkSheetktResources.ktResourceList
-                          join bbb in _excel.WorkSheetktResourceTranslation.ktResourceTranslationList on aaa.ResourceID equals bbb.ResourceID
-                          join ccc in _excel.WorkSheetktResourceType.ktResourceTypeList.Where(d => d.ResourceTypeID.Equals("1")) on aaa.ResourceTypeID equals ccc.ResourceTypeID
+            var query = (from aaa in _excel._workSheetktResources.ktResourceList
+                          join bbb in _excel._workSheetktResourceTranslation.ktResourceTranslationList on aaa.ResourceID equals bbb.ResourceID
+                          join ccc in _excel._workSheetktResourceType.ktResourceTypeList.Where(d => d.ResourceTypeID.Equals("1")) on aaa.ResourceTypeID equals ccc.ResourceTypeID
                           select new
                           {
                               bbb.LanguageID,
@@ -131,7 +165,7 @@ namespace TreatPraktik.ViewModel
                               aaa.ResourceID
                           }).ToList();
 
-            List<GroupTypeOrder> groupOrderList = (from a in _excel.WorkSheetktUIGroupOrder.ktUIGroupOrderList.OrderBy(m => m.GroupOrder)
+            List<GroupTypeOrder> groupOrderList = (from a in _excel._workSheetktUIGroupOrder.ktUIGroupOrderList.OrderBy(m => m.GroupOrder)
                                          select new GroupTypeOrder
                                          {
                                              DepartmentID = a.DepartmentID,
@@ -140,8 +174,8 @@ namespace TreatPraktik.ViewModel
                                              GroupOrder = a.GroupOrder
                                          }).ToList();
 
-            List<GroupType> groupList = (from a in _excel.WorkSheetExaminedGroup.ExaminedGroupList
-                                         join b in _excel.WorkSheetktResources.ktResourceList on a.GroupType equals b.ResourceResxID into hej
+            List<GroupType> groupList = (from a in _excel._workSheetktExaminedGroup.ExaminedGroupList
+                                         join b in _excel._workSheetktResources.ktResourceList on a.GroupType equals b.ResourceResxID into hej
                                          from c in hej.DefaultIfEmpty()
                                          select new GroupType
                                          {
@@ -198,9 +232,9 @@ namespace TreatPraktik.ViewModel
         {
             //Items
             //Sort on language 1=English and on ResourceType 2=DataItemHeading
-            var query = (from aa in _excel.WorkSheetktResources.ktResourceList
-                          join bb in _excel.WorkSheetktResourceTranslation.ktResourceTranslationList on aa.ResourceID equals bb.ResourceID
-                          join cc in _excel.WorkSheetktResourceType.ktResourceTypeList.Where(d => d.ResourceTypeID.Equals("2")) on aa.ResourceTypeID equals cc.ResourceTypeID
+            var query = (from aa in _excel._workSheetktResources.ktResourceList
+                          join bb in _excel._workSheetktResourceTranslation.ktResourceTranslationList on aa.ResourceID equals bb.ResourceID
+                          join cc in _excel._workSheetktResourceType.ktResourceTypeList.Where(d => d.ResourceTypeID.Equals("2")) on aa.ResourceTypeID equals cc.ResourceTypeID
                           select new
                           {
                               bb.LanguageID,
@@ -208,8 +242,8 @@ namespace TreatPraktik.ViewModel
                               bb.TranslationText
                           }).ToList();
 
-            List<ItemType> itemList = (from a in _excel.WorkSheetktUIOrder.ktUIOrderList.OrderBy(m => m.GroupOrder)
-                                       join b in _excel.WorkSheetUIDesign.ktUIDesignList on a.DesignID equals b.DesignID
+            List<ItemType> itemList = (from a in _excel._workSheetktUIOrder.ktUIOrderList.OrderBy(m => m.GroupOrder)
+                                       join b in _excel._workSheetUIDesign.ktUIDesignList on a.DesignID equals b.DesignID
                                        select new ItemType
                                        {
                                            ResourceType = b.ResxID,
@@ -287,6 +321,10 @@ namespace TreatPraktik.ViewModel
                 }
                 return _instance;
             }
+            set
+            {
+                _instance = value;
+            }
         }
 
         /// <summary>
@@ -299,9 +337,6 @@ namespace TreatPraktik.ViewModel
         /// <param name="danishTranslationText">The danish group name</param>
         public void CreateGroup(string pageTypeId, string languageId, double groupOrder, string englishTranslationText, string danishTranslationText)
         {
-            //GroupTypeOrder --> DepartmentID = 1, set PzgeTypeID, set new GroupTypeID, set groupOrder
-            //GroupType --> set new GroupTypeID, danish, english, resourcetype = English name - " ", set new ResourceTypeID
-
             GroupTypeOrder gtOrder = new GroupTypeOrder();
             GroupType groupType = new GroupType();
 
@@ -349,8 +384,8 @@ namespace TreatPraktik.ViewModel
             
             groupType.ResourceType = hej;
 
-            groupType.ResourceID = (GroupCounter + 1).ToString();
-            GroupCounter++;
+            groupType.ResourceID = (_groupCounter + 1).ToString();
+            _groupCounter++;
             groupType.ResourceTypeID = "1";
 
             //Reference GroupTypeOrder with GroupType
@@ -371,17 +406,87 @@ namespace TreatPraktik.ViewModel
         /// <summary>
         /// Rename an existing group
         /// </summary>
-        /// <param name="pageTypeId"></param>
-        /// <param name="groupOrder"></param>
-        /// <param name="groupTypeID"></param>
-        /// <param name="itemTypes"></param>
-        /// <param name="englishTranslationText"></param>
-        /// <param name="danishTranslationText"></param>
-        public void RenameGroup(string pageTypeId, string groupOrder, string groupTypeID, ObservableCollection<ItemType> itemTypes,
-            string englishTranslationText, string danishTranslationText)
+        /// <param name="pageTypeId">The id for the selected page</param>
+        /// <param name="groupTypeID">The id for the selected group</param>
+        /// <param name="englishTranslationText">The english group name</param>
+        /// <param name="danishTranslationText">The danish group name</param>
+        public void RenameGroup(string pageTypeId, string groupTypeID, string englishTranslationText, string danishTranslationText)
         {
+            PageType page = (from a in PageList where a.PageTypeID.Equals(pageTypeId) select a).FirstOrDefault();
+            GroupTypeOrder oldGroup = (from b in page.Groups where b.GroupTypeID.Equals(groupTypeID) select b).FirstOrDefault();
 
+            GroupTypeOrder newGroup = new GroupTypeOrder();
+            
+            GroupType newGroupType = new GroupType();
+            newGroup.Group = newGroupType;
+            List<ItemType> temp = oldGroup.Group.Items.Select(
+                    item =>
+                        new ItemType(item.DanishTranslationText, item.DesignID, item.EnglishTranslationText,
+                            item.GroupTypeID, item.Header, item.IncludedTypeID, item.ItemOrder, item.LanguageID,
+                            item.ResourceType)).ToList();
+            ObservableCollection<ItemType> obsCol = new ObservableCollection<ItemType>(temp);
+            newGroup.Group.Items = obsCol;
 
+            newGroup.Group.DanishTranslationText = danishTranslationText;
+            newGroup.Group.EnglishTranslationText = englishTranslationText;
+            newGroup.Group.LanguageID = oldGroup.Group.LanguageID;
+
+            //newGroup.Group = oldGroup.Group;
+            newGroup.DepartmentID = oldGroup.DepartmentID;
+            newGroup.GroupOrder = oldGroup.GroupOrder;
+
+            int highestId = 0;
+
+            foreach (PageType pageType in PageList)
+            {
+                int index = 0;
+
+                while (index < pageType.Groups.Count)
+                {
+                    if (Convert.ToInt32(pageType.Groups[index].GroupTypeID) > highestId)
+                    {
+                        highestId = Convert.ToInt32(pageType.Groups[index].GroupTypeID);
+                    }
+
+                    index++;
+                }
+            }
+
+            foreach (ItemType item in newGroup.Group.Items)
+            {
+                item.GroupTypeID = (highestId + 1).ToString();
+            }
+
+            newGroup.GroupTypeID = (highestId + 1).ToString();
+            newGroup.Group.GroupTypeID = newGroup.GroupTypeID;
+            newGroup.PageTypeID = pageTypeId;
+            
+            
+            string hej = englishTranslationText.Replace(" ", string.Empty);
+            int i = 1;
+            foreach (PageType pType in PageList)
+            {
+                while ((from a in pType.Groups where a.Group.ResourceType.Equals(hej + i) select a).Any())
+                {
+                    i++;
+                }
+            }
+            
+            hej = hej + i;
+
+            newGroup.Group.ResourceType = hej;
+            newGroup.Group.ResourceID = (_groupCounter + 1).ToString();
+            _groupCounter++;
+            newGroup.Group.ResourceTypeID = oldGroup.Group.ResourceTypeID;
+
+            foreach (PageType pageType in PageList)
+            {
+                if (pageType.PageTypeID.Equals(pageTypeId))
+                {
+                    pageType.Groups.Remove(oldGroup);
+                    pageType.Groups.Add(newGroup);
+                }
+            }
         }
     }
 }

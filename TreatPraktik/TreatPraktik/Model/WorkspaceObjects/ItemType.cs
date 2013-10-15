@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
 
 namespace TreatPraktik.Model.WorkspaceObjects
 {
@@ -12,16 +9,29 @@ namespace TreatPraktik.Model.WorkspaceObjects
         public string GroupTypeID { get; set; }
         public string DesignID { get; set; }            //ID of the item
         public Double ItemOrder { get; set; }          //Item order in the group
-        //public string DatabaseFieldName { get; set; }   //Item name
-        private string header { get; set; }
+        private string _header;
         public string IncludedTypeID { get; set; }
-        private string languageID { get; set; }
+        private string _languageID;
         public string DanishTranslationText { get; set; }
         public string EnglishTranslationText { get; set; }
 
         public ItemType()
         {
 
+        }
+
+        public ItemType(string danish, string designId, string english, string groupTypeId, string header, 
+            string includedTypeId, double itemOrder, string languageId, string resourceType)
+        {
+            this.ResourceType = resourceType;
+            this.GroupTypeID = groupTypeId;
+            this.DesignID = designId;
+            this.ItemOrder = itemOrder;
+            this.Header = header;
+            this.IncludedTypeID = includedTypeId;
+            this.LanguageID = languageId;
+            this.DanishTranslationText = danish;
+            this.EnglishTranslationText = english;
         }
 
         #region INotifyPropertyChanged
@@ -42,11 +52,11 @@ namespace TreatPraktik.Model.WorkspaceObjects
         {
             get 
             { 
-                return header;
+                return _header;
             }
             set 
             { 
-                header = value;
+                _header = value;
                 OnPropertyChanged("Header");
             }
         }
@@ -55,14 +65,14 @@ namespace TreatPraktik.Model.WorkspaceObjects
         {
             get
             {
-                return languageID;
+                return _languageID;
             }
             set
             {
-                this.languageID = value;
+                this._languageID = value;
                 if(DesignID != null && !DesignID.Equals("197") && !DesignID.Equals("198"))
                 {
-                    switch (languageID)
+                    switch (_languageID)
                     {
                         case "1": Header = EnglishTranslationText; break;
                         case "2": Header = DanishTranslationText; break;

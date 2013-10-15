@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Linq;
-using System.Text;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
@@ -135,7 +132,7 @@ namespace TreatPraktik.Ressources.ExcelClasses
                         break;
                     }
 
-                    if (!_rTranslation.ktResourceTranslationList.Any(x => x.ResourceID.Equals(gtOrder.Group.ResourceTypeID)))
+                    if (!_rTranslation.ktResourceTranslationList.Any(x => x.ResourceID.Equals(gtOrder.Group.ResourceID)))
                     {
                         if (columnCount >= 3)
                         {
@@ -176,7 +173,7 @@ namespace TreatPraktik.Ressources.ExcelClasses
                         cell4.DataType = CellValues.Number;
                         columnCount++;
 
-                        string text5 = gtOrder.Group.ResourceTypeID;
+                        string text5 = gtOrder.Group.ResourceID;
                         Cell cell5 =
                             _sharedResources.InsertCellInWorksheet(
                                 _sharedResources.Number2String(columnCount, true), rowCount, worksheetPart);

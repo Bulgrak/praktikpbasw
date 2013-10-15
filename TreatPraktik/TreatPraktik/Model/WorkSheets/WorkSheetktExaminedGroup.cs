@@ -13,9 +13,17 @@ namespace TreatPraktik.Model.WorkSheets
         public string SheetName { get; set; }
         public List<ktExaminedGroup> ExaminedGroupList { get; set; }
 
-        public WorkSheetktExaminedGroup()
+        private WorkSheetktExaminedGroup()
         {
             SheetName = "ktExaminedGroup";
+            ExaminedGroupList = new List<ktExaminedGroup>();
+        }
+
+        /// <summary>
+        /// Creates a new empty list of ktExaminedGroup items
+        /// </summary>
+        public void ClearList()
+        {
             ExaminedGroupList = new List<ktExaminedGroup>();
         }
 
@@ -124,6 +132,10 @@ namespace TreatPraktik.Model.WorkSheets
                     instance = new WorkSheetktExaminedGroup();
                 }
                 return instance;
+            }
+            set
+            {
+                instance = value;
             }
         }
     }
