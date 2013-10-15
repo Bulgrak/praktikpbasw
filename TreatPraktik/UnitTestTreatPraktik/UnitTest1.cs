@@ -86,7 +86,7 @@ namespace UnitTestTreatPraktik
 
             //_workspaceVM.CreateGroup("15", "1", 9.0, "Jesper", "Er sej");
 
-            CollectionAssert.Contains()
+            //CollectionAssert.Contains()
         }
     }
 }

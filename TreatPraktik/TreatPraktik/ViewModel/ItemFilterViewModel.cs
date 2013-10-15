@@ -109,12 +109,12 @@ namespace TreatPraktik.ViewModel
         {
             List<ToolboxItem> toolboxItemList = new List<ToolboxItem>();
             ImportExcel ie = ImportExcel.Instance;
-            List<ktUIDesign> designList = ie.WorkSheetUIDesign.ktUIDesignList;
-            List<ktResources> resourceList = ie.WorkSheetktResources.ktResourceList;
-            List<ktResourceTranslation> resourceTranslationList = ie.WorkSheetktResourceTranslation.ktResourceTranslationList;
-            List<ktResourceType> resourceTypeList = ie.WorkSheetktResourceType.ktResourceTypeList;
-            List<QAktUIDesign> qaktuidesignList = ie.WorkSheetQAktUIDesign.QAktUIDesignList;
-            List<QAGroup> qagrouplist = ie.WorkSheetQAGroups.QAGroupsList;
+            List<ktUIDesign> designList = ie._workSheetUIDesign.ktUIDesignList;
+            List<ktResources> resourceList = ie._workSheetktResources.ktResourceList;
+            List<ktResourceTranslation> resourceTranslationList = ie._workSheetktResourceTranslation.ktResourceTranslationList;
+            List<ktResourceType> resourceTypeList = ie._workSheetktResourceType.ktResourceTypeList;
+            List<QAktUIDesign> qaktuidesignList = ie._workSheetQAktUIDesign.QAktUIDesignList;
+            List<QAGroup> qagrouplist = ie._workSheetQAGroups.QAGroupsList;
             toolboxItemList = (
                 //joiner tabeller, der vedrører header
                 from a in designList
@@ -139,9 +139,9 @@ namespace TreatPraktik.ViewModel
                     Category = j.Type
                 }).ToList();
 
-            var query = (from aa in ie.WorkSheetktResources.ktResourceList
-                         join bb in ie.WorkSheetktResourceTranslation.ktResourceTranslationList on aa.ResourceID equals bb.ResourceID
-                         join cc in ie.WorkSheetktResourceType.ktResourceTypeList.Where(d => d.ResourceTypeID.Equals("2")) on aa.ResourceTypeID equals cc.ResourceTypeID
+            var query = (from aa in ie._workSheetktResources.ktResourceList
+                         join bb in ie._workSheetktResourceTranslation.ktResourceTranslationList on aa.ResourceID equals bb.ResourceID
+                         join cc in ie._workSheetktResourceType.ktResourceTypeList.Where(d => d.ResourceTypeID.Equals("2")) on aa.ResourceTypeID equals cc.ResourceTypeID
                          select new
                          {
                              bb.LanguageID,
