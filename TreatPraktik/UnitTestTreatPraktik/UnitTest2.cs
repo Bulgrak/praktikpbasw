@@ -54,7 +54,7 @@ namespace UnitTestTreatPraktik
             
 
             Group group = new Group();
-            group.PopulateGroupTable();
+            //group.PopulateGroupTable();
         }
 
         [TestMethod]

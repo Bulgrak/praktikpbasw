@@ -29,7 +29,8 @@ namespace TreatPraktik.View
         {
             InitializeComponent();
             wvm = WorkspaceViewModel.Instance;
-            wvm.LoadWorkspace(@"C:\UITablesToStud.xlsx");
+            string path = System.IO.Path.Combine(Environment.CurrentDirectory, @"Ressources\Configuration.xlsx");
+            wvm.LoadWorkspace(path);
             ObservableCollection<PageType> pageTypeList = wvm.PageList;
 
 
