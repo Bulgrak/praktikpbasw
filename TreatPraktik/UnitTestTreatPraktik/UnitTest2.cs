@@ -36,25 +36,25 @@ namespace UnitTestTreatPraktik
             //_exExcel = TreatPraktik.ViewModel.ExportExcel.Instance;
 
             //WorkspaceUserControl wpuc = new WorkspaceUserControl();
-            ObservableCollection<GroupTypeOrder> groups = new ObservableCollection<GroupTypeOrder>();
-            GroupTypeOrder gto = new GroupTypeOrder();
-            gto.DepartmentID = "1";
-            gto.GroupOrder = 1;
-            gto.GroupTypeID = "1";
-            gto.PageTypeID = "15";
-            GroupType gt = new GroupType();
-            gt.GroupHeader = "Gert";
-            gt.GroupTypeID = "1";
-            gt.LanguageID = "1";
-            gt.ResourceID = "1";
-            gt.ResourceType = "1";
-            gt.ResourceTypeID = "1";
+            //ObservableCollection<GroupTypeOrder> groups = new ObservableCollection<GroupTypeOrder>();
+            //GroupTypeOrder gto = new GroupTypeOrder();
+            //gto.DepartmentID = "1";
+            //gto.GroupOrder = 1;
+            //gto.GroupTypeID = "1";
+            //gto.PageTypeID = "15";
+            //GroupType gt = new GroupType();
+            //gt.GroupHeader = "Gert";
+            //gt.GroupTypeID = "1";
+            //gt.LanguageID = "1";
+            //gt.ResourceID = "1";
+            //gt.ResourceType = "1";
+            //gt.ResourceTypeID = "1";
 
 
             
 
-            Group group = new Group();
-            //group.PopulateGroupTable();
+            //GroupContainerUserControl groupContainerUserControl = new GroupContainerUserControl();
+            //groupContainerUserControl.PopulateGroupTable();
         }
 
         [TestMethod]

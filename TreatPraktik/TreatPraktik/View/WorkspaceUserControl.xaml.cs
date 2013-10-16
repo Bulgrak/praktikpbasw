@@ -49,10 +49,10 @@ namespace TreatPraktik.View
                     //{
                     //    groupType.Add(gto.Group);
                     //}
-                    Group ucGroup = new Group();
-                    ucGroup.Groups = pt.Groups;
-                    ucGroup.CreateGroupTables();
-                    ti.Content = ucGroup;
+                    GroupTableContainerUserControl ucGroupTableContainerUserControl = new GroupTableContainerUserControl();
+                    ucGroupTableContainerUserControl.GtoObsCollection = pt.Groups;
+                    ucGroupTableContainerUserControl.CreateGroupTables();
+                    ti.Content = ucGroupTableContainerUserControl;
 
                     myTabControl.Items.Add(ti);
                 }
