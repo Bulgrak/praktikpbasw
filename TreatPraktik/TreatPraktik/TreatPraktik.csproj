@@ -78,6 +78,9 @@
     <Compile Include="View\DragAdornerGroup.cs" />
     <Compile Include="View\DragAdornerItem.cs" />
     <Compile Include="View\DragAdornerToolboxItem.cs" />
+    <Compile Include="View\GroupTableUserControl.xaml.cs">
+      <DependentUpon>GroupTableUserControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\ItemFilter.xaml.cs">
       <DependentUpon>ItemFilter.xaml</DependentUpon>
     </Compile>
@@ -111,8 +114,8 @@
     <Compile Include="ViewModel\ItemFilterViewModel.cs" />
     <Compile Include="ViewModel\WorkspaceViewModel.cs" />
     <Compile Include="View\GridExtensions.cs" />
-    <Compile Include="View\Group.xaml.cs">
-      <DependentUpon>Group.xaml</DependentUpon>
+    <Compile Include="View\GroupContainerUserControl.xaml.cs">
+      <DependentUpon>GroupContainerUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\ImportExportExcel.xaml.cs">
       <DependentUpon>ImportExportExcel.xaml</DependentUpon>
@@ -126,6 +129,10 @@
     <Compile Include="View\WorkspaceUserControl.xaml.cs">
       <DependentUpon>WorkspaceUserControl.xaml</DependentUpon>
     </Compile>
+    <Page Include="View\GroupTableUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\ItemFilter.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -142,7 +149,7 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="View\Group.xaml">
+    <Page Include="View\GroupContainerUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
