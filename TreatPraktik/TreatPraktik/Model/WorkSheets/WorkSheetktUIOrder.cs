@@ -72,23 +72,37 @@ namespace TreatPraktik.Model.WorkSheets
                 //Check to verify the row contained data.
                 if (textValues.Count() > 0)
                 {
-                    //Create a ktExaminedGroup and add it to the list.
-
-                    var textArray = textValues.ToArray();
-                    ktUIOrder order = new ktUIOrder();
-                    order.DesignID = textArray[0];
-                    order.GroupOrder = double.Parse(textArray[1], CultureInfo.InvariantCulture); // Convert.ToDouble(textArray[1]);
-                    order.GroupTypeID = textArray[2];
-                    order.PageTypeID = textArray[3];
-                    order.IncludedTypeID = textArray[4];
-                    result.Add(order);
+                    if (textValues.Count() == 5)
+                    {
+                        //Create a ktUIOrder and add it to the list.
+                        var textArray = textValues.ToArray();
+                        ktUIOrder order = new ktUIOrder();
+                        order.DesignID = textArray[0];
+                        order.GroupOrder = double.Parse(textArray[1], CultureInfo.InvariantCulture); // Convert.ToDouble(textArray[1]);
+                        order.GroupTypeID = textArray[2];
+                        order.PageTypeID = textArray[3];
+                        order.IncludedTypeID = textArray[4];
+                        result.Add(order);
+                    }
+                    else
+                    {
+                        var textArray = textValues.ToArray();
+                        ktUIOrder order = new ktUIOrder();
+                        order.DesignID = textArray[0];
+                        order.GroupOrder = double.Parse(textArray[1], CultureInfo.InvariantCulture); // Convert.ToDouble(textArray[1]);
+                        order.GroupTypeID = textArray[2];
+                        order.PageTypeID = "";
+                        order.IncludedTypeID = textArray[4];
+                        result.Add(order);
+                    }
+                    
                 }
                 else
                 {
                     //If no cells, then you have reached the end of the table.
                     break;
                 }
-                //Return populated list of ktExaminedGroup.
+                //Return populated list of ktUIOrder.
                 ktUIOrderList = result;
             }
         }

@@ -90,11 +90,17 @@ namespace TreatPraktik.Ressources.ExcelClasses
             headerCell3.CellValue = new CellValue(index3.ToString(CultureInfo.InvariantCulture));
             headerCell3.DataType = new EnumValue<CellValues>(CellValues.SharedString);
 
-            string header4 = "IncludedTypeID";
+            string header4 = "PageTypeID";
             int index4 = _sharedResources.InsertSharedStringItem(header4, shareStringPart);
             Cell headerCell4 = _sharedResources.InsertCellInWorksheet("D", 1, worksheetPart);
             headerCell4.CellValue = new CellValue(index4.ToString(CultureInfo.InvariantCulture));
             headerCell4.DataType = new EnumValue<CellValues>(CellValues.SharedString);
+
+            string header5 = "IncludedTypeID";
+            int index5 = _sharedResources.InsertSharedStringItem(header5, shareStringPart);
+            Cell headerCell5 = _sharedResources.InsertCellInWorksheet("E", 1, worksheetPart);
+            headerCell5.CellValue = new CellValue(index5.ToString(CultureInfo.InvariantCulture));
+            headerCell5.DataType = new EnumValue<CellValues>(CellValues.SharedString);
 
             #endregion
 
@@ -150,6 +156,12 @@ namespace TreatPraktik.Ressources.ExcelClasses
                     Cell cell3 = _sharedResources.InsertCellInWorksheet(_sharedResources.Number2String(columnCount, true), rowCount, worksheetPart);
                     cell3.CellValue = new CellValue(text3);
                     cell3.DataType = CellValues.Number;
+                    columnCount++;
+
+                    string text4 = null;
+                    Cell cell4 = _sharedResources.InsertCellInWorksheet(_sharedResources.Number2String(columnCount, true), rowCount, worksheetPart);
+                    cell4.CellValue = new CellValue(text4);
+                    cell4.DataType = CellValues.Number;
                     columnCount++;
 
                     string text5 = group.Group.Items[i].IncludedTypeID;
