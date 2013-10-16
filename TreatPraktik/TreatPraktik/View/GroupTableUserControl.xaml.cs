@@ -23,7 +23,7 @@ namespace TreatPraktik.View
     /// </summary>
     public partial class GroupTableUserControl : UserControl
     {
-        public GroupContainerUserControl ParentGroupContainerUserControl { get; set; }
+        public GroupTableContainerUserControl ParentGroupTableContainerUserControl { get; set; }
 
         public GroupTableUserControl()
         {
@@ -151,8 +151,9 @@ namespace TreatPraktik.View
 
         private void InsertGroupItem(GroupType groupType, int row, int column)
         {
-            Border border = GetCellItem(row, column);
-            Grid gridGroupCell = (Grid)border.Child;
+            Border bCell = GetCellItem(row, column);
+            bCell.DataContext = groupType;
+            Grid gridGroupCell = (Grid)bCell.Child;
             TextBlock tb = (TextBlock)gridGroupCell.Children[1];
             tb.DataContext = groupType;
             tb.SetBinding(TextBlock.TextProperty, "GroupHeader");
@@ -929,7 +930,7 @@ namespace TreatPraktik.View
             Grid targetGroupTable = GroupTable;
             Grid draggedGroupTable = e.Data.GetData("System.Windows.Controls.Grid") as Grid;
 
-            ParentGroupContainerUserControl.MoveGroup((GroupTableUserControl)draggedGroupTable.Parent, (GroupTableUserControl)targetGroupTable.Parent);
+            ParentGroupTableContainerUserControl.MoveGroup((GroupTableUserControl)draggedGroupTable.Parent, (GroupTableUserControl)targetGroupTable.Parent);
         }
 
         void border_Drop(object sender, DragEventArgs e)
@@ -1080,8 +1081,8 @@ namespace TreatPraktik.View
         {
             if (adorner != null)
             {
-                Border lbl = sender as Border;
-                var pos = lbl.PointFromScreen(GetMousePosition());
+                Border bCell = sender as Border;
+                var pos = bCell.PointFromScreen(GetMousePosition());
                 adorner.UpdatePosition(pos);
                 //e.Handled = true;
             }
@@ -1151,7 +1152,6 @@ namespace TreatPraktik.View
         public Button CreateClearGroupBtn()
         {
             var uriSource = new Uri(@"/TreatPraktik;component/Ressources/Delete-icon.png", UriKind.Relative);
-            BitmapImage logo = new BitmapImage();
             Image imgRemoveIcon = new Image();
             imgRemoveIcon.Source = new BitmapImage(uriSource);
 

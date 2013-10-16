@@ -17,11 +17,11 @@ namespace TreatPraktik.View
     /// <summary>
     /// Interaction logic for GroupContainerUserControl.xaml
     /// </summary>
-    public partial class GroupContainerUserControl : UserControl
+    public partial class GroupTableContainerUserControl : UserControl
     {
         public ObservableCollection<GroupTypeOrder> GtoObsCollection { get; set; }
 
-        public GroupContainerUserControl()
+        public GroupTableContainerUserControl()
         {
             InitializeComponent();
         }
@@ -102,7 +102,7 @@ namespace TreatPraktik.View
                     int initialValue = i;
                     i = GetIndexLastOccurrence(GtoObsCollection[i], i);
                     skipped = skipped + (i - initialValue);
-                    groupTableUserControl.ParentGroupContainerUserControl = this;
+                    groupTableUserControl.ParentGroupTableContainerUserControl = this;
                     groupTableUserControl.PopulateGroupTable(gt);
                     List<string> deptNumbers = GetDepartments(initialValue, GtoObsCollection[initialValue]);
 
@@ -110,7 +110,7 @@ namespace TreatPraktik.View
                 }
                 else
                 {
-                    groupTableUserControl.ParentGroupContainerUserControl = this;
+                    groupTableUserControl.ParentGroupTableContainerUserControl = this;
                     groupTableUserControl.PopulateGroupTable(gt);
                     tbDepartNumber.Text = "Dept: " + GtoObsCollection[i].DepartmentID;
                 }

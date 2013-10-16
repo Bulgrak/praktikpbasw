@@ -114,8 +114,8 @@
     <Compile Include="ViewModel\ItemFilterViewModel.cs" />
     <Compile Include="ViewModel\WorkspaceViewModel.cs" />
     <Compile Include="View\GridExtensions.cs" />
-    <Compile Include="View\GroupContainerUserControl.xaml.cs">
-      <DependentUpon>GroupContainerUserControl.xaml</DependentUpon>
+    <Compile Include="View\GroupTableContainerUserControl.xaml.cs">
+      <DependentUpon>GroupTableContainerUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\ImportExportExcel.xaml.cs">
       <DependentUpon>ImportExportExcel.xaml</DependentUpon>
@@ -149,7 +149,7 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="View\GroupContainerUserControl.xaml">
+    <Page Include="View\GroupTableContainerUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
