@@ -24,10 +24,10 @@ namespace TreatPraktik.View
         /// </summary>
         private void ImportExcel_Click(object sender, RoutedEventArgs e)
         {
-            //_workspaceVM.CreateGroup("15", "1", 8.0, "New group", "Ny gruppe");
+            _workspaceVM.CreateGroup("15", "1", 8.0, "New group", "Ny gruppe");
             //_workspaceVM.CreateGroup("15", "1", 9.0, "Jesper", "Er sej");
 
-            _workspaceVM.RenameGroup("15", "0", "Rename group", "Omdøb gruppe");
+            //_workspaceVM.RenameGroup("15", "0", "Rename group", "Omdøb gruppe");
             
             MessageBox.Show("Ikke implementeret");
         }

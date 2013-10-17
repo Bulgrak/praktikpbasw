@@ -406,11 +406,27 @@ namespace TreatPraktik.ViewModel
         /// <summary>
         /// Rename an existing group
         /// </summary>
+        /// <param name="pageTypeID">The id for the selected page</param>
+        /// <param name="groupTypeID">The id for the selected group</param>
+        /// <param name="engTransText">The english group name</param>
+        /// <param name="danTransText">The danish group name</param>
+        public void RenameGroup(string pageTypeID, string groupTypeID, string engTransText, string danTransText)
+        {
+            PageType page = (from a in PageList where a.PageTypeID.Equals(pageTypeID) select a).FirstOrDefault();
+            GroupTypeOrder group = (from b in page.Groups where b.GroupTypeID.Equals(groupTypeID) select b).FirstOrDefault();
+
+            group.Group.DanishTranslationText = danTransText;
+            group.Group.EnglishTranslationText = engTransText;
+        }
+
+        /// <summary>
+        /// Rename an existing group
+        /// </summary>
         /// <param name="pageTypeId">The id for the selected page</param>
         /// <param name="groupTypeID">The id for the selected group</param>
         /// <param name="englishTranslationText">The english group name</param>
         /// <param name="danishTranslationText">The danish group name</param>
-        public void RenameGroup(string pageTypeId, string groupTypeID, string englishTranslationText, string danishTranslationText)
+        public void RenameGroup2(string pageTypeId, string groupTypeID, string englishTranslationText, string danishTranslationText)
         {
             PageType page = (from a in PageList where a.PageTypeID.Equals(pageTypeId) select a).FirstOrDefault();
             GroupTypeOrder oldGroup = (from b in page.Groups where b.GroupTypeID.Equals(groupTypeID) select b).FirstOrDefault();

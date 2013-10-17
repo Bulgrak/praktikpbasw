@@ -73,6 +73,23 @@ namespace UnitTestTreatPraktik
                                       }).ToList();
         }
 
+        #region Add items to a group
+
+        [TestMethod]
+        public void AddItemsToExistingGroup()
+        {
+            //Check if the items are present in ktUIOrder
+        }
+
+        [TestMethod]
+        public void CreateGroupWithItems()
+        {
+            //Add items to a group
+            //Test if they are present in ktUIOrder
+        }
+
+        #endregion
+
         #region Create new group
 
         [TestMethod]
@@ -447,15 +464,19 @@ namespace UnitTestTreatPraktik
             #region ktResources tests
 
             //Get the new groups in ktResources
-            List<ktResources> resources =
+            List<ktResources> resources1 =
                 _impExcel._workSheetktResources.ktResourceList.Where(
-                    x => x.ResourceResxID.Equals("Newgroup1") ||
-                        x.ResourceResxID.Equals("Newgroup2")).ToList();
+                    x => x.ResourceResxID.Equals("Newgroup1")).ToList();
+
+            List<ktResources> resources2 =
+                _impExcel._workSheetktResources.ktResourceList.Where(
+                    x => x.ResourceResxID.Equals("Newgroup2")).ToList();
 
             //Check if there only is one item of "New Group" in ktResources
-            Assert.AreEqual(resources.Count(), 2);
-            ktResources newResourceOne = resources[0];
-            ktResources newResourceTwo = resources[1];
+            Assert.AreEqual(resources1.Count(), 1);
+            Assert.AreEqual(resources2.Count(), 1);
+            ktResources newResourceOne = resources1[0];
+            ktResources newResourceTwo = resources2[0];
 
             //Check if new group has a ResourceTypeID equal to 1.
             //Means that the group is a group
@@ -518,7 +539,7 @@ namespace UnitTestTreatPraktik
 
         #endregion
 
-        #region Rename a group
+        #region Rename group
 
         [TestMethod]
         public void RenameGroup()
@@ -536,15 +557,161 @@ namespace UnitTestTreatPraktik
             //Import the new excel file
             _impExcel.ImportExcelConfiguration(_exportPath);
 
+            #region ktResources tests
+
+            //Get the new groups in ktResources
+            List<ktResources> resources =
+                _impExcel._workSheetktResources.ktResourceList.Where(
+                    x => x.ResourceResxID.Equals("Vitals")).ToList();
+
+            //Check if there only is one item of "New Group" in ktResources
+            Assert.AreEqual(resources.Count(), 1);
+            ktResources newResource = resources[0];
+
+            //Check if new group has a ResourceTypeID equal to 1.
+            //Means that the group is a group
+            Assert.AreEqual(newResource.ResourceTypeID, "1");
+
+            //Does the old list contain the new groups?
+            CollectionAssert.DoesNotContain(_oldResources, newResource);
+
+            #endregion
+
+            #region ktUIResourceTranslation tests
+
+            //Get the new groups in ktResourceTranslation
+            List<ktResourceTranslation> resourceTranslations =
+                _impExcel._workSheetktResourceTranslation.ktResourceTranslationList.Where(
+                    x => x.ResourceID.Equals(newResource.ResourceID)).ToList();
+
+            //Check if there are four items of "New Group" in ktResourceTranslation
+            Assert.AreEqual(resourceTranslations.Count(), 2);
+
+            //Check if the translation texts are right for the two "New Groups"
+            foreach (ktResourceTranslation rt in resourceTranslations)
+            {
+                if (rt.LanguageID.Equals("1"))
+                {
+                    Assert.AreEqual(rt.TranslationText, engTransText);
+                }
+                else
+                {
+                    Assert.AreEqual(rt.TranslationText, danTransText);
+                }
+
+                //Does the "New Group" exist in the old list
+                CollectionAssert.DoesNotContain(_oldResTranslation, rt);
+            }
+
+            #endregion
+        }
+
+        [TestMethod]
+        public void RenameTwoGroups()
+        {
+            //Rename a group
+            string pageTypeId1 = "15";
+            string groupTypeId1 = "0";
+            string engTransText1 = "Rename group one";
+            string danTransText1 = "Omdøb gruppe et";
+            _wvm.RenameGroup(pageTypeId1, groupTypeId1, engTransText1, danTransText1);
+
+            //Rename a group
+            string pageTypeId2 = "15";
+            string groupTypeId2 = "3";
+            string engTransText2 = "Rename group two";
+            string danTransText2 = "Omdøb gruppe et";
+            _wvm.RenameGroup(pageTypeId2, groupTypeId2, engTransText2, danTransText2);
+
+            //Export to excel with the group in it
+            _exExcel.CreateNewExcel(_exportPath);
+
+            //Import the new excel file
+            _impExcel.ImportExcelConfiguration(_exportPath);
+
+            #region ktResources tests
+
+            //Get the new groups in ktResources
+            List<ktResources> resources1 =
+                _impExcel._workSheetktResources.ktResourceList.Where(
+                    x => x.ResourceResxID.Equals("Vitals")).ToList();
+
+            List<ktResources> resources2 =
+                _impExcel._workSheetktResources.ktResourceList.Where(
+                    x => x.ResourceResxID.Equals("AdmissionData1")).ToList();
+
+            //Check if there only is two items of "New Group" in ktResources
+            Assert.AreEqual(resources1.Count(), 1);
+            Assert.AreEqual(resources2.Count(), 1);
+            ktResources newResourceOne = resources1[0]; //<-- Vitals
+            ktResources newResourceTwo = resources2[0]; //<-- AdmissionData1
+
+            //Check if new group has a ResourceTypeID equal to 1.
+            //Means that the group is a group
+            Assert.AreEqual(newResourceOne.ResourceTypeID, "1");
+            Assert.AreEqual(newResourceTwo.ResourceTypeID, "1");
+
+            //Does the old list contain the new groups?
+            CollectionAssert.DoesNotContain(_oldResources, newResourceOne);
+            CollectionAssert.DoesNotContain(_oldResources, newResourceOne);
+
+            #endregion
+
+            #region ktUIResourceTranslation tests
+
+            //Get the new groups in ktResourceTranslation
+            List<ktResourceTranslation> resourceTranslationsOne =
+                _impExcel._workSheetktResourceTranslation.ktResourceTranslationList.Where(
+                    x => x.ResourceID.Equals(newResourceOne.ResourceID)).ToList();
+
+            List<ktResourceTranslation> resourceTranslationsTwo =
+                _impExcel._workSheetktResourceTranslation.ktResourceTranslationList.Where(
+                    x => x.ResourceID.Equals(newResourceTwo.ResourceID)).ToList();
+
+            //Check if there are four items of "New Group" in ktResourceTranslation
+            Assert.AreEqual(resourceTranslationsOne.Count() + resourceTranslationsTwo.Count() , 4);
+
+            //Check if the translation texts are right for the two "New Groups"
+            foreach (ktResourceTranslation rt in resourceTranslationsOne)
+            {
+                if (rt.LanguageID.Equals("1"))
+                {
+                    Assert.AreEqual(rt.TranslationText, engTransText1);
+                }
+                else
+                {
+                    Assert.AreEqual(rt.TranslationText, danTransText1);
+                }
+
+                //Does the "New Group" exist in the old list
+                CollectionAssert.DoesNotContain(_oldResTranslation, rt);
+            }
+
+            foreach (ktResourceTranslation rt in resourceTranslationsTwo)
+            {
+                if (rt.LanguageID.Equals("1"))
+                {
+                    Assert.AreEqual(rt.TranslationText, engTransText2);
+                }
+                else
+                {
+                    Assert.AreEqual(rt.TranslationText, danTransText2);
+                }
+
+                //Does the "New Group" exist in the old list
+                CollectionAssert.DoesNotContain(_oldResTranslation, rt);
+            }
+
+            #endregion
 
         }
 
         #endregion
 
-        [TestCleanup]
-        public void CleanUp()
-        {
-            File.Delete(_exportPath);
-        }
+        //[TestCleanup]
+        //public void CleanUp()
+        //{
+        //    File.Delete(_exportPath);
+        //}
     }
 }

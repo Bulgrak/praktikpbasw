@@ -1,4 +1,6 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
@@ -13,14 +15,20 @@ namespace TreatPraktik.Ressources.ExcelClasses
     class ResourceTranslation
     {
         readonly WorkSheetktResourceTranslation _rTranslation;
+        readonly WorkSheetktResources _resources;
         readonly SharedRessources _sharedResources;
         readonly WorkspaceViewModel _workspaceVM;
+
+        readonly List<GroupTypeOrder> _tempList;
 
         public ResourceTranslation()
         {
             _rTranslation = WorkSheetktResourceTranslation.Instance;
+            _resources = WorkSheetktResources.Instance;
             _sharedResources = SharedRessources.Instance;
             _workspaceVM = WorkspaceViewModel.Instance;
+
+            _tempList = new List<GroupTypeOrder>();
         }
 
         /// <summary>
@@ -87,62 +95,103 @@ namespace TreatPraktik.Ressources.ExcelClasses
 
             #endregion
 
-            #region Insert original ktResourceTranslation items into the excel document
-
             int columnCount = 1;
             uint rowCount = 2;
 
-            foreach (ktResourceTranslation resTrans in _rTranslation.ktResourceTranslationList)
-            {
-                if (columnCount >= 3)
+            #region Create list containing all the resource translations, but also the ResourceTypeID from ktResources
+
+            var query = (from a in _rTranslation.ktResourceTranslationList
+                join b in _resources.ktResourceList on a.ResourceID equals b.ResourceID
+                select new
                 {
-                    columnCount = 1;
+                    a.TranslationText,
+                    a.LanguageID,
+                    a.ResourceID,
+                    b.ResourceTypeID
+                }).ToList();
+
+            #endregion
+
+            #region Create temporary list containing the groups needed to create the ktUIOrder excel sheet
+
+            foreach (PageType page in _workspaceVM.PageList)
+            {
+                foreach (GroupTypeOrder group in page.Groups)
+                {
+                    if (group.GroupTypeID.Equals("58") || group.GroupTypeID.Equals("60"))
+                    {
+                        continue;
+                    }
+
+                    if (!_tempList.Any(x => x.GroupTypeID.Equals(group.GroupTypeID)))
+                    {
+                        _tempList.Add(group);
+                    }
                 }
-
-                string text1 = resTrans.LanguageID;
-                Cell cell1 = _sharedResources.InsertCellInWorksheet(_sharedResources.Number2String(columnCount, true), rowCount, worksheetPart);
-                cell1.CellValue = new CellValue(text1);
-                cell1.DataType = CellValues.Number;
-                columnCount++;
-
-                string text2 = resTrans.ResourceID;
-                Cell cell2 = _sharedResources.InsertCellInWorksheet(_sharedResources.Number2String(columnCount, true), rowCount, worksheetPart);
-                cell2.CellValue = new CellValue(text2);
-                cell2.DataType = CellValues.Number;
-                columnCount++;
-
-                string text3 = resTrans.TranslationText;
-                Cell cell3 = _sharedResources.InsertCellInWorksheet(_sharedResources.Number2String(columnCount, true), rowCount, worksheetPart);
-                cell3.CellValue = new CellValue(text3);
-                cell3.DataType = CellValues.String;
-
-                rowCount++;
             }
 
             #endregion
 
-            #region Insert new ktResourceTranslation items into excel
+            #region Inserting data rows
 
-            foreach (PageType page in _workspaceVM.PageList)
+            //Insert all from the original list + changes --> renaming of groups
+            foreach (var qItem in query)
             {
-                foreach (GroupTypeOrder gtOrder in page.Groups)
+                if (qItem.ResourceTypeID.Equals("1"))
                 {
-                    if (gtOrder.GroupTypeID.Equals("58") || gtOrder.GroupTypeID.Equals("60"))
-                    {
-                        break;
-                    }
-
-                    if (!_rTranslation.ktResourceTranslationList.Any(x => x.ResourceID.Equals(gtOrder.Group.ResourceID)))
+                    //Indsætter alle de grupper der ikke indgår i templisten under ResourceTypeID 1
+                    if (!_tempList.Any(x => x.Group.ResourceID.Equals(qItem.ResourceID)))
                     {
                         if (columnCount >= 3)
                         {
                             columnCount = 1;
                         }
+                        string text9 = qItem.LanguageID;
+                        Cell cell9 =
+                            _sharedResources.InsertCellInWorksheet(
+                                _sharedResources.Number2String(columnCount, true),
+                                rowCount, worksheetPart);
+                        cell9.CellValue = new CellValue(text9);
+                        cell9.DataType = CellValues.Number;
+                        columnCount++;
 
-                        string text1 = "1";     // <- English translation
+                        string text10 = qItem.ResourceID;
+                        Cell cell10 =
+                            _sharedResources.InsertCellInWorksheet(
+                                _sharedResources.Number2String(columnCount, true),
+                                rowCount, worksheetPart);
+                        cell10.CellValue = new CellValue(text10);
+                        cell10.DataType = CellValues.Number;
+                        columnCount++;
+
+                        string text11 = qItem.TranslationText;
+                        Cell cell11 =
+                            _sharedResources.InsertCellInWorksheet(
+                                _sharedResources.Number2String(columnCount, true),
+                                rowCount, worksheetPart);
+                        cell11.CellValue = new CellValue(text11);
+                        cell11.DataType = CellValues.String;
+
+                        rowCount++;
+                    }
+                    //Indsætter de groups der er i templisten
+                    else
+                    {
+                        var gtOrder =
+                            (from a in _tempList
+                                where a.Group.ResourceID.Equals(qItem.ResourceID)
+                                select a).FirstOrDefault();
+
+                        if (columnCount >= 3)
+                        {
+                            columnCount = 1;
+                        }
+
+                        string text1 = qItem.LanguageID;
                         Cell cell1 =
                             _sharedResources.InsertCellInWorksheet(
-                                _sharedResources.Number2String(columnCount, true), rowCount, worksheetPart);
+                                _sharedResources.Number2String(columnCount, true),
+                                rowCount, worksheetPart);
                         cell1.CellValue = new CellValue(text1);
                         cell1.DataType = CellValues.Number;
                         columnCount++;
@@ -150,43 +199,97 @@ namespace TreatPraktik.Ressources.ExcelClasses
                         string text2 = gtOrder.Group.ResourceID;
                         Cell cell2 =
                             _sharedResources.InsertCellInWorksheet(
-                                _sharedResources.Number2String(columnCount, true), rowCount, worksheetPart);
+                                _sharedResources.Number2String(columnCount, true),
+                                rowCount, worksheetPart);
                         cell2.CellValue = new CellValue(text2);
                         cell2.DataType = CellValues.Number;
                         columnCount++;
 
-                        string text3 = gtOrder.Group.EnglishTranslationText;
+                        string text3 = qItem.LanguageID.Equals("1") ? gtOrder.Group.EnglishTranslationText : gtOrder.Group.DanishTranslationText;
                         Cell cell3 =
                             _sharedResources.InsertCellInWorksheet(
-                                _sharedResources.Number2String(columnCount, true), rowCount, worksheetPart);
+                                _sharedResources.Number2String(columnCount, true),
+                                rowCount, worksheetPart);
                         cell3.CellValue = new CellValue(text3);
                         cell3.DataType = CellValues.String;
 
                         rowCount++;
+                    }
+                }
+                //Indsætter alle de andre translation informationer
+                else
+                {
+                    if (columnCount >= 3)
+                    {
                         columnCount = 1;
+                    }
 
-                        string text4 = "2";     // <- Danish translation
-                        Cell cell4 =
+                    string text7 = qItem.LanguageID;
+                    Cell cell7 =
+                        _sharedResources.InsertCellInWorksheet(_sharedResources.Number2String(columnCount, true),
+                            rowCount, worksheetPart);
+                    cell7.CellValue = new CellValue(text7);
+                    cell7.DataType = CellValues.Number;
+                    columnCount++;
+
+                    string text8 = qItem.ResourceID;
+                    Cell cell8 =
+                        _sharedResources.InsertCellInWorksheet(_sharedResources.Number2String(columnCount, true),
+                            rowCount, worksheetPart);
+                    cell8.CellValue = new CellValue(text8);
+                    cell8.DataType = CellValues.Number;
+                    columnCount++;
+
+                    string text9 = qItem.TranslationText;
+                    Cell cell9 =
+                        _sharedResources.InsertCellInWorksheet(_sharedResources.Number2String(columnCount, true),
+                            rowCount, worksheetPart);
+                    cell9.CellValue = new CellValue(text9);
+                    cell9.DataType = CellValues.String;
+
+                    rowCount++;
+                }
+            }
+
+            //Indsætter de groups der ikke indgår in den originale liste --> Ny oprettede grupper
+            foreach (var order in _tempList)
+            {
+                if (!query.Any(x => x.ResourceID.Equals(order.Group.ResourceID)))
+                {
+                    for (int i = 1; i < 3; i++)
+                    {
+                        if (columnCount >= 3)
+                        {
+                            columnCount = 1;
+                        }
+
+                        string text1 = i.ToString();
+                        Cell cell1 =
                             _sharedResources.InsertCellInWorksheet(
-                                _sharedResources.Number2String(columnCount, true), rowCount, worksheetPart);
-                        cell4.CellValue = new CellValue(text4);
-                        cell4.DataType = CellValues.Number;
+                                _sharedResources.Number2String(columnCount, true),
+                                rowCount, worksheetPart);
+                        cell1.CellValue = new CellValue(text1);
+                        cell1.DataType = CellValues.Number;
                         columnCount++;
 
-                        string text5 = gtOrder.Group.ResourceID;
-                        Cell cell5 =
+                        string text2 = order.Group.ResourceID;
+                        Cell cell2 =
                             _sharedResources.InsertCellInWorksheet(
-                                _sharedResources.Number2String(columnCount, true), rowCount, worksheetPart);
-                        cell5.CellValue = new CellValue(text5);
-                        cell5.DataType = CellValues.Number;
+                                _sharedResources.Number2String(columnCount, true),
+                                rowCount, worksheetPart);
+                        cell2.CellValue = new CellValue(text2);
+                        cell2.DataType = CellValues.Number;
                         columnCount++;
 
-                        string text6 = gtOrder.Group.DanishTranslationText;
-                        Cell cell6 =
+                        string text3 = text1.Equals("1")
+                            ? order.Group.EnglishTranslationText
+                            : order.Group.DanishTranslationText;
+                        Cell cell3 =
                             _sharedResources.InsertCellInWorksheet(
-                                _sharedResources.Number2String(columnCount, true), rowCount, worksheetPart);
-                        cell6.CellValue = new CellValue(text6);
-                        cell6.DataType = CellValues.String;
+                                _sharedResources.Number2String(columnCount, true),
+                                rowCount, worksheetPart);
+                        cell3.CellValue = new CellValue(text3);
+                        cell3.DataType = CellValues.String;
 
                         rowCount++;
                     }
@@ -195,6 +298,7 @@ namespace TreatPraktik.Ressources.ExcelClasses
 
             #endregion
 
+            //Saves the excel sheet
             worksheetPart.Worksheet.Save();
         }
     }
