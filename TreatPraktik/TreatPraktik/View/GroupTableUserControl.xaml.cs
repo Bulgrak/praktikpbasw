@@ -109,9 +109,7 @@ namespace TreatPraktik.View
         public GroupType GetGroupType(Grid grid)
         {
             Border b = (Border)grid.GetCellChild(0, 0);
-            Grid gridGroupCell = (Grid)b.Child;
-            TextBlock tb = (TextBlock)gridGroupCell.Children[1];
-            GroupType gt = (GroupType)tb.DataContext;
+            GroupType gt = (GroupType)b.DataContext;
             return gt;
         }
 
@@ -124,10 +122,8 @@ namespace TreatPraktik.View
                 int j = 0;
                 while (j < GroupTable.ColumnDefinitions.Count)
                 {
-                    Border b = (Border)GroupTable.GetCellChild(i, j);
-                    Grid gridCell = (Grid)b.Child;
-                    TextBlock tb = (TextBlock)gridCell.Children[1];
-                    ItemType it = (ItemType)tb.DataContext;
+                    Border bCell = (Border)GroupTable.GetCellChild(i, j);
+                    ItemType it = (ItemType)bCell.DataContext;
                     if (it.DesignID != null)
                         itemTypeList.Add(it);
                     j++;
@@ -139,13 +135,14 @@ namespace TreatPraktik.View
 
         private void InsertItem(ItemType itemType, int row, int column, SolidColorBrush textColor)
         {
-            Border border = GetCellItem(row, column);
-            Grid cellItem = (Grid)border.Child;
+            Border bCell = GetCellItem(row, column);
+            Grid cellItem = (Grid)bCell.Child;
             TextBlock tb = (TextBlock)cellItem.Children[1];
-            ItemType dummyItemType = (ItemType)tb.DataContext;
+            ItemType dummyItemType = (ItemType)bCell.DataContext;
             itemType.ItemOrder = dummyItemType.ItemOrder;
-            tb.DataContext = itemType;
-            tb.SetBinding(TextBlock.TextProperty, "Header");
+            bCell.DataContext = itemType;
+            //tb.DataContext = itemType;
+            //tb.SetBinding(TextBlock.TextProperty, "Header");
             tb.Foreground = textColor;
         }
 
@@ -155,7 +152,7 @@ namespace TreatPraktik.View
             bCell.DataContext = groupType;
             Grid gridGroupCell = (Grid)bCell.Child;
             TextBlock tb = (TextBlock)gridGroupCell.Children[1];
-            tb.DataContext = groupType;
+            //tb.DataContext = groupType;
             tb.SetBinding(TextBlock.TextProperty, "GroupHeader");
         }
 
@@ -196,14 +193,13 @@ namespace TreatPraktik.View
             gridGroupTable.RemoveRow(gridGroupTable.RowDefinitions.Count - 1);
             GroupTypeOrder gto = (GroupTypeOrder)gridGroupTable.DataContext;
             GroupType gt = gto.Group;
-            TextBlock tb = (TextBlock)gridCell.Children[1];
 
-            ItemType itToBeDeleted = (ItemType)tb.DataContext;
+            ItemType itToBeDeleted = (ItemType)border.DataContext;
             gt.Items.Remove(itToBeDeleted);
 
             int i = Convert.ToInt32(itToBeDeleted.ItemOrder);
             ItemType itemType = new ItemType();
-            tb.DataContext = itemType;
+            border.DataContext = itemType;
 
             List<ItemType> itemTypeList = GetItemTypes();
             bool stopCounting = false;
@@ -236,10 +232,11 @@ namespace TreatPraktik.View
             {
                 if (uie is Border)
                 {
-                    Border b = (Border)uie;
-                    Grid gridCell = (Grid)b.Child;
-                    TextBlock tb = (TextBlock)gridCell.Children[1];
-                    ItemType it = (ItemType)tb.DataContext;
+                    Border bCell = (Border)uie;
+                    //Grid gridCell = (Grid)b.Child;
+                    //TextBlock tb = (TextBlock)gridCell.Children[1];
+                    //ItemType it = (ItemType)b.DataContext;
+                    ItemType it = (ItemType)bCell.DataContext;
                     itemTypeListCheck.Add(it);
                 }
             }
@@ -331,7 +328,6 @@ namespace TreatPraktik.View
             }
         }
 
-
         private void AddNewGroupRow()
         {
             RowDefinition rd = new RowDefinition();
@@ -356,14 +352,14 @@ namespace TreatPraktik.View
 
         private Border CreateGroupCell(Color borderBrush, Color background)
         {
-            Border border = CreateBorderContainer(borderBrush, background);
-            border.MouseEnter += border_MouseEnter;
-            border.MouseLeave += border_MouseLeave;
-            border.AllowDrop = true;
-            border.Drop += border_Drop;
-            border.DragEnter += border_DragEnter;
-            border.DragLeave += border_DragLeave;
-            border.DragOver += border_DragOver;
+            Border bGroupCell = CreateBorderContainer(borderBrush, background);
+            bGroupCell.MouseEnter += border_MouseEnter;
+            bGroupCell.MouseLeave += border_MouseLeave;
+            bGroupCell.AllowDrop = true;
+            bGroupCell.Drop += border_Drop;
+            bGroupCell.DragEnter += border_DragEnter;
+            bGroupCell.DragLeave += border_DragLeave;
+            bGroupCell.DragOver += border_DragOver;
             TextBlock tb = new TextBlock { FontWeight = FontWeights.Bold, FontSize = 14.0 };
             Grid gridCell = new Grid();
             CreateColumns(gridCell, 2);
@@ -372,26 +368,27 @@ namespace TreatPraktik.View
             Grid.SetColumn(tb, 0);
             gridCell.Children.Add(clearGroupBtn);
             gridCell.Children.Add(tb);
-            border.Child = gridCell;
-            return border;
+            bGroupCell.Child = gridCell;
+            return bGroupCell;
         }
 
         private Border CreateItemCell(Color borderBrush, Color background, ItemType itemType)
         {
-            Border border = CreateBorderContainer(borderBrush, background);
-            border.MouseEnter += border_MouseEnter;
-            border.MouseLeave += border_MouseLeave;
-            border.AllowDrop = true;
-            border.Drop += border_Drop;
-            border.DragEnter += border_DragEnter;
-            border.DragLeave += border_DragLeave;
-            border.DragOver += border_DragOver;
+            Border bCell = CreateBorderContainer(borderBrush, background);
+            bCell.DataContext = itemType;
+            bCell.MouseEnter += border_MouseEnter;
+            bCell.MouseLeave += border_MouseLeave;
+            bCell.AllowDrop = true;
+            bCell.Drop += border_Drop;
+            bCell.DragEnter += border_DragEnter;
+            bCell.DragLeave += border_DragLeave;
+            bCell.DragOver += border_DragOver;
             TextBlock tb = new TextBlock
             {
                 FontSize = 14.0,
                 HorizontalAlignment = HorizontalAlignment.Stretch,
-                VerticalAlignment = VerticalAlignment.Stretch,
-                DataContext = itemType
+                VerticalAlignment = VerticalAlignment.Stretch//,
+                //DataContext = itemType
             };
             tb.SetBinding(TextBlock.TextProperty, "Header");
 
@@ -402,8 +399,8 @@ namespace TreatPraktik.View
             Grid.SetColumn(tb, 0);
             gridCell.Children.Add(clearCellBtn);
             gridCell.Children.Add(tb);
-            border.Child = gridCell;
-            return border;
+            bCell.Child = gridCell;
+            return bCell;
         }
 
         void border_DragLeave(object sender, DragEventArgs e)
@@ -443,31 +440,17 @@ namespace TreatPraktik.View
 
         void CheckToolboxItemDrop(object sender, DragEventArgs e)
         {
-            TextBlock tb = null;
-            Grid gridCell = null;
-            if (e.Source is Border)
-            {
-                Border target = e.Source as Border;
-                gridCell = (Grid)target.Child;
-                tb = (TextBlock)gridCell.Children[1];
-            }
-            else
-            {
-                tb = e.Source as TextBlock;
-                gridCell = (Grid)tb.Parent;
-            }
+            Border bCell = GetBorderByDropEvent(e);
             ListBoxItem lbi = e.Data.GetData("System.Windows.Controls.ListBoxItem") as ListBoxItem;
             ToolboxItem tbi = (ToolboxItem)lbi.Content;
 
-            if (!(tb.DataContext is GroupType))
+            if (!(bCell.DataContext is GroupType))
             {
-                Border borderCell = (Border)gridCell.Parent;
-                int row = Grid.GetRow(borderCell);
+                int row = Grid.GetRow(bCell);
                 bool containsRow = CheckForNewLineItem(row);
                 if (tbi.DesignID.Equals("198") && containsRow)
                 {
                     e.Effects = DragDropEffects.None;
-
                 }
                 else
                 {
@@ -482,47 +465,8 @@ namespace TreatPraktik.View
 
         void CheckItemTypeDrop(object sender, DragEventArgs e)
         {
-            TextBlock tb = null;
-            Grid gridCell = null;
-            Grid groupTable = null;
-            Border borderCell = null;
-            ItemType it = null;
-            Image img = null;
-            Button btn = null;
-            int row = 0;
-            if (e.Source is Border)
-            {
-                borderCell = e.Source as Border;
-
-                groupTable = (Grid)borderCell.Parent;
-                gridCell = (Grid)borderCell.Child;
-                tb = (TextBlock)gridCell.Children[1];
-            }
-            if (e.Source is TextBlock)
-            {
-                tb = e.Source as TextBlock;
-                gridCell = (Grid)tb.Parent;
-                borderCell = (Border)gridCell.Parent;
-                groupTable = (Grid)borderCell.Parent;
-            }
-            if (e.Source is Image)
-            {
-                img = e.Source as Image;
-                btn = (Button)img.Parent;
-                gridCell = (Grid)btn.Parent;
-                borderCell = (Border)gridCell.Parent;
-                groupTable = (Grid)borderCell.Parent;
-                tb = (TextBlock)gridCell.Children[1];
-            }
-            if (e.Source is Button)
-            {
-                btn = e.Source as Button;
-                gridCell = (Grid)btn.Parent;
-                borderCell = (Border)gridCell.Parent;
-                groupTable = (Grid)borderCell.Parent;
-                tb = (TextBlock)gridCell.Children[1];
-            }
-            row = Grid.GetRow(borderCell);
+            Border borderCell = GetBorderByDropEvent(e);
+            int row = Grid.GetRow(borderCell);
             Border draggedBorderCell = (Border)e.Data.GetData("System.Windows.Controls.Border");
             Grid draggedGridCell = (Grid)draggedBorderCell.Child;
             TextBlock draggedTextBlock = (TextBlock)draggedGridCell.Children[1];
@@ -530,11 +474,11 @@ namespace TreatPraktik.View
             Grid draggedGroupTable = (Grid)draggedBorderCell.Parent;
 
             GroupType draggedGt = GetGroupType(draggedGroupTable);
-            GroupType gt = GetGroupType(groupTable);
+            GroupType gt = GetGroupType(GroupTable);
 
-            it = (ItemType)draggedTextBlock.DataContext;
+            ItemType it = (ItemType)draggedTextBlock.DataContext;
 
-            if (tb.DataContext is ItemType)
+            if (borderCell.DataContext is ItemType)
             {
                 if (!draggedGt.GroupTypeID.Equals(gt.GroupTypeID))
                 {
@@ -553,7 +497,7 @@ namespace TreatPraktik.View
                     }
                 }
             }
-            if (tb.DataContext is GroupType)
+            if (borderCell.DataContext is GroupType)
             {
 
                 e.Effects = DragDropEffects.None;
@@ -562,47 +506,9 @@ namespace TreatPraktik.View
 
         void CheckGroupTableDrop(object sender, DragEventArgs e)
         {
-            TextBlock tb = null;
-            Grid gridCell = null;
-            Grid groupTable = null;
-            Border borderCell = null;
-            ItemType it = null;
-            Image img = null;
-            Button btn = null;
-            int row = 0;
-            if (e.Source is Border)
-            {
-                borderCell = e.Source as Border;
-
-                groupTable = (Grid)borderCell.Parent;
-                gridCell = (Grid)borderCell.Child;
-                tb = (TextBlock)gridCell.Children[1];
-            }
-            if (e.Source is TextBlock)
-            {
-                tb = e.Source as TextBlock;
-                gridCell = (Grid)tb.Parent;
-                borderCell = (Border)gridCell.Parent;
-                groupTable = (Grid)borderCell.Parent;
-            }
-            if (e.Source is Image)
-            {
-                img = e.Source as Image;
-                btn = (Button)img.Parent;
-                gridCell = (Grid)btn.Parent;
-                borderCell = (Border)gridCell.Parent;
-                groupTable = (Grid)borderCell.Parent;
-                tb = (TextBlock)gridCell.Children[1];
-            }
-            if (e.Source is Button)
-            {
-                btn = e.Source as Button;
-                gridCell = (Grid)btn.Parent;
-                borderCell = (Border)gridCell.Parent;
-                groupTable = (Grid)borderCell.Parent;
-                tb = (TextBlock)gridCell.Children[1];
-            }
-            if (tb.DataContext is GroupType)
+            Border bCell = GetBorderByDropEvent(e);
+            
+            if (bCell.DataContext is GroupType)
             {
                 e.Effects = DragDropEffects.Move;
             }
@@ -612,32 +518,47 @@ namespace TreatPraktik.View
             }
         }
 
-        void HandleToolboxItemDrop(object sender, DragEventArgs e)
+        Border GetBorderByDropEvent(DragEventArgs e)
         {
-            TextBlock tb = null;
-            Grid gridCell = null;
-            Border target = null;
+            Border bCell = null;
             if (e.Source is Border)
             {
-                target = e.Source as Border;
-                gridCell = (Grid)target.Child;
-                tb = (TextBlock)gridCell.Children[1];
-            }
-            else
-            {
+                bCell = e.Source as Border;
 
-                tb = e.Source as TextBlock;
-                gridCell = (Grid)tb.Parent;
-                target = (Border)gridCell.Parent;
             }
+            else if (e.Source is TextBlock)
+            {
+                TextBlock tb = e.Source as TextBlock;
+                Grid gridCell = (Grid)tb.Parent;
+                bCell = (Border)gridCell.Parent;
+            }
+            else if (e.Source is Image)
+            {
+                Image img = e.Source as Image;
+                Button btn = (Button)img.Parent;
+                Grid gridCell = (Grid)btn.Parent;
+                bCell = (Border)gridCell.Parent;
+            }
+            else if (e.Source is Button)
+            {
+                Button btn = e.Source as Button;
+                Grid gridCell = (Grid)btn.Parent;
+                bCell = (Border)gridCell.Parent;
+            }
+            return bCell;
+        }
+
+        void HandleToolboxItemDrop(object sender, DragEventArgs e)
+        {
+            Border bCell = GetBorderByDropEvent(e);
+            
             ListBoxItem lbi = e.Data.GetData("System.Windows.Controls.ListBoxItem") as ListBoxItem;
             ToolboxItem tbi = (ToolboxItem)lbi.Content;
 
-            ItemType itToBeMoved = (ItemType)tb.DataContext;
+            ItemType itToBeMoved = (ItemType)bCell.DataContext;
             int designID = Convert.ToInt32(itToBeMoved.DesignID);
-            Border borderCell = (Border)gridCell.Parent;
-            int row = Grid.GetRow(borderCell);
-            Grid grid = (Grid)borderCell.Parent;
+            int row = Grid.GetRow(bCell);
+            Grid grid = (Grid)bCell.Parent;
             GroupTypeOrder gto = (GroupTypeOrder)grid.DataContext;
             GroupType gt = gto.Group;
             if (tbi.DesignID.Equals("198") && designID != 0)
@@ -730,56 +651,19 @@ namespace TreatPraktik.View
         void HandleItemTypeDrop(object sender, DragEventArgs e)
         {
             //dragged item
-            Border target = null;
-            Grid gridCell = null;
-            TextBlock tb = null;
-            ItemType targetItemType = null;
-            Image img = null;
-            Button btn = null;
-            if (e.Source is Border)
-            {
-                target = e.Source as Border;
-                gridCell = (Grid)target.Child;
-                tb = (TextBlock)gridCell.Children[1];
-                targetItemType = (ItemType)tb.DataContext;
-            }
-            if (e.Source is TextBlock)
-            {
-                tb = e.Source as TextBlock;
-                gridCell = (Grid)tb.Parent;
-                target = (Border)gridCell.Parent;
-                targetItemType = (ItemType)tb.DataContext;
-            }
-            if (e.Source is Image)
-            {
-                img = e.Source as Image;
-                btn = (Button)img.Parent;
-                gridCell = (Grid)btn.Parent;
-                target = (Border)gridCell.Parent;
-                tb = (TextBlock)gridCell.Children[1];
-                targetItemType = (ItemType)tb.DataContext;
-            }
-            if (e.Source is Button)
-            {
-                btn = e.Source as Button;
-                gridCell = (Grid)btn.Parent;
-                target = (Border)gridCell.Parent;
-                tb = (TextBlock)gridCell.Children[1];
-                targetItemType = (ItemType)tb.DataContext;
-
-            }
+            Border target = GetBorderByDropEvent(e);
+            ItemType targetItemType = (ItemType)target.DataContext;
+            
             Border target2 = e.Data.GetData("System.Windows.Controls.Border") as Border;
-            Grid gridCell2 = (Grid)target2.Child;
-            TextBlock tb2 = (TextBlock)gridCell2.Children[1];
-            ItemType draggedItemType = (ItemType)tb2.DataContext;
-            Grid groupTable2 = (Grid)target2.Parent;
+            ItemType draggedItemType = (ItemType)target2.DataContext;
+            //Grid groupTable2 = (Grid)target2.Parent;
             Grid groupTable = (Grid)target.Parent;
 
-            GroupType gt2 = GetGroupType(groupTable2);
+            //GroupType gt2 = GetGroupType(groupTable2);
             GroupType gt = GetGroupType(groupTable);
 
             double targetItemTypeNo = targetItemType.ItemOrder; //affected item
-            double draggedItemTypeNo = draggedItemType.ItemOrder; //dragged item
+            //double draggedItemTypeNo = draggedItemType.ItemOrder; //dragged item
 
             gt.Items.Remove(draggedItemType);
             int position = gt.Items.IndexOf(targetItemType);
@@ -798,12 +682,11 @@ namespace TreatPraktik.View
                     int column = Grid.GetColumn(target);
                     int rowCount = groupTable.RowDefinitions.Count;
                     int lastRow = groupTable.RowDefinitions.Count - 1;
-                    groupTable.ClearGrid();
-                    PopulateGroupTable(gt);
+                    RefreshGroupTable(gt);
                     Border newTarget = null;
                     if (rowCount == groupTable.RowDefinitions.Count + 1)
                     {
-                        AddNewEmptyItemRow();
+                        AddNewEmptyItemRow(); // Adds new row in case the item has been drop at the last row
                         if (row == lastRow)
                         {
                             newTarget =
@@ -819,16 +702,13 @@ namespace TreatPraktik.View
                     {
                         newTarget = (Border)GetCellItem(row, column);
                     }
-                    Grid newGridCell = (Grid)newTarget.Child;
-                    TextBlock newtb = (TextBlock)newGridCell.Children[1];
-                    newtb.DataContext = draggedItemType;
+                    newTarget.DataContext = draggedItemType;
                     i = 1;
                     while (i < groupTable.RowDefinitions.Count - 2)
                     {
-
                         if (!CheckIfRowIsEmpty(i))
                         {
-                            GenerateEmptyFields(i, true);
+                            GenerateEmptyFields(i, CheckForNewLineItem(i));
                         }
                         i++;
                     }
@@ -847,45 +727,48 @@ namespace TreatPraktik.View
                     ObservableCollection<ItemType> ocItemTypeList = new ObservableCollection<ItemType>(itemTypeList);
                     gt.Items = ocItemTypeList;
 
-                    groupTable.ClearGrid();
-                    PopulateGroupTable(gt);
-                    DisableAllowDropByNewLineItem();
+                    RefreshGroupTable(gt);
                 }
-                if (draggedItemType.DesignID.Equals("198"))
-                {
-                    ItemType newit = new ItemType();
-                    newit.ItemOrder = draggedItemType.ItemOrder;
-                    tb2.DataContext = newit;
-                    tb.DataContext = draggedItemType;
-                    gt.Items.Remove(draggedItemType);
-                    if (position != -1)
-                    {
-                        gt.Items.Insert(position, draggedItemType);
-                        gt.Items[position].ItemOrder = targetItemTypeNo;
-                    }
-                    if (targetItemType.DesignID == null)
-                    {
-                        gt.Items.Add(draggedItemType);
-                    }
-                    draggedItemType.ItemOrder = targetItemTypeNo;
-                    int i = 1;
-                    while (i < groupTable.RowDefinitions.Count - 2)
-                    {
+                //else if (draggedItemType.DesignID.Equals("198"))
+                //{
+                //    ItemType newit = new ItemType();
+                //    newit.ItemOrder = draggedItemType.ItemOrder;
+                //    target.DataContext = newit;
+                //    target2.DataContext = draggedItemType;
+                //    gt.Items.Remove(draggedItemType);
+                //    if (position != -1)
+                //    {
+                //        gt.Items.Insert(position, draggedItemType);
+                //        //gt.Items[position].ItemOrder = targetItemTypeNo;
+                //    }
+                //    if (targetItemType.DesignID == null)
+                //    {
+                //        gt.Items.Add(draggedItemType);
+                //    }
+                //    draggedItemType.ItemOrder = targetItemTypeNo;
+                //    //RefreshGroupTable(gt);
+                //    int i = 1;
+                //    while (i < groupTable.RowDefinitions.Count - 2)
+                //    {
 
-                        if (!CheckIfRowIsEmpty(i))
-                        {
-                            GenerateEmptyFields(i, true);
-                        }
-                        i++;
-                    }
-                    GenerateEmptyFields(groupTable.RowDefinitions.Count - 2, false);
-                    GenerateEmptyFields(groupTable.RowDefinitions.Count - 1, false);
-                    groupTable.ClearGrid();
-                    PopulateGroupTable(gt);
-                    DisableAllowDropByNewLineItem();
-                }
+                //        if (!CheckIfRowIsEmpty(i))
+                //        {
+                //            GenerateEmptyFields(i, true);
+                //        }
+                //        i++;
+                //    }
+                //    GenerateEmptyFields(groupTable.RowDefinitions.Count - 2, false);
+                //    GenerateEmptyFields(groupTable.RowDefinitions.Count - 1, false);
+                //    groupTable.ClearGrid();
+                //    PopulateGroupTable(gt);
+                //    DisableAllowDropByNewLineItem();
+                //}
+                //else if (draggedItemType.DesignID("198"))
+                //{
+                    
+                //}
 
-                if (targetItemType.DesignID != null && draggedItemType.DesignID != null && !draggedItemType.DesignID.Equals("198"))
+                else if (draggedItemType.DesignID.Equals("198"))
                 {
                     if (draggedItemType.ItemOrder > targetItemType.ItemOrder)
                     {
@@ -894,17 +777,53 @@ namespace TreatPraktik.View
                     }
                     else
                     {
-
                         gt.Items[position].ItemOrder--;
                         draggedItemType.ItemOrder = targetItemTypeNo;
                         gt.Items.Insert(position, draggedItemType);
-
                     }
-
+                    //gt = SortItemList(gt);
+                    //RefreshGroupTable(gt);
                     int i = 1;
                     while (i < groupTable.RowDefinitions.Count - 2)
                     {
+                        if (!CheckIfRowIsEmpty(i))
+                        {
+                            if (!CheckForNewLineItem(i))
+                            {
+                                GenerateEmptyFields(i, true);
+                            }
+                            else
+                            {
+                                GenerateEmptyFields(i, false);
+                            }
+                        }
+                        
+                        i++;
+                    }
+                    GenerateEmptyFields(groupTable.RowDefinitions.Count - 2, false);
+                    GenerateEmptyFields(groupTable.RowDefinitions.Count - 1, false);
+                    gt = SortItemList(gt);
+                    RefreshGroupTable(gt);
+                }
 
+                else if (targetItemType.DesignID != null && draggedItemType.DesignID != null && !draggedItemType.DesignID.Equals("198"))
+                {
+                    if (draggedItemType.ItemOrder > targetItemType.ItemOrder)
+                    {
+                        gt.Items.Insert(position, draggedItemType);
+                        draggedItemType.ItemOrder = targetItemTypeNo;
+                    }
+                    else
+                    {
+                        gt.Items[position].ItemOrder--;
+                        draggedItemType.ItemOrder = targetItemTypeNo;
+                        gt.Items.Insert(position, draggedItemType);
+                    }
+                    //gt = SortItemList(gt);
+                    //RefreshGroupTable(gt);
+                    int i = 1;
+                    while (i < groupTable.RowDefinitions.Count - 2)
+                    {
                         if (!CheckIfRowIsEmpty(i))
                         {
                             GenerateEmptyFields(i, true);
@@ -913,16 +832,26 @@ namespace TreatPraktik.View
                     }
                     GenerateEmptyFields(groupTable.RowDefinitions.Count - 2, false);
                     GenerateEmptyFields(groupTable.RowDefinitions.Count - 1, false);
-                    List<ItemType> itemTypeList = gt.Items.ToList();
-                    itemTypeList = itemTypeList.OrderBy(o => o.ItemOrder).ToList();
-                    ObservableCollection<ItemType> ocItemTypeList = new ObservableCollection<ItemType>(itemTypeList);
-                    gt.Items = ocItemTypeList;
-
-                    groupTable.ClearGrid();
-                    PopulateGroupTable(gt);
-                    DisableAllowDropByNewLineItem();
+                    gt = SortItemList(gt);
+                    RefreshGroupTable(gt);
                 }
             }
+        }
+
+        GroupType SortItemList(GroupType gt)
+        {
+            List<ItemType> itemTypeList = gt.Items.ToList();
+            itemTypeList = itemTypeList.OrderBy(o => o.ItemOrder).ToList();
+            ObservableCollection<ItemType> ocItemTypeList = new ObservableCollection<ItemType>(itemTypeList);
+            gt.Items = ocItemTypeList;
+            return gt;
+        }
+
+        void RefreshGroupTable(GroupType gt)
+        {
+            GroupTable.ClearGrid();
+            PopulateGroupTable(gt);
+            DisableAllowDropByNewLineItem();
         }
 
         void HandleGroupTableDrop(object sender, DragEventArgs e)
@@ -1033,20 +962,18 @@ namespace TreatPraktik.View
 
         void border_MouseEnter(object sender, MouseEventArgs e)
         {
-            Border border = sender as Border;
-
-            Grid cellItem = (Grid)border.Child;
-            TextBlock tb = (TextBlock)cellItem.Children[1];
-            if (tb.DataContext is ItemType)
+            Border bCell = sender as Border;
+            Grid cellItem = (Grid)bCell.Child;
+            if (bCell.DataContext is ItemType)
             {
-                ItemType itemType = (ItemType)tb.DataContext;
+                ItemType itemType = (ItemType)bCell.DataContext;
                 if (itemType.Header != null)
                 {
                     Button btnClearCell = (Button)cellItem.Children[0];
                     btnClearCell.Visibility = Visibility.Visible;
                 }
             }
-            if (tb.DataContext is GroupType)
+            if (bCell.DataContext is GroupType)
             {
                 Button btnClearCell = (Button)cellItem.Children[0];
                 btnClearCell.Visibility = Visibility.Visible;
@@ -1055,15 +982,15 @@ namespace TreatPraktik.View
 
         void border_MouseLeave(object sender, MouseEventArgs e)
         {
-            Border border = sender as Border;
-            Grid cellItem = (Grid)border.Child;
+            Border bCell = sender as Border;
+            Grid cellItem = (Grid)bCell.Child;
             Button btnClearCell = (Button)cellItem.Children[0];
             btnClearCell.Visibility = Visibility.Hidden;
         }
 
         public Border CreateBorderContainer(Color borderBrush, Color background)
         {
-            Border border = new Border
+            Border bCell = new Border
             {
                 BorderBrush = new SolidColorBrush(borderBrush),
                 Background = new SolidColorBrush(background),
@@ -1072,9 +999,9 @@ namespace TreatPraktik.View
                 MaxHeight = 27.0,
                 HorizontalAlignment = HorizontalAlignment.Stretch
             };
-            border.MouseMove += border_MouseMove;
-            border.GiveFeedback += border_GiveFeedback;
-            return border;
+            bCell.MouseMove += border_MouseMove;
+            bCell.GiveFeedback += border_GiveFeedback;
+            return bCell;
         }
 
         void border_GiveFeedback(object sender, GiveFeedbackEventArgs e)
@@ -1090,19 +1017,12 @@ namespace TreatPraktik.View
 
         void border_MouseMove(object sender, MouseEventArgs e)
         {
-            Point current = e.GetPosition(this);
             if (sender is Border && e.LeftButton == MouseButtonState.Pressed)
             {
-
                 Border draggedItem = sender as Border;
-                Grid draggedItemGridCell = (Grid)draggedItem.Child;
-                TextBlock draggedItemTb = (TextBlock)draggedItemGridCell.Children[1];
-                if (draggedItemTb.DataContext is ItemType) //Prevent dragging if GroupType
+                if (draggedItem.DataContext is ItemType) //Prevent dragging if GroupType
                 {
-                    Grid groupTable = (Grid)draggedItem.Parent;
-                    Grid gridCell = (Grid)draggedItem.Child;
-                    TextBlock tb = (TextBlock)gridCell.Children[1];
-                    ItemType it = (ItemType)tb.DataContext;
+                    ItemType it = (ItemType)draggedItem.DataContext;
                     if (it.Header != null)
                     {
                         adorner = new DragAdornerItem(draggedItem, e.GetPosition(draggedItem));
@@ -1116,7 +1036,7 @@ namespace TreatPraktik.View
                         AdornerLayer.GetAdornerLayer(this).Remove(adorner);
                     }
                 }
-                if (draggedItemTb.DataContext is GroupType)
+                if (draggedItem.DataContext is GroupType)
                 {
                     Grid groupTable = (Grid)draggedItem.Parent;
 
@@ -1131,7 +1051,6 @@ namespace TreatPraktik.View
         public Button CreateClearCellBtn()
         {
             var uriSource = new Uri(@"/TreatPraktik;component/Ressources/Delete-icon.png", UriKind.Relative);
-            BitmapImage logo = new BitmapImage();
             Image imgRemoveIcon = new Image();
             imgRemoveIcon.Source = new BitmapImage(uriSource);
 
