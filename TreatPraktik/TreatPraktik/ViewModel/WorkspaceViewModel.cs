@@ -182,18 +182,6 @@ namespace TreatPraktik.ViewModel
                                              ResourceType = a.GroupType
                                          }).ToList();
 
-            for (int i = 0; i < groupOrderList.Count; i++)
-            {
-                foreach(GroupType group in groupList)
-                {
-                    if (groupOrderList[i].GroupTypeID.Equals(group.GroupTypeID))
-                    {
-                        groupOrderList[i].Group = group;
-                    }
-                }
-            }
-
-
             foreach (GroupType group in groupList)
             {
                 foreach (var item in query)
@@ -215,6 +203,18 @@ namespace TreatPraktik.ViewModel
                     }
                 }
                 group.LanguageID = "2";
+            }
+
+            //Link GroupType to GroupOrderType
+            for (int i = 0; i < groupOrderList.Count; i++)
+            {
+                foreach (GroupType group in groupList)
+                {
+                    if (groupOrderList[i].GroupTypeID.Equals(group.GroupTypeID))
+                    {
+                        groupOrderList[i].Group = group;
+                    }
+                }
             }
             
             //Groups = new ObservableCollection<GroupType>(groupList);
@@ -247,31 +247,18 @@ namespace TreatPraktik.ViewModel
                     {
                         GroupTypeID = a.GroupTypeID,
                         ItemOrder = a.GroupOrder,
-                        DesignID = a.DesignID
+                        DesignID = a.DesignID,
+                        IncludedTypeID = a.IncludedTypeID
                     }).ToList();
 
-            List<ItemType> itemList = (from a in _excel._workSheetktUIOrder.ktUIOrderList
-                join b in _excel._workSheetUIDesign.ktUIDesignList on a.DesignID equals b.DesignID
+            List<ItemType> itemList = (from a in _excel._workSheetUIDesign.ktUIDesignList 
+                
                 select new ItemType
                 {
-                    ResourceType = b.ResxID,
-                    //GroupTypeID = a.GroupTypeID,
+                    ResourceType = a.ResxID,
                     DesignID = a.DesignID,
-                    //ItemOrder = a.GroupOrder,
-                    IncludedTypeID = a.IncludedTypeID
+                    //IncludedTypeID = a.IncludedTypeID
                 }).ToList();
-
-            //Link Item to ItemTypeOrder
-            for (int i = 0; i < itemOrders.Count; i++)
-            {
-                foreach (ItemType item in itemList)
-                {
-                    if (itemOrders[i].DesignID.Equals(item.DesignID))
-                    {
-                        itemOrders[i].Item = item;
-                    }
-                }
-            }
 
             //Set DanishTranslationText & EnglishTranslationText
             //Set LanguageID to 2 <-- Danish
@@ -295,7 +282,34 @@ namespace TreatPraktik.ViewModel
                 itemType.LanguageID = "2";
             }
 
+            //Link ItemType to ItemTypeOrder
+            for (int i = 0; i < itemOrders.Count; i++)
+            {
+                foreach (ItemType item in itemList)
+                {
+                    if (itemOrders[i].DesignID.Equals(item.DesignID))
+                    {
+                        itemOrders[i].Item = item;
+                    }
+                }
+            }
 
+            foreach (var it in itemList)
+            {
+                if (it.DesignID.Equals("63"))
+                {
+                    Console.WriteLine(it.Header);
+                }
+            }
+
+            foreach (var ito in itemOrders)
+            {
+                if (ito.DesignID.Equals("63"))
+                {
+                    Console.WriteLine(ito.DesignID + " - " + ito.GroupTypeID);
+                }
+                
+            }
 
             ObservableCollection<ItemTypeOrder> obsCol = new ObservableCollection<ItemTypeOrder>(itemOrders);
 
@@ -305,19 +319,31 @@ namespace TreatPraktik.ViewModel
         /// <summary>
         /// Puts ItemTypes into GroupTypes, and GroupTypes into PageTypes
         /// </summary>
-        private void LinkCollections(ObservableCollection<PageType> pages, ObservableCollection<GroupTypeOrder> groupOrderTypes, ObservableCollection<ItemTypeOrder> items)
+        private void LinkCollections(ObservableCollection<PageType> pages, ObservableCollection<GroupTypeOrder> groupOrderTypes, ObservableCollection<ItemTypeOrder> itemTypeOrder)
         {
             //Put items into groups
             for (int i = 0; i < groupOrderTypes.Count; i++)
             {
-                for (int k = 0; k < items.Count; k++)
+                for (int k = 0; k < itemTypeOrder.Count; k++)
                 {
-                    if (groupOrderTypes[i].Group.GroupTypeID.Equals(items[k].GroupTypeID))
+                    if (groupOrderTypes[i].Group.GroupTypeID.Equals(itemTypeOrder[k].GroupTypeID))
                     {
-                        groupOrderTypes[i].Group.ItemOrder.Add(items[k]);
+                        groupOrderTypes[i].Group.ItemOrder.Add(itemTypeOrder[k]);
                     }
                 }
             }
+
+            //foreach (GroupTypeOrder typeOrder in groupOrderTypes)
+            //{
+            //    foreach (ItemTypeOrder it in typeOrder.Group.ItemOrder)
+            //    {
+            //        if (it.DesignID.Equals("63"))
+            //        {
+            //            Console.WriteLine(typeOrder.GroupTypeID + " - " + it.DesignID);
+            //        }
+                    
+            //    }
+            //}
 
             //Put groups into pages
             for (int i = 0; i < pages.Count; i++)
@@ -330,6 +356,24 @@ namespace TreatPraktik.ViewModel
                     }
                 }
             }
+
+            //foreach (PageType hej in PageList)
+            //{
+            //    foreach (GroupTypeOrder gt in hej.Groups)
+            //    {
+            //        foreach (ItemTypeOrder it in gt.Group.ItemOrder)
+            //        {
+            //            if (it.DesignID.Equals("63"))
+            //            {
+            //                Console.WriteLine(hej.PageTypeID + " - " + gt.GroupTypeID + " - " + it.DesignID);
+            //            }
+            //        }
+            //    }
+                
+
+            //}
+
+            //int x = 0;
         }
 
         /// <summary>

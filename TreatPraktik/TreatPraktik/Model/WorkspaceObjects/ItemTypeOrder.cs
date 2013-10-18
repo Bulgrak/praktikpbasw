@@ -16,17 +16,20 @@ namespace TreatPraktik.Model.WorkspaceObjects
         //Used to link the ItemTypeOrder to the Item
         public string DesignID { get; set; }
 
+        public string IncludedTypeID { get; set; }
+
         public ItemTypeOrder()
         {
 
         }
 
-        public ItemTypeOrder(ItemType item, string groupTypeID, double itemOrder, string designID)
+        public ItemTypeOrder(ItemType item, string groupTypeID, double itemOrder, string designID, string includedTypeID)
         {
             this.Item = item;
             this.GroupTypeID = groupTypeID;
             ItemOrder = itemOrder;
             this.DesignID = designID;
+            this.IncludedTypeID = includedTypeID;
         }
 
         #region INotifyPropertyChanged

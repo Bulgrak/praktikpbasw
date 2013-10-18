@@ -10,7 +10,7 @@ namespace TreatPraktik.Model.WorkspaceObjects
         public string DesignID { get; set; }            //ID of the item
         //public Double ItemOrder { get; set; }          //Item order in the group
         private string _header;
-        public string IncludedTypeID { get; set; }
+        
         private string _languageID;
         public string DanishTranslationText { get; set; }
         public string EnglishTranslationText { get; set; }
