@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TreatPraktik.Model;
+using TreatPraktik.Model.WorkspaceObjects;
 using TreatPraktik.ViewModel;
 
 namespace UnitTestTreatPraktik
@@ -78,7 +79,55 @@ namespace UnitTestTreatPraktik
         [TestMethod]
         public void AddItemsToExistingGroup()
         {
-            //Check if the items are present in ktUIOrder
+            //Create new items
+            string resourceType1 = "2"; //<-- DataItemHeading
+            string groupTypeID1 = "0";
+            string designID1 = "12";
+            double itemOrder1 = 35.00;
+            string header1 = "Coughing";
+            string includedType1 = "1";
+            string danTransText1 = "Hoste (forværring)";
+            string engTransText1 = "Coughing";
+            string languageID1 = "1";
+            ItemTypeOrder itemOne = new ItemTypeOrder(danTransText1, designID1, engTransText1, groupTypeID1, header1,
+                includedType1, itemOrder1, languageID1, resourceType1);
+
+            string resourceType2 = "2"; //<-- DataItemHeading
+            string groupTypeID2 = "0";
+            string designID2 = "5";
+            double itemOrder2 = 36.00;
+            string header2 = "Smoking";
+            string includedType2 = "1";
+            string danTransText2 = "Aktiv ryger (> 5 cigaretter pr. dag inden for sidste 10 år)";
+            string engTransText2 = "Active smoking >5 cigarettes per day prior to episode onset";
+            string languageID2 = "1";
+            ItemTypeOrder itemTwo = new ItemTypeOrder(danTransText2, designID2, engTransText2, groupTypeID2, header2,
+                includedType2, itemOrder2, languageID2, resourceType2);
+            
+            //Add the items to the group
+            foreach (PageType page in _wvm.PageList)
+            {
+                foreach (GroupTypeOrder gtOrder in page.Groups)
+                {
+                    if (gtOrder.Group.GroupTypeID.Equals(groupTypeID1))
+                    {
+                        gtOrder.Group.ItemOrder.Add(itemOne);
+                    }
+                    if (gtOrder.Group.GroupTypeID.Equals(groupTypeID2))
+                    {
+                        gtOrder.Group.ItemOrder.Add(itemTwo);
+                    }
+                }
+            }
+
+            //Export excel with the added items in it
+            _exExcel.CreateNewExcel(_exportPath);
+
+            //Import the new excel file
+            _impExcel.ImportExcelConfiguration(_exportPath);
+
+            int i = 0;
+
         }
 
         [TestMethod]

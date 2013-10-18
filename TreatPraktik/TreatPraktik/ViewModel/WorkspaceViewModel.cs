@@ -17,8 +17,7 @@ namespace TreatPraktik.ViewModel
 
         public ObservableCollection<PageType> PageList { get; private set; } // <-- The only list that changes should be made in
         private ObservableCollection<GroupTypeOrder> GroupList { get; set; }
-        private ObservableCollection<GroupType> Groups { get; set; }
-        private ObservableCollection<ItemType> ItemList { get; set; }
+        private ObservableCollection<ItemTypeOrder> ItemList { get; set; }
 
         private int _groupCounter;
 
@@ -37,7 +36,7 @@ namespace TreatPraktik.ViewModel
             GroupList = GetAllGroups();
             ItemList = GetAllItems();
 
-            LinkCollections(PageList, Groups, GroupList, ItemList);
+            LinkCollections(PageList, GroupList, ItemList);
 
             _groupCounter = 0;
             int index = 0;
@@ -64,7 +63,7 @@ namespace TreatPraktik.ViewModel
             GroupList = GetAllGroups();
             ItemList = GetAllItems();
 
-            LinkCollections(PageList, Groups, GroupList, ItemList);
+            LinkCollections(PageList, GroupList, ItemList);
 
             _groupCounter = 0;
             int index = 0;
@@ -218,7 +217,7 @@ namespace TreatPraktik.ViewModel
                 group.LanguageID = "2";
             }
             
-            Groups = new ObservableCollection<GroupType>(groupList);
+            //Groups = new ObservableCollection<GroupType>(groupList);
             ObservableCollection<GroupTypeOrder> obsCol = new ObservableCollection<GroupTypeOrder>(groupOrderList);
 
             return obsCol;
@@ -228,7 +227,7 @@ namespace TreatPraktik.ViewModel
         /// Gets all the ItemTypes from Excel
         /// </summary>
         /// <returns>Collection of items</returns>
-        private ObservableCollection<ItemType> GetAllItems()
+        private ObservableCollection<ItemTypeOrder> GetAllItems()
         {
             //Items
             //Sort on language 1=English and on ResourceType 2=DataItemHeading
@@ -242,17 +241,40 @@ namespace TreatPraktik.ViewModel
                               bb.TranslationText
                           }).ToList();
 
-            List<ItemType> itemList = (from a in _excel._workSheetktUIOrder.ktUIOrderList.OrderBy(m => m.GroupOrder)
-                                       join b in _excel._workSheetUIDesign.ktUIDesignList on a.DesignID equals b.DesignID
-                                       select new ItemType
-                                       {
-                                           ResourceType = b.ResxID,
-                                           GroupTypeID = a.GroupTypeID,
-                                           DesignID = a.DesignID,
-                                           ItemOrder = a.GroupOrder,
-                                           IncludedTypeID = a.IncludedTypeID
-                                       }).ToList();
+            List<ItemTypeOrder> itemOrders =
+                (from a in _excel._workSheetktUIOrder.ktUIOrderList.OrderBy(m => m.GroupOrder)
+                    select new ItemTypeOrder
+                    {
+                        GroupTypeID = a.GroupTypeID,
+                        ItemOrder = a.GroupOrder,
+                        DesignID = a.DesignID
+                    }).ToList();
 
+            List<ItemType> itemList = (from a in _excel._workSheetktUIOrder.ktUIOrderList
+                join b in _excel._workSheetUIDesign.ktUIDesignList on a.DesignID equals b.DesignID
+                select new ItemType
+                {
+                    ResourceType = b.ResxID,
+                    //GroupTypeID = a.GroupTypeID,
+                    DesignID = a.DesignID,
+                    //ItemOrder = a.GroupOrder,
+                    IncludedTypeID = a.IncludedTypeID
+                }).ToList();
+
+            //Link Item to ItemTypeOrder
+            for (int i = 0; i < itemOrders.Count; i++)
+            {
+                foreach (ItemType item in itemList)
+                {
+                    if (itemOrders[i].DesignID.Equals(item.DesignID))
+                    {
+                        itemOrders[i].Item = item;
+                    }
+                }
+            }
+
+            //Set DanishTranslationText & EnglishTranslationText
+            //Set LanguageID to 2 <-- Danish
             foreach (ItemType itemType in itemList)
             {
                 foreach (var item in query)
@@ -273,7 +295,9 @@ namespace TreatPraktik.ViewModel
                 itemType.LanguageID = "2";
             }
 
-            ObservableCollection<ItemType> obsCol = new ObservableCollection<ItemType>(itemList);
+
+
+            ObservableCollection<ItemTypeOrder> obsCol = new ObservableCollection<ItemTypeOrder>(itemOrders);
 
             return obsCol;
         }
@@ -281,16 +305,16 @@ namespace TreatPraktik.ViewModel
         /// <summary>
         /// Puts ItemTypes into GroupTypes, and GroupTypes into PageTypes
         /// </summary>
-        private void LinkCollections(ObservableCollection<PageType> pages, ObservableCollection<GroupType> groups, ObservableCollection<GroupTypeOrder> groupOrderTypes, ObservableCollection<ItemType> items)
+        private void LinkCollections(ObservableCollection<PageType> pages, ObservableCollection<GroupTypeOrder> groupOrderTypes, ObservableCollection<ItemTypeOrder> items)
         {
             //Put items into groups
-            for (int i = 0; i < groups.Count; i++)
+            for (int i = 0; i < groupOrderTypes.Count; i++)
             {
                 for (int k = 0; k < items.Count; k++)
                 {
-                    if (groups[i].GroupTypeID.Equals(items[k].GroupTypeID))
+                    if (groupOrderTypes[i].Group.GroupTypeID.Equals(items[k].GroupTypeID))
                     {
-                        groups[i].Items.Add(items[k]);
+                        groupOrderTypes[i].Group.ItemOrder.Add(items[k]);
                     }
                 }
             }
@@ -419,90 +443,90 @@ namespace TreatPraktik.ViewModel
             group.Group.EnglishTranslationText = engTransText;
         }
 
-        /// <summary>
-        /// Rename an existing group
-        /// </summary>
-        /// <param name="pageTypeId">The id for the selected page</param>
-        /// <param name="groupTypeID">The id for the selected group</param>
-        /// <param name="englishTranslationText">The english group name</param>
-        /// <param name="danishTranslationText">The danish group name</param>
-        public void RenameGroup2(string pageTypeId, string groupTypeID, string englishTranslationText, string danishTranslationText)
-        {
-            PageType page = (from a in PageList where a.PageTypeID.Equals(pageTypeId) select a).FirstOrDefault();
-            GroupTypeOrder oldGroup = (from b in page.Groups where b.GroupTypeID.Equals(groupTypeID) select b).FirstOrDefault();
+        ///// <summary>
+        ///// Rename an existing group
+        ///// </summary>
+        ///// <param name="pageTypeId">The id for the selected page</param>
+        ///// <param name="groupTypeID">The id for the selected group</param>
+        ///// <param name="englishTranslationText">The english group name</param>
+        ///// <param name="danishTranslationText">The danish group name</param>
+        //public void RenameGroup2(string pageTypeId, string groupTypeID, string englishTranslationText, string danishTranslationText)
+        //{
+        //    PageType page = (from a in PageList where a.PageTypeID.Equals(pageTypeId) select a).FirstOrDefault();
+        //    GroupTypeOrder oldGroup = (from b in page.Groups where b.GroupTypeID.Equals(groupTypeID) select b).FirstOrDefault();
 
-            GroupTypeOrder newGroup = new GroupTypeOrder();
+        //    GroupTypeOrder newGroup = new GroupTypeOrder();
             
-            GroupType newGroupType = new GroupType();
-            newGroup.Group = newGroupType;
-            List<ItemType> temp = oldGroup.Group.Items.Select(
-                    item =>
-                        new ItemType(item.DanishTranslationText, item.DesignID, item.EnglishTranslationText,
-                            item.GroupTypeID, item.Header, item.IncludedTypeID, item.ItemOrder, item.LanguageID,
-                            item.ResourceType)).ToList();
-            ObservableCollection<ItemType> obsCol = new ObservableCollection<ItemType>(temp);
-            newGroup.Group.Items = obsCol;
+        //    GroupType newGroupType = new GroupType();
+        //    newGroup.Group = newGroupType;
+        //    List<Item> temp = oldGroup.Group.Items.Select(
+        //            item =>
+        //                new Item(item.DanishTranslationText, item.DesignID, item.EnglishTranslationText,
+        //                    item.GroupTypeID, item.Header, item.IncludedTypeID, item.ItemOrder, item.LanguageID,
+        //                    item.ResourceType)).ToList();
+        //    ObservableCollection<Item> obsCol = new ObservableCollection<Item>(temp);
+        //    newGroup.Group.Items = obsCol;
 
-            newGroup.Group.DanishTranslationText = danishTranslationText;
-            newGroup.Group.EnglishTranslationText = englishTranslationText;
-            newGroup.Group.LanguageID = oldGroup.Group.LanguageID;
+        //    newGroup.Group.DanishTranslationText = danishTranslationText;
+        //    newGroup.Group.EnglishTranslationText = englishTranslationText;
+        //    newGroup.Group.LanguageID = oldGroup.Group.LanguageID;
 
-            //newGroup.Group = oldGroup.Group;
-            newGroup.DepartmentID = oldGroup.DepartmentID;
-            newGroup.GroupOrder = oldGroup.GroupOrder;
+        //    //newGroup.Group = oldGroup.Group;
+        //    newGroup.DepartmentID = oldGroup.DepartmentID;
+        //    newGroup.GroupOrder = oldGroup.GroupOrder;
 
-            int highestId = 0;
+        //    int highestId = 0;
 
-            foreach (PageType pageType in PageList)
-            {
-                int index = 0;
+        //    foreach (PageType pageType in PageList)
+        //    {
+        //        int index = 0;
 
-                while (index < pageType.Groups.Count)
-                {
-                    if (Convert.ToInt32(pageType.Groups[index].GroupTypeID) > highestId)
-                    {
-                        highestId = Convert.ToInt32(pageType.Groups[index].GroupTypeID);
-                    }
+        //        while (index < pageType.Groups.Count)
+        //        {
+        //            if (Convert.ToInt32(pageType.Groups[index].GroupTypeID) > highestId)
+        //            {
+        //                highestId = Convert.ToInt32(pageType.Groups[index].GroupTypeID);
+        //            }
 
-                    index++;
-                }
-            }
+        //            index++;
+        //        }
+        //    }
 
-            foreach (ItemType item in newGroup.Group.Items)
-            {
-                item.GroupTypeID = (highestId + 1).ToString();
-            }
+        //    foreach (Item item in newGroup.Group.Items)
+        //    {
+        //        item.GroupTypeID = (highestId + 1).ToString();
+        //    }
 
-            newGroup.GroupTypeID = (highestId + 1).ToString();
-            newGroup.Group.GroupTypeID = newGroup.GroupTypeID;
-            newGroup.PageTypeID = pageTypeId;
+        //    newGroup.GroupTypeID = (highestId + 1).ToString();
+        //    newGroup.Group.GroupTypeID = newGroup.GroupTypeID;
+        //    newGroup.PageTypeID = pageTypeId;
             
             
-            string hej = englishTranslationText.Replace(" ", string.Empty);
-            int i = 1;
-            foreach (PageType pType in PageList)
-            {
-                while ((from a in pType.Groups where a.Group.ResourceType.Equals(hej + i) select a).Any())
-                {
-                    i++;
-                }
-            }
+        //    string hej = englishTranslationText.Replace(" ", string.Empty);
+        //    int i = 1;
+        //    foreach (PageType pType in PageList)
+        //    {
+        //        while ((from a in pType.Groups where a.Group.ResourceType.Equals(hej + i) select a).Any())
+        //        {
+        //            i++;
+        //        }
+        //    }
             
-            hej = hej + i;
+        //    hej = hej + i;
 
-            newGroup.Group.ResourceType = hej;
-            newGroup.Group.ResourceID = (_groupCounter + 1).ToString();
-            _groupCounter++;
-            newGroup.Group.ResourceTypeID = oldGroup.Group.ResourceTypeID;
+        //    newGroup.Group.ResourceType = hej;
+        //    newGroup.Group.ResourceID = (_groupCounter + 1).ToString();
+        //    _groupCounter++;
+        //    newGroup.Group.ResourceTypeID = oldGroup.Group.ResourceTypeID;
 
-            foreach (PageType pageType in PageList)
-            {
-                if (pageType.PageTypeID.Equals(pageTypeId))
-                {
-                    pageType.Groups.Remove(oldGroup);
-                    pageType.Groups.Add(newGroup);
-                }
-            }
-        }
+        //    foreach (PageType pageType in PageList)
+        //    {
+        //        if (pageType.PageTypeID.Equals(pageTypeId))
+        //        {
+        //            pageType.Groups.Remove(oldGroup);
+        //            pageType.Groups.Add(newGroup);
+        //        }
+        //    }
+        //}
     }
 }

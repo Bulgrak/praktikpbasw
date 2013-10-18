@@ -6,9 +6,9 @@ namespace TreatPraktik.Model.WorkspaceObjects
     public class ItemType : INotifyPropertyChanged
     {
         public string ResourceType { get; set; }
-        public string GroupTypeID { get; set; }
+        //public string GroupTypeID { get; set; }
         public string DesignID { get; set; }            //ID of the item
-        public Double ItemOrder { get; set; }          //Item order in the group
+        //public Double ItemOrder { get; set; }          //Item order in the group
         private string _header;
         public string IncludedTypeID { get; set; }
         private string _languageID;
@@ -24,9 +24,9 @@ namespace TreatPraktik.Model.WorkspaceObjects
             string includedTypeId, double itemOrder, string languageId, string resourceType)
         {
             this.ResourceType = resourceType;
-            this.GroupTypeID = groupTypeId;
+            //this.GroupTypeID = groupTypeId;
             this.DesignID = designId;
-            this.ItemOrder = itemOrder;
+            //this.ItemOrder = itemOrder;
             this.Header = header;
             this.IncludedTypeID = includedTypeId;
             this.LanguageID = languageId;
