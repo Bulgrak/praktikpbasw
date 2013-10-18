@@ -333,38 +333,38 @@ namespace TreatPraktik.View
         private void GenerateEmptyFields(GroupType gt)
         {
             int i = 0;
-            while (i < gt.Items.Count)
+            while (i < gt.ItemOrder.Count)
             {
                 int noOfEmptyFieldsCounter = 0;
-                if (gt.Items.Count > 1)
+                if (gt.ItemOrder.Count > 1)
                 {
-                    if (gt.Items[i].ItemOrder != i)
+                    if (gt.ItemOrder[i].ItemOrder != i)
                     {
                         int totalNumberOfEmptyFields = 0;
-                        if (!gt.Items[i - 1].DesignID.Equals("198"))
+                        if (!gt.ItemOrder[i - 1].DesignID.Equals("198"))
                         {
-                            noOfEmptyFieldsCounter = (int)gt.Items[i].ItemOrder - (int)gt.Items[i - 1].ItemOrder;
+                            noOfEmptyFieldsCounter = (int)gt.ItemOrder[i].ItemOrder - (int)gt.ItemOrder[i - 1].ItemOrder;
                             totalNumberOfEmptyFields = noOfEmptyFieldsCounter + i;
                             while (noOfEmptyFieldsCounter > 1) //Insert Empty fields
                             {
-                                gt.Items.Insert(i, CreateEmptyField(gt, i + noOfEmptyFieldsCounter - 2));
+                                gt.ItemOrder.Insert(i, CreateEmptyField(gt, i + noOfEmptyFieldsCounter - 2));
                                 noOfEmptyFieldsCounter--;
                             }
                             //i = totalNumberOfEmptyFields - 1;
-                            i = gt.Items.Count - 1;
+                            i = gt.ItemOrder.Count - 1;
                         }
                         else
                         {
-                            totalNumberOfEmptyFields = (int)gt.Items[i].ItemOrder - ((int)gt.Items[i - 1].ItemOrder + (4 - (((int)gt.Items[i - 1].ItemOrder) % 4)));
+                            totalNumberOfEmptyFields = (int)gt.ItemOrder[i].ItemOrder - ((int)gt.ItemOrder[i - 1].ItemOrder + (4 - (((int)gt.ItemOrder[i - 1].ItemOrder) % 4)));
                             noOfEmptyFieldsCounter = totalNumberOfEmptyFields;
                             while (noOfEmptyFieldsCounter > 0)
                             {
-                                gt.Items.Insert(i, CreateEmptyField(gt, i + noOfEmptyFieldsCounter - 2));
+                                gt.ItemOrder.Insert(i, CreateEmptyField(gt, i + noOfEmptyFieldsCounter - 2));
                                 noOfEmptyFieldsCounter--;
                             }
                             if (totalNumberOfEmptyFields != 0)
                             {
-                                i = gt.Items.Count - 1;
+                                i = gt.ItemOrder.Count - 1;
                         }
                     }
                     }
@@ -373,11 +373,11 @@ namespace TreatPraktik.View
                 }
                 else
                 {
-                    noOfEmptyFieldsCounter = (int)gt.Items[i].ItemOrder;
+                    noOfEmptyFieldsCounter = (int)gt.ItemOrder[i].ItemOrder;
                     //totalNumberOfEmptyFields = noOfEmptyFieldsCounter + i;
                     while (noOfEmptyFieldsCounter > 0)
                     {
-                        gt.Items.Insert(i, CreateEmptyField(gt, i + noOfEmptyFieldsCounter - 2));
+                        gt.ItemOrder.Insert(i, CreateEmptyField(gt, i + noOfEmptyFieldsCounter - 2));
                         noOfEmptyFieldsCounter--;
                     }
                     break;
@@ -385,15 +385,17 @@ namespace TreatPraktik.View
             }
         }
 
-        private ItemType CreateEmptyField(GroupType gt, int itemOrder)
+        private ItemTypeOrder CreateEmptyField(GroupType gt, int itemOrder)
         {
+            ItemTypeOrder itemTypeOrder = new ItemTypeOrder();
+            itemTypeOrder.GroupTypeID = gt.GroupTypeID;
             ItemType emptyFieldItemType = new ItemType();
             emptyFieldItemType.DesignID = "197";
             emptyFieldItemType.Header = "<EmptyField>";
-            emptyFieldItemType.GroupTypeID = gt.GroupTypeID;
             emptyFieldItemType.IncludedTypeID = "1";
-            emptyFieldItemType.ItemOrder = itemOrder;
-            return emptyFieldItemType;
+            itemTypeOrder.ItemOrder = itemOrder;
+            itemTypeOrder.Item = emptyFieldItemType;
+            return itemTypeOrder;
         }
 
         private void AddNewGroupRow()
@@ -458,7 +460,7 @@ namespace TreatPraktik.View
                 VerticalAlignment = VerticalAlignment.Stretch//,
                 //DataContext = itemType
             };
-            tb.SetBinding(TextBlock.TextProperty, "Header");
+            tb.SetBinding(TextBlock.TextProperty, "Item.Header");
 
             Grid gridCell = new Grid();
             CreateColumns(gridCell, 2);
@@ -677,12 +679,11 @@ namespace TreatPraktik.View
                 itToBeMoved.Item.EnglishTranslationText = tbi.EnglishTranslationText;
                 itToBeMoved.Item.LanguageID = tbi.LanguageID;
                 itToBeMoved.GroupTypeID = gt.GroupTypeID;
-                itToBeMoved.IncludedTypeID = "1";
+                itToBeMoved.Item.IncludedTypeID = "1";
 
 
 
                 gt.ItemOrder.Add(itToBeMoved);
-                gt.Items.Add(itToBeMoved);
                 GenerateEmptyFields(gt);
                 grid.ClearGrid();
                 PopulateGroupTable(gt);
@@ -713,14 +714,14 @@ namespace TreatPraktik.View
             //Grid groupTable2 = (Grid)target2.Parent;
             Grid groupTable = (Grid)target.Parent;
             GroupType gt = GetGroupType(groupTable);
-            int draggedPosition = gt.Items.IndexOf(draggedItemType);
+            int draggedPosition = gt.ItemOrder.IndexOf(draggedItemType);
             double targetItemTypeNo = targetItemType.ItemOrder; //affected item
-            int targetPosition = gt.Items.IndexOf(targetItemType);
+            int targetPosition = gt.ItemOrder.IndexOf(targetItemType);
 
             
             if (targetItemType != draggedItemType)
             {
-                gt.Items.Remove(draggedItemType);
+                gt.ItemOrder.Remove(draggedItemType);
                 if (targetItemType.DesignID == null)
                 {
                     int i = 0;
@@ -729,7 +730,7 @@ namespace TreatPraktik.View
                     //    gt.Items[i].ItemOrder--;
                     //    i++;
                     //}
-                    DecrementItemOrder(gt, gt.Items.Count, draggedPosition);
+                    DecrementItemOrder(gt, gt.ItemOrder.Count, draggedPosition);
                     draggedItemType.ItemOrder = targetItemType.ItemOrder;
                     //int row = Grid.GetRow(target);
                     //int column = Grid.GetColumn(target);
@@ -756,14 +757,14 @@ namespace TreatPraktik.View
                     //    newTarget = (Border)GetCellItem(row, column);
                     //}
                     //newTarget.DataContext = draggedItemType;
-                    gt.Items.Add(draggedItemType);
+                    gt.ItemOrder.Add(draggedItemType);
                     
                     GenerateEmptyFields(gt);
                     //gt.Items.Add(draggedItemType);
-                    List<ItemType> itemTypeList = gt.Items.ToList();
-                    itemTypeList = itemTypeList.OrderBy(o => o.ItemOrder).ToList();
-                    ObservableCollection<ItemTypeOrder> ocItemTypeList = new ObservableCollection<ItemTypeOrder>(itemTypeList);
-                    gt.ItemOrder = ocItemTypeList;
+                    //List<ItemType> itemTypeList = gt.Item.ToList();
+                    //itemTypeList = itemTypeList.OrderBy(o => o.ItemOrder).ToList();
+                    //ObservableCollection<ItemTypeOrder> ocItemTypeList = new ObservableCollection<ItemTypeOrder>(itemTypeList);
+                    //gt.ItemOrder = ocItemTypeList;
 
                     RefreshGroupTable(gt);
                 }
@@ -833,17 +834,17 @@ namespace TreatPraktik.View
                     }
                     else
                     {
-                        if (gt.Items.Count != targetPosition)
+                        if (gt.ItemOrder.Count != targetPosition)
                         {
 
                             //gt.Items[position].ItemOrder--;
                         draggedItemType.ItemOrder = targetItemTypeNo;
-                            gt.Items.Insert(targetPosition, draggedItemType);
+                            gt.ItemOrder.Insert(targetPosition, draggedItemType);
                             }
                             else
                             {
                             draggedItemType.ItemOrder = targetItemTypeNo;
-                            gt.Items.Add(draggedItemType);
+                            gt.ItemOrder.Add(draggedItemType);
                             }
                         }
                     AdjustItemOrder(gt, targetPosition, draggedPosition);
@@ -872,9 +873,9 @@ namespace TreatPraktik.View
             int i = targetPosition - 1;
             while (i >= draggedPosition)
             {
-                if (!gt.Items[i].DesignID.Equals("198"))
+                if (!gt.ItemOrder[i].DesignID.Equals("198"))
                     {
-                    gt.Items[i].ItemOrder--;
+                    gt.ItemOrder[i].ItemOrder--;
                 }
                 else
                         {
@@ -889,9 +890,9 @@ namespace TreatPraktik.View
             int i = position + 1;
             while (i <= startPosition)
             {
-                if (!gt.Items[i].DesignID.Equals("198"))
+                if (!gt.ItemOrder[i].DesignID.Equals("198"))
                 {
-                    gt.Items[i].ItemOrder++;
+                    gt.ItemOrder[i].ItemOrder++;
                     }
                 else
                 {
