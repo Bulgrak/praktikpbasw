@@ -112,7 +112,7 @@ namespace TreatPraktik.Ressources.ExcelClasses
                 {
                     if (group.Group != null)
                     {
-                        for (int i = 0; i < group.Group.Items.Count; i++)
+                        for (int i = 0; i < group.Group.ItemOrder.Count; i++)
                         {
                             if (!_tempList.Any(x => x.GroupTypeID == group.GroupTypeID))
                             {
@@ -133,26 +133,26 @@ namespace TreatPraktik.Ressources.ExcelClasses
 
             foreach (GroupTypeOrder group in _tempList)
             {
-                for (int i = 0; i < group.Group.Items.Count; i++)
+                for (int i = 0; i < group.Group.ItemOrder.Count; i++)
                 {
                     if (columnCount >= 4)
                     {
                         columnCount = 1;
                     }
 
-                    string text1 = group.Group.Items[i].DesignID;
+                    string text1 = group.Group.ItemOrder[i].DesignID;
                     Cell cell1 = _sharedResources.InsertCellInWorksheet(_sharedResources.Number2String(columnCount, true), rowCount, worksheetPart);
                     cell1.CellValue = new CellValue(text1);
                     cell1.DataType = CellValues.Number;
                     columnCount++;
 
-                    double text2 = group.Group.Items[i].ItemOrder;
+                    double text2 = group.Group.ItemOrder[i].ItemOrder;
                     Cell cell2 = _sharedResources.InsertCellInWorksheet(_sharedResources.Number2String(columnCount, true), rowCount, worksheetPart);
                     cell2.DataType = CellValues.Number;
                     cell2.CellValue = new CellValue(DoubleValue.FromDouble(text2));
                     columnCount++;
 
-                    string text3 = group.Group.Items[i].GroupTypeID;
+                    string text3 = group.Group.ItemOrder[i].GroupTypeID;
                     Cell cell3 = _sharedResources.InsertCellInWorksheet(_sharedResources.Number2String(columnCount, true), rowCount, worksheetPart);
                     cell3.CellValue = new CellValue(text3);
                     cell3.DataType = CellValues.Number;
@@ -164,7 +164,7 @@ namespace TreatPraktik.Ressources.ExcelClasses
                     cell4.DataType = CellValues.Number;
                     columnCount++;
 
-                    string text5 = group.Group.Items[i].IncludedTypeID;
+                    string text5 = group.Group.ItemOrder[i].Item.IncludedTypeID;
                     Cell cell5 = _sharedResources.InsertCellInWorksheet(_sharedResources.Number2String(columnCount, true), rowCount, worksheetPart);
                     cell5.CellValue = new CellValue(text5);
                     cell5.DataType = CellValues.Number;

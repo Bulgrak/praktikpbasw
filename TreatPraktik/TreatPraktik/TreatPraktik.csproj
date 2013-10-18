@@ -70,6 +70,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Model\WorkspaceObjects\GroupTypeOrder.cs" />
+    <Compile Include="Model\WorkspaceObjects\ItemTypeOrder.cs" />
     <Compile Include="Ressources\ExcelClasses\ResourceTranslation.cs" />
     <Compile Include="Ressources\Exceptions.cs" />
     <Compile Include="ViewModel\LanguageViewModel.cs" />

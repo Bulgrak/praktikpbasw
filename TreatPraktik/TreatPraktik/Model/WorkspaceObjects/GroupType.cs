@@ -7,7 +7,7 @@ namespace TreatPraktik.Model.WorkspaceObjects
     {
         public string GroupTypeID { get; set; }                         //Group ID
         private string _groupHeader;                                    //The real name for the group
-        public ObservableCollection<ItemType> Items { get; set; }       //Items in the group
+        public ObservableCollection<ItemTypeOrder> ItemOrder { get; set; }       //Items in the group
         private string _languageID;
         public string DanishTranslationText { get; set; }
         public string EnglishTranslationText { get; set; }
@@ -17,7 +17,7 @@ namespace TreatPraktik.Model.WorkspaceObjects
 
         public GroupType()
         {
-            Items = new ObservableCollection<ItemType>();
+            ItemOrder = new ObservableCollection<ItemTypeOrder>();
         }
 
         #region INotifyPropertyChanged

@@ -28,9 +28,9 @@ namespace TreatPraktik.ViewModel
                 {
                     group.Group.LanguageID = languageID;
 
-                    foreach (ItemType item in group.Group.Items)
+                    foreach (ItemTypeOrder item in group.Group.ItemOrder)
                     {
-                        item.LanguageID = languageID;
+                        item.Item.LanguageID = languageID;
                     }
                 }
             }
