@@ -393,7 +393,7 @@ namespace TreatPraktik.View
             ItemType emptyFieldItemType = new ItemType();
             emptyFieldItemType.DesignID = "197";
             emptyFieldItemType.Header = "<EmptyField>";
-            emptyFieldItemType.IncludedTypeID = "1";
+            itemTypeOrder.IncludedTypeID = "1";
             itemTypeOrder.ItemOrder = itemOrder;
             itemTypeOrder.Item = emptyFieldItemType;
             return itemTypeOrder;
@@ -643,7 +643,7 @@ namespace TreatPraktik.View
                 itemType.EnglishTranslationText = tbi.EnglishTranslationText;
                 itemType.LanguageID = tbi.LanguageID;
                 itemTypeOrder.GroupTypeID = gt.GroupTypeID;
-                itemType.IncludedTypeID = "1";
+                itemTypeOrder.IncludedTypeID = "1";
                 itemTypeOrder.Item = itemType;
 
                 int index = gt.ItemOrder.IndexOf(itToBeMoved);
@@ -665,7 +665,7 @@ namespace TreatPraktik.View
                 itemType.EnglishTranslationText = tbi.EnglishTranslationText;
                 itemType.LanguageID = tbi.LanguageID;
                 itemTypeOrder.GroupTypeID = gt.GroupTypeID;
-                itemType.IncludedTypeID = "1";
+                itemTypeOrder.IncludedTypeID = "1";
                 itemTypeOrder.Item = itemType;
 
                 List<ItemTypeOrder> itemTypeList = GetItemTypes();
@@ -686,7 +686,7 @@ namespace TreatPraktik.View
                 itemType.EnglishTranslationText = tbi.EnglishTranslationText;
                 itemType.LanguageID = tbi.LanguageID;
                 itToBeMoved.GroupTypeID = gt.GroupTypeID;
-                itemType.IncludedTypeID = "1";
+                itToBeMoved.IncludedTypeID = "1";
                 itToBeMoved.Item = itemType;
 
 
@@ -707,7 +707,7 @@ namespace TreatPraktik.View
                 itToBeMoved.Item.EnglishTranslationText = tbi.EnglishTranslationText;
                 itToBeMoved.Item.LanguageID = tbi.LanguageID;
                 itToBeMoved.GroupTypeID = gt.GroupTypeID;
-                itToBeMoved.Item.IncludedTypeID = "1";
+                itToBeMoved.IncludedTypeID = "1";
             }
         }
 

@@ -328,12 +328,12 @@ namespace TreatPraktik.ViewModel
                 {
                     if (groupOrderTypes[i].Group.GroupTypeID.Equals(itemTypeOrder[k].GroupTypeID))
                     {
-                        if (!groupOrderTypes[i].Group.ItemOrder.Contains(items[k]))
+                        if (!groupOrderTypes[i].Group.ItemOrder.Contains(itemTypeOrder[k]))
                         {
-                            groupOrderTypes[i].Group.ItemOrder.Add(items[k]);
+                            groupOrderTypes[i].Group.ItemOrder.Add(itemTypeOrder[k]);
+                        }
                     }
                 }
-            }
             }
 
             //foreach (GroupTypeOrder typeOrder in groupOrderTypes)

@@ -164,7 +164,7 @@ namespace TreatPraktik.Ressources.ExcelClasses
                     cell4.DataType = CellValues.Number;
                     columnCount++;
 
-                    string text5 = group.Group.ItemOrder[i].Item.IncludedTypeID;
+                    string text5 = group.Group.ItemOrder[i].IncludedTypeID;
                     Cell cell5 = _sharedResources.InsertCellInWorksheet(_sharedResources.Number2String(columnCount, true), rowCount, worksheetPart);
                     cell5.CellValue = new CellValue(text5);
                     cell5.DataType = CellValues.Number;

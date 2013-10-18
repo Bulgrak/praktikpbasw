@@ -28,7 +28,7 @@ namespace TreatPraktik.Model.WorkspaceObjects
             this.DesignID = designId;
             //this.ItemOrder = itemOrder;
             this.Header = header;
-            this.IncludedTypeID = includedTypeId;
+            //this.IncludedTypeID = includedTypeId;
             this.LanguageID = languageId;
             this.DanishTranslationText = danish;
             this.EnglishTranslationText = english;
