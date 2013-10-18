@@ -52,7 +52,7 @@ namespace TreatPraktik.View
                             AddNewEmptyItemRow();
                             counterRow++;
                             gt.ItemOrder[j + skipped].Item.Header = "<NewLineItem>";
-                            //gt.Items[j + skipped].ItemOrder = j + skipped;
+                            gt.ItemOrder[j + skipped].ItemOrder = j + skipped;
                             SolidColorBrush textColor2 = Brushes.Black;
                             InsertItem(gt.ItemOrder[j + skipped], counterRow, j % 4, textColor2);
                             j--;
@@ -61,7 +61,7 @@ namespace TreatPraktik.View
                             continue;
                         }
                         gt.ItemOrder[j + skipped].Item.Header = "<NewLineItem>";
-                        //gt.Items[j + skipped].ItemOrder = j + skipped;
+                        gt.ItemOrder[j + skipped].ItemOrder = j + skipped;
                         SolidColorBrush textColor = Brushes.Black;
                         InsertItem(gt.ItemOrder[j + skipped], counterRow, j % 4, textColor);
                         skipped = skipped + j;
@@ -82,7 +82,7 @@ namespace TreatPraktik.View
                     {
                         SolidColorBrush textColor = Brushes.Black;
                         InsertItem(gt.ItemOrder[j + skipped], counterRow, j % 4, textColor);
-                        //gt.Items[j + skipped].ItemOrder = j + skipped;
+                        gt.ItemOrder[j + skipped].ItemOrder = j + skipped;
                     }
                     else
                     {
@@ -92,7 +92,7 @@ namespace TreatPraktik.View
                         }
                         SolidColorBrush textColor = Brushes.Black;
                         InsertItem(gt.ItemOrder[j + skipped], counterRow, j % 4, textColor);
-                        //gt.Items[j + skipped].ItemOrder = j + skipped;
+                        gt.ItemOrder[j + skipped].ItemOrder = j + skipped;
                     }
                     counterColumn++;
                 }
@@ -389,6 +389,7 @@ namespace TreatPraktik.View
         {
             ItemTypeOrder itemTypeOrder = new ItemTypeOrder();
             itemTypeOrder.GroupTypeID = gt.GroupTypeID;
+            itemTypeOrder.DesignID = "197";
             ItemType emptyFieldItemType = new ItemType();
             emptyFieldItemType.DesignID = "197";
             emptyFieldItemType.Header = "<EmptyField>";
@@ -633,18 +634,21 @@ namespace TreatPraktik.View
             GroupType gt = gto.Group;
             if (tbi.DesignID.Equals("198") && designID != 0)
             {
-                ItemTypeOrder newItemType = new ItemTypeOrder();
-                newItemType.DesignID = tbi.DesignID;
-                newItemType.Item.Header = tbi.Header;
-                newItemType.ItemOrder = itToBeMoved.ItemOrder;
-                newItemType.Item.DanishTranslationText = tbi.DanishTranslationText;
-                newItemType.Item.EnglishTranslationText = tbi.EnglishTranslationText;
-                newItemType.Item.LanguageID = tbi.LanguageID;
-                newItemType.GroupTypeID = gt.GroupTypeID;
-                newItemType.Item.IncludedTypeID = "1";
+                ItemTypeOrder itemTypeOrder = new ItemTypeOrder();
+                itemTypeOrder.DesignID = tbi.DesignID;
+                ItemType itemType = new ItemType();
+                itemType.Header = tbi.Header;
+                itemTypeOrder.ItemOrder = itToBeMoved.ItemOrder;
+                itemType.DanishTranslationText = tbi.DanishTranslationText;
+                itemType.EnglishTranslationText = tbi.EnglishTranslationText;
+                itemType.LanguageID = tbi.LanguageID;
+                itemTypeOrder.GroupTypeID = gt.GroupTypeID;
+                itemType.IncludedTypeID = "1";
+                itemTypeOrder.Item = itemType;
+
                 int index = gt.ItemOrder.IndexOf(itToBeMoved);
 
-                gt.ItemOrder.Insert(index, newItemType);
+                gt.ItemOrder.Insert(index, itemTypeOrder);
                 grid.ClearGrid();
                 PopulateGroupTable(gt);
                 DisableAllowDropByNewLineItem();
@@ -652,19 +656,21 @@ namespace TreatPraktik.View
             }
             if (designID != 0 && !tbi.DesignID.Equals("198") && designID != 197)
             {
-                ItemTypeOrder newItemType = new ItemTypeOrder();
-                newItemType.DesignID = tbi.DesignID;
-                newItemType.Item.Header = tbi.Header;
-                newItemType.ItemOrder = itToBeMoved.ItemOrder;
-                newItemType.Item.DanishTranslationText = tbi.DanishTranslationText;
-                newItemType.Item.EnglishTranslationText = tbi.EnglishTranslationText;
-                newItemType.Item.LanguageID = tbi.LanguageID;
-                newItemType.GroupTypeID = gt.GroupTypeID;
-                newItemType.Item.IncludedTypeID = "1";
+                ItemTypeOrder itemTypeOrder = new ItemTypeOrder();
+                itemTypeOrder.DesignID = tbi.DesignID;
+                ItemType itemType = new ItemType();
+                itemType.Header = tbi.Header;
+                itemTypeOrder.ItemOrder = itToBeMoved.ItemOrder;
+                itemType.DanishTranslationText = tbi.DanishTranslationText;
+                itemType.EnglishTranslationText = tbi.EnglishTranslationText;
+                itemType.LanguageID = tbi.LanguageID;
+                itemTypeOrder.GroupTypeID = gt.GroupTypeID;
+                itemType.IncludedTypeID = "1";
+                itemTypeOrder.Item = itemType;
 
                 List<ItemTypeOrder> itemTypeList = GetItemTypes();
                 int startPosition = itemTypeList.IndexOf(itToBeMoved);
-                MoveItemsForward(startPosition, itemTypeList, grid, newItemType, gt);
+                MoveItemsForward(startPosition, itemTypeList, grid, itemTypeOrder, gt);
 
 
                 grid.ClearGrid();
@@ -674,13 +680,14 @@ namespace TreatPraktik.View
             if (designID == 0)
             {
                 itToBeMoved.DesignID = tbi.DesignID;
-                itToBeMoved.Item.Header = tbi.Header;
-                itToBeMoved.Item.DanishTranslationText = tbi.DanishTranslationText;
-                itToBeMoved.Item.EnglishTranslationText = tbi.EnglishTranslationText;
-                itToBeMoved.Item.LanguageID = tbi.LanguageID;
+                ItemType itemType = new ItemType();
+                itemType.Header = tbi.Header;
+                itemType.DanishTranslationText = tbi.DanishTranslationText;
+                itemType.EnglishTranslationText = tbi.EnglishTranslationText;
+                itemType.LanguageID = tbi.LanguageID;
                 itToBeMoved.GroupTypeID = gt.GroupTypeID;
-                itToBeMoved.Item.IncludedTypeID = "1";
-
+                itemType.IncludedTypeID = "1";
+                itToBeMoved.Item = itemType;
 
 
                 gt.ItemOrder.Add(itToBeMoved);

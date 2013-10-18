@@ -314,7 +314,10 @@ namespace TreatPraktik.ViewModel
                 {
                     if (groupOrderTypes[i].Group.GroupTypeID.Equals(items[k].GroupTypeID))
                     {
-                        groupOrderTypes[i].Group.ItemOrder.Add(items[k]);
+                        if (!groupOrderTypes[i].Group.ItemOrder.Contains(items[k]))
+                        {
+                            groupOrderTypes[i].Group.ItemOrder.Add(items[k]);
+                        }
                     }
                 }
             }
