@@ -52,7 +52,7 @@ namespace TreatPraktik.View
                             AddNewEmptyItemRow();
                             counterRow++;
                             gt.ItemOrder[j + skipped].Item.Header = "<NewLineItem>";
-                            gt.ItemOrder[j + skipped].ItemOrder = j + skipped;
+                            //gt.ItemOrder[j + skipped].ItemOrder = j + skipped;
                             SolidColorBrush textColor2 = Brushes.Black;
                             InsertItem(gt.ItemOrder[j + skipped], counterRow, j % 4, textColor2);
                             j--;
@@ -61,7 +61,7 @@ namespace TreatPraktik.View
                             continue;
                         }
                         gt.ItemOrder[j + skipped].Item.Header = "<NewLineItem>";
-                        gt.ItemOrder[j + skipped].ItemOrder = j + skipped;
+                        //gt.ItemOrder[j + skipped].ItemOrder = j + skipped;
                         SolidColorBrush textColor = Brushes.Black;
                         InsertItem(gt.ItemOrder[j + skipped], counterRow, j % 4, textColor);
                         skipped = skipped + j;
@@ -82,7 +82,7 @@ namespace TreatPraktik.View
                     {
                         SolidColorBrush textColor = Brushes.Black;
                         InsertItem(gt.ItemOrder[j + skipped], counterRow, j % 4, textColor);
-                        gt.ItemOrder[j + skipped].ItemOrder = j + skipped;
+                        //gt.ItemOrder[j + skipped].ItemOrder = j + skipped;
                     }
                     else
                     {
@@ -92,7 +92,7 @@ namespace TreatPraktik.View
                         }
                         SolidColorBrush textColor = Brushes.Black;
                         InsertItem(gt.ItemOrder[j + skipped], counterRow, j % 4, textColor);
-                        gt.ItemOrder[j + skipped].ItemOrder = j + skipped;
+                        //gt.ItemOrder[j + skipped].ItemOrder = j + skipped;
                     }
                     counterColumn++;
                 }
@@ -200,8 +200,9 @@ namespace TreatPraktik.View
             gt.ItemOrder.Remove(itToBeDeleted);
 
             int i = Convert.ToInt32(itToBeDeleted.ItemOrder);
-            ItemType itemType = new ItemType();
-            border.DataContext = itemType;
+            //ItemType itemType = new ItemType();
+            ItemTypeOrder ito = new ItemTypeOrder();
+            border.DataContext = ito;
 
             List<ItemTypeOrder> itemTypeList = GetItemTypes();
             bool stopCounting = false;
@@ -547,9 +548,9 @@ namespace TreatPraktik.View
             GroupType draggedGt = GetGroupType(draggedGroupTable);
             GroupType gt = GetGroupType(GroupTable);
 
-            ItemType it = (ItemType)draggedTextBlock.DataContext;
-
-            if (borderCell.DataContext is ItemType)
+            ItemTypeOrder ito = (ItemTypeOrder)draggedTextBlock.DataContext;
+            ItemType it = ito.Item;
+            if (borderCell.DataContext is ItemTypeOrder)
             {
                 if (!draggedGt.GroupTypeID.Equals(gt.GroupTypeID))
                 {
@@ -637,6 +638,7 @@ namespace TreatPraktik.View
                 ItemTypeOrder itemTypeOrder = new ItemTypeOrder();
                 itemTypeOrder.DesignID = tbi.DesignID;
                 ItemType itemType = new ItemType();
+                itemType.DesignID = tbi.DesignID;
                 itemType.Header = tbi.Header;
                 itemTypeOrder.ItemOrder = itToBeMoved.ItemOrder;
                 itemType.DanishTranslationText = tbi.DanishTranslationText;
@@ -659,6 +661,7 @@ namespace TreatPraktik.View
                 ItemTypeOrder itemTypeOrder = new ItemTypeOrder();
                 itemTypeOrder.DesignID = tbi.DesignID;
                 ItemType itemType = new ItemType();
+                itemType.DesignID = tbi.DesignID;
                 itemType.Header = tbi.Header;
                 itemTypeOrder.ItemOrder = itToBeMoved.ItemOrder;
                 itemType.DanishTranslationText = tbi.DanishTranslationText;
@@ -681,6 +684,7 @@ namespace TreatPraktik.View
             {
                 itToBeMoved.DesignID = tbi.DesignID;
                 ItemType itemType = new ItemType();
+                itemType.DesignID = tbi.DesignID;
                 itemType.Header = tbi.Header;
                 itemType.DanishTranslationText = tbi.DanishTranslationText;
                 itemType.EnglishTranslationText = tbi.EnglishTranslationText;
@@ -885,7 +889,8 @@ namespace TreatPraktik.View
                     gt.ItemOrder[i].ItemOrder--;
                 }
                 else
-                        {
+                {
+                    gt.ItemOrder[i].ItemOrder--;
                     break;
                 }
                 i--;
@@ -1035,10 +1040,11 @@ namespace TreatPraktik.View
         {
             Border bCell = sender as Border;
             Grid cellItem = (Grid)bCell.Child;
-            if (bCell.DataContext is ItemType)
+            if (bCell.DataContext is ItemTypeOrder)
             {
-                ItemType itemType = (ItemType)bCell.DataContext;
-                if (itemType.Header != null)
+                ItemTypeOrder ito = (ItemTypeOrder)bCell.DataContext;
+                ItemType it = ito.Item;
+                if (it != null)
                 {
                     Button btnClearCell = (Button)cellItem.Children[0];
                     btnClearCell.Visibility = Visibility.Visible;
@@ -1091,9 +1097,10 @@ namespace TreatPraktik.View
             if (sender is Border && e.LeftButton == MouseButtonState.Pressed)
             {
                 Border draggedItem = sender as Border;
-                if (draggedItem.DataContext is ItemType) //Prevent dragging if GroupType
+                if (draggedItem.DataContext is ItemTypeOrder) //Prevent dragging if GroupType
                 {
-                    ItemType it = (ItemType)draggedItem.DataContext;
+                    ItemTypeOrder ito = (ItemTypeOrder)draggedItem.DataContext;
+                    ItemType it = ito.Item;
                     if (it.Header != null)
                     {
                         adorner = new DragAdornerItem(draggedItem, e.GetPosition(draggedItem));
