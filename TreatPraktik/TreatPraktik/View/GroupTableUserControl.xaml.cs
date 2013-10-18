@@ -330,32 +330,47 @@ namespace TreatPraktik.View
             int k = 0;
             while (i < gt.Items.Count)
             {
-                if (gt.Items[i].ItemOrder != i)
+                if (gt.Items.Count > 1)
                 {
-                    if (!gt.Items[i-1].DesignID.Equals("198"))
+                    if (gt.Items[i].ItemOrder != i)
                     {
-                        k = (int)gt.Items[i].ItemOrder - (int)gt.Items[i - 1].ItemOrder;
-                        j = k + i;
-                        while (k > 1)
+                        if (!gt.Items[i - 1].DesignID.Equals("198"))
                         {
-                            gt.Items.Insert(i, CreateEmptyField(gt));
-                            k--;
+                            k = (int)gt.Items[i].ItemOrder - (int)gt.Items[i - 1].ItemOrder;
+                            j = k + i;
+                            while (k > 1)
+                            {
+                                gt.Items.Insert(i, CreateEmptyField(gt));
+                                k--;
+                            }
+                            i = j - 1;
                         }
-                        i = j - 1;
-                    }
-                    else
-                    {
-                        k = ((int)gt.Items[i].ItemOrder - (i%4)) - (int)gt.Items[i - 1].ItemOrder;
-                        j = k + i;
-                        while (k > 1)
+                        else
                         {
-                            gt.Items.Insert(i, CreateEmptyField(gt));
-                            k--;
+                            k = (int)gt.Items[i].ItemOrder - ((int)gt.Items[i - 1].ItemOrder + (i % 4));
+                            j = k + i;
+                            while (k > 1)
+                            {
+                                gt.Items.Insert(i, CreateEmptyField(gt));
+                                k--;
+                            }
+                            i = j - 1;
                         }
-                        i = j - 1;
                     }
+                    i++;
+
                 }
-                i++;
+                else
+                {
+                    k = (int)gt.Items[i].ItemOrder;
+                    j = k + i;
+                    while (k > 0)
+                    {
+                        gt.Items.Insert(i, CreateEmptyField(gt));
+                        k--;
+                    }
+                    break;
+                }
             }
         }
 
