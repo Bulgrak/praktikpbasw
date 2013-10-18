@@ -13,9 +13,11 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using DocumentFormat.OpenXml.Drawing;
 using DocumentFormat.OpenXml.EMMA;
 using TreatPraktik.Model;
 using TreatPraktik.Model.WorkspaceObjects;
+using Point = System.Windows.Point;
 
 namespace TreatPraktik.View
 {
@@ -326,35 +328,39 @@ namespace TreatPraktik.View
         private void GenerateEmptyFields(GroupType gt)
         {
             int i = 0;
-            int j = 0;
-            int k = 0;
             while (i < gt.Items.Count)
             {
+                int noOfEmptyFieldsCounter = 0;
                 if (gt.Items.Count > 1)
                 {
                     if (gt.Items[i].ItemOrder != i)
                     {
+                        int totalNumberOfEmptyFields = 0;
                         if (!gt.Items[i - 1].DesignID.Equals("198"))
                         {
-                            k = (int)gt.Items[i].ItemOrder - (int)gt.Items[i - 1].ItemOrder;
-                            j = k + i;
-                            while (k > 1)
+                            noOfEmptyFieldsCounter = (int)gt.Items[i].ItemOrder - (int)gt.Items[i - 1].ItemOrder;
+                            totalNumberOfEmptyFields = noOfEmptyFieldsCounter + i;
+                            while (noOfEmptyFieldsCounter > 1) //Insert Empty fields
                             {
-                                gt.Items.Insert(i, CreateEmptyField(gt));
-                                k--;
+                                gt.Items.Insert(i, CreateEmptyField(gt, i + noOfEmptyFieldsCounter - 2));
+                                noOfEmptyFieldsCounter--;
                             }
-                            i = j - 1;
+                            //i = totalNumberOfEmptyFields - 1;
+                            i = gt.Items.Count - 1;
                         }
                         else
                         {
-                            k = (int)gt.Items[i].ItemOrder - ((int)gt.Items[i - 1].ItemOrder + (i % 4));
-                            j = k + i;
-                            while (k > 1)
+                            totalNumberOfEmptyFields = (int)gt.Items[i].ItemOrder - ((int)gt.Items[i - 1].ItemOrder + (4 - (((int)gt.Items[i - 1].ItemOrder) % 4)));
+                            noOfEmptyFieldsCounter = totalNumberOfEmptyFields;
+                            while (noOfEmptyFieldsCounter > 0)
                             {
-                                gt.Items.Insert(i, CreateEmptyField(gt));
-                                k--;
+                                gt.Items.Insert(i, CreateEmptyField(gt, i + noOfEmptyFieldsCounter - 2));
+                                noOfEmptyFieldsCounter--;
                             }
-                            i = j - 1;
+                            if (totalNumberOfEmptyFields != 0)
+                            {
+                                i = gt.Items.Count - 1;
+                            }
                         }
                     }
                     i++;
@@ -362,25 +368,26 @@ namespace TreatPraktik.View
                 }
                 else
                 {
-                    k = (int)gt.Items[i].ItemOrder;
-                    j = k + i;
-                    while (k > 0)
+                    noOfEmptyFieldsCounter = (int)gt.Items[i].ItemOrder;
+                    //totalNumberOfEmptyFields = noOfEmptyFieldsCounter + i;
+                    while (noOfEmptyFieldsCounter > 0)
                     {
-                        gt.Items.Insert(i, CreateEmptyField(gt));
-                        k--;
+                        gt.Items.Insert(i, CreateEmptyField(gt, i + noOfEmptyFieldsCounter - 2));
+                        noOfEmptyFieldsCounter--;
                     }
                     break;
                 }
             }
         }
 
-        private ItemType CreateEmptyField(GroupType gt)
+        private ItemType CreateEmptyField(GroupType gt, int itemOrder)
         {
             ItemType emptyFieldItemType = new ItemType();
             emptyFieldItemType.DesignID = "197";
             emptyFieldItemType.Header = "<EmptyField>";
             emptyFieldItemType.GroupTypeID = gt.GroupTypeID;
             emptyFieldItemType.IncludedTypeID = "1";
+            emptyFieldItemType.ItemOrder = itemOrder;
             return emptyFieldItemType;
         }
 
@@ -698,66 +705,53 @@ namespace TreatPraktik.View
             ItemType draggedItemType = (ItemType)target2.DataContext;
             Grid groupTable = (Grid)target.Parent;
             GroupType gt = GetGroupType(groupTable);
-
+            int draggedPosition = gt.Items.IndexOf(draggedItemType);
             double targetItemTypeNo = targetItemType.ItemOrder; //affected item
-
-            gt.Items.Remove(draggedItemType);
-            int position = gt.Items.IndexOf(targetItemType);
+            int targetPosition = gt.Items.IndexOf(targetItemType);
+            
+            
             if (targetItemType != draggedItemType)
             {
+                gt.Items.Remove(draggedItemType);
                 if (targetItemType.DesignID == null)
                 {
                     int i = 0;
-                    while (i < gt.Items.Count)
-                    {
-                        gt.Items[i].ItemOrder--;
-                        i++;
-                    }
+                    //while (i < gt.Items.Count)
+                    //{
+                    //    gt.Items[i].ItemOrder--;
+                    //    i++;
+                    //}
+                    DecrementItemOrder(gt, gt.Items.Count, draggedPosition);
                     draggedItemType.ItemOrder = targetItemType.ItemOrder;
-                    int row = Grid.GetRow(target);
-                    int column = Grid.GetColumn(target);
-                    int rowCount = groupTable.RowDefinitions.Count;
-                    int lastRow = groupTable.RowDefinitions.Count - 1;
-                    RefreshGroupTable(gt);
-                    Border newTarget = null;
-                    if (rowCount == groupTable.RowDefinitions.Count + 1)
-                    {
-                        AddNewEmptyItemRow(); // Adds new row in case the item has been drop at the last row
-                        if (row == lastRow)
-                        {
-                            newTarget =
-                                (Border)GetCellItem(groupTable.RowDefinitions.Count - 1, column);
-                        }
-                        else
-                        {
-                            newTarget =
-                                (Border)GetCellItem(groupTable.RowDefinitions.Count - 2, column);
-                        }
-                    }
-                    else
-                    {
-                        newTarget = (Border)GetCellItem(row, column);
-                    }
-                    newTarget.DataContext = draggedItemType;
-                    i = 1;
-                    while (i < groupTable.RowDefinitions.Count - 2)
-                    {
-                        if (!CheckIfRowIsEmpty(i))
-                        {
-                            //GenerateEmptyFields(i, CheckForNewLineItem(i));
-                        }
-                        i++;
-                    }
-                    if (!(row == groupTable.RowDefinitions.Count - 2))
-                    {
-                        //GenerateEmptyFields(groupTable.RowDefinitions.Count - 2, true);
-                    }
-                    else
-                    {
-                        //GenerateEmptyFields(groupTable.RowDefinitions.Count - 2, false);
-                    }
-                    //GenerateEmptyFields(groupTable.RowDefinitions.Count - 1, false);
+                    //int row = Grid.GetRow(target);
+                    //int column = Grid.GetColumn(target);
+                    //int rowCount = groupTable.RowDefinitions.Count;
+                    //int lastRow = groupTable.RowDefinitions.Count - 1;
+                    //RefreshGroupTable(gt);
+                    //Border newTarget = null;
+                    //if (rowCount == groupTable.RowDefinitions.Count + 1)
+                    //{
+                    //    AddNewEmptyItemRow(); // Adds new row in case the item has been drop at the last row
+                    //    if (row == lastRow)
+                    //    {
+                    //        newTarget =
+                    //            (Border)GetCellItem(groupTable.RowDefinitions.Count - 1, column);
+                    //    }
+                    //    else
+                    //    {
+                    //        newTarget =
+                    //            (Border)GetCellItem(groupTable.RowDefinitions.Count - 2, column);
+                    //    }
+                    //}
+                    //else
+                    //{
+                    //    newTarget = (Border)GetCellItem(row, column);
+                    //}
+                    //newTarget.DataContext = draggedItemType;
                     gt.Items.Add(draggedItemType);
+                    
+                    GenerateEmptyFields(gt);
+                    //gt.Items.Add(draggedItemType);
                     List<ItemType> itemTypeList = gt.Items.ToList();
                     itemTypeList = itemTypeList.OrderBy(o => o.ItemOrder).ToList();
                     ObservableCollection<ItemType> ocItemTypeList = new ObservableCollection<ItemType>(itemTypeList);
@@ -804,73 +798,98 @@ namespace TreatPraktik.View
 
                 //}
 
-                else if (draggedItemType.DesignID.Equals("198"))
+                //else if (draggedItemType.DesignID.Equals("198"))
+                //{
+                //    if (draggedItemType.ItemOrder > targetItemType.ItemOrder)
+                //    {
+                //        gt.Items.Insert(targetPosition, draggedItemType);
+                //        draggedItemType.ItemOrder = targetItemTypeNo;
+                //    }
+                //    else
+                //    {
+                //        gt.Items[targetPosition].ItemOrder--;
+                //        draggedItemType.ItemOrder = targetItemTypeNo;
+                //        gt.Items.Insert(targetPosition, draggedItemType);
+                //    }
+                //    GenerateEmptyFields(gt);
+                //    gt = SortItemList(gt);
+                //    RefreshGroupTable(gt);
+                //}
+
+                else if (targetItemType.DesignID != null && draggedItemType.DesignID != null /*&& !draggedItemType.DesignID.Equals("198")*/)
                 {
                     if (draggedItemType.ItemOrder > targetItemType.ItemOrder)
                     {
-                        gt.Items.Insert(position, draggedItemType);
+                        gt.Items.Insert(targetPosition, draggedItemType);
                         draggedItemType.ItemOrder = targetItemTypeNo;
                     }
                     else
                     {
-                        gt.Items[position].ItemOrder--;
-                        draggedItemType.ItemOrder = targetItemTypeNo;
-                        gt.Items.Insert(position, draggedItemType);
-                    }
-                    //gt = SortItemList(gt);
-                    //RefreshGroupTable(gt);
-                    int i = 1;
-                    while (i < groupTable.RowDefinitions.Count - 2)
-                    {
-                        if (!CheckIfRowIsEmpty(i))
+                        if (gt.Items.Count != targetPosition)
                         {
-                            if (!CheckForNewLineItem(i))
-                            {
-                                //GenerateEmptyFields(i, true);
-                            }
-                            else
-                            {
-                                //GenerateEmptyFields(i, false);
-                            }
-                        }
 
-                        i++;
+                            //gt.Items[position].ItemOrder--;
+                            draggedItemType.ItemOrder = targetItemTypeNo;
+                            gt.Items.Insert(targetPosition, draggedItemType);
+                        }
+                        else
+                        {
+                            draggedItemType.ItemOrder = targetItemTypeNo;
+                            gt.Items.Add(draggedItemType);
+                        }
                     }
-                    //GenerateEmptyFields(groupTable.RowDefinitions.Count - 2, false);
-                    //GenerateEmptyFields(groupTable.RowDefinitions.Count - 1, false);
+                    AdjustItemOrder(gt, targetPosition, draggedPosition);
+                    
+                    GenerateEmptyFields(gt);
                     gt = SortItemList(gt);
                     RefreshGroupTable(gt);
                 }
+            }
+        }
 
-                else if (targetItemType.DesignID != null && draggedItemType.DesignID != null && !draggedItemType.DesignID.Equals("198"))
+        void AdjustItemOrder(GroupType gt, int targetPosition, int draggedPosition)
+        {
+            if (targetPosition < draggedPosition)
+            {
+                IncrementItemOrder(gt, targetPosition, draggedPosition);
+            }
+            else
+            {
+                DecrementItemOrder(gt, targetPosition, draggedPosition);
+            }
+        }
+
+        void DecrementItemOrder(GroupType gt, int targetPosition, int draggedPosition)
+        {
+            int i = targetPosition - 1;
+            while (i >= draggedPosition)
+            {
+                if (!gt.Items[i].DesignID.Equals("198"))
                 {
-                    if (draggedItemType.ItemOrder > targetItemType.ItemOrder)
-                    {
-                        gt.Items.Insert(position, draggedItemType);
-                        draggedItemType.ItemOrder = targetItemTypeNo;
-                    }
-                    else
-                    {
-                        gt.Items[position].ItemOrder--;
-                        draggedItemType.ItemOrder = targetItemTypeNo;
-                        gt.Items.Insert(position, draggedItemType);
-                    }
-                    //gt = SortItemList(gt);
-                    //RefreshGroupTable(gt);
-                    int i = 1;
-                    while (i < groupTable.RowDefinitions.Count - 2)
-                    {
-                        if (!CheckIfRowIsEmpty(i))
-                        {
-                            //GenerateEmptyFields(i, true);
-                        }
-                        i++;
-                    }
-                    //GenerateEmptyFields(groupTable.RowDefinitions.Count - 2, false);
-                    //GenerateEmptyFields(groupTable.RowDefinitions.Count - 1, false);
-                    gt = SortItemList(gt);
-                    RefreshGroupTable(gt);
+                    gt.Items[i].ItemOrder--;
                 }
+                else
+                {
+                    break;
+                }
+                i--;
+            }
+        }
+
+        void IncrementItemOrder(GroupType gt, int position, int startPosition)
+        {
+            int i = position + 1;
+            while (i <= startPosition)
+            {
+                if (!gt.Items[i].DesignID.Equals("198"))
+                {
+                    gt.Items[i].ItemOrder++;
+                }
+                else
+                {
+                    break;
+                }
+                i++;
             }
         }
 
