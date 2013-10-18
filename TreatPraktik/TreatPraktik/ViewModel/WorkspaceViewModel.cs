@@ -204,7 +204,7 @@ namespace TreatPraktik.ViewModel
                 }
                 group.LanguageID = "2";
             }
-
+            
             //Link GroupType to GroupOrderType
             for (int i = 0; i < groupOrderList.Count; i++)
             {
@@ -308,7 +308,7 @@ namespace TreatPraktik.ViewModel
                 {
                     Console.WriteLine(ito.DesignID + " - " + ito.GroupTypeID);
                 }
-                
+
             }
 
             ObservableCollection<ItemTypeOrder> obsCol = new ObservableCollection<ItemTypeOrder>(itemOrders);
@@ -328,9 +328,12 @@ namespace TreatPraktik.ViewModel
                 {
                     if (groupOrderTypes[i].Group.GroupTypeID.Equals(itemTypeOrder[k].GroupTypeID))
                     {
-                        groupOrderTypes[i].Group.ItemOrder.Add(itemTypeOrder[k]);
+                        if (!groupOrderTypes[i].Group.ItemOrder.Contains(items[k]))
+                        {
+                            groupOrderTypes[i].Group.ItemOrder.Add(items[k]);
                     }
                 }
+            }
             }
 
             //foreach (GroupTypeOrder typeOrder in groupOrderTypes)
