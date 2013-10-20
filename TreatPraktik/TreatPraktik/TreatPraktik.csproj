@@ -80,6 +80,8 @@
     <Compile Include="View\DragAdornerGroup.cs" />
     <Compile Include="View\DragAdornerItem.cs" />
     <Compile Include="View\DragAdornerToolboxItem.cs" />
+    <Compile Include="View\GridHelpers.cs" />
+    <Compile Include="View\GroupOrderToRow.cs" />
     <Compile Include="View\GroupTableUserControl.xaml.cs">
       <DependentUpon>GroupTableUserControl.xaml</DependentUpon>
     </Compile>

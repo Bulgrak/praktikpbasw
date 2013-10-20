@@ -4,8 +4,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" Height="Auto" Width="Auto">
-    <Grid>
+    <Grid Width="372">
         <Button Content="Import Excel" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="120" Click="ImportExcel_Click" Margin="0,0,127.2,0"/>
         <Button Content="Export Excel" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="120" Margin="125,0,0,0" Click="ExportExcel_Click"/>
+        <Button Content="Test" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="120" Margin="0,0,252,0" Click="Button_Click"/>
     </Grid>
 </UserControl>

@@ -1,9 +1,10 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Windows;
 
 namespace TreatPraktik.Model.WorkspaceObjects
 {
-    public class GroupType : INotifyPropertyChanged
+    public class GroupType : DependencyObject, INotifyPropertyChanged 
     {
         public string GroupTypeID { get; set; }                         //Group ID
         private string _groupHeader;                                    //The real name for the group

@@ -51,7 +51,7 @@ namespace TreatPraktik.View
                     //}
                     GroupTableContainerUserControl ucGroupTableContainerUserControl = new GroupTableContainerUserControl();
                     ucGroupTableContainerUserControl.GtoObsCollection = pt.Groups;
-                    ucGroupTableContainerUserControl.CreateGroupTables();
+                    //ucGroupTableContainerUserControl.CreateGroupTables();
                     ti.Content = ucGroupTableContainerUserControl;
 
                     myTabControl.Items.Add(ti);

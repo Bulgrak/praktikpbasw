@@ -18,13 +18,14 @@ using DocumentFormat.OpenXml.EMMA;
 using TreatPraktik.Model;
 using TreatPraktik.Model.WorkspaceObjects;
 using Point = System.Windows.Point;
+using System.ComponentModel;
 
 namespace TreatPraktik.View
 {
     /// <summary>
     /// Interaction logic for GroupTableUserControl.xaml
     /// </summary>
-    public partial class GroupTableUserControl : UserControl
+    public partial class GroupTableUserControl : UserControl, INotifyPropertyChanged
     {
         public GroupTableContainerUserControl ParentGroupTableContainerUserControl { get; set; }
 
@@ -32,6 +33,69 @@ namespace TreatPraktik.View
         {
             InitializeComponent();
         }
+
+        #region INotifyPropertyChanged
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged(string propertyName)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
+        #endregion
+
+        //public GroupType Gert
+        //{
+        //    get { return (GroupType)GetValue(GertProperty); }
+        //    set
+        //    {
+        //        SetValue(GertProperty, value);
+        //    }
+        //}
+
+        //// Using a DependencyProperty as the backing store for TableGroupType.  This enables animation, styling, binding, etc...
+        //public static readonly DependencyProperty GertProperty =
+        //    DependencyProperty.Register(
+        //    "Gert", 
+        //    typeof(GroupType), 
+        //    typeof(GroupTableContainerUserControl), 
+        //    new PropertyMetadata(null));
+
+        private static void OnCustomerChangedCallBack(
+                DependencyObject sender, DependencyPropertyChangedEventArgs e)
+        {
+            GroupTableUserControl control = sender as GroupTableUserControl;
+            GroupType time = (GroupType)e.NewValue;
+            control.MyGroupType = time;
+        }
+
+        protected virtual void OnCustomerChanged()
+        {
+            // Grab related data.
+            // Raises INotifyPropertyChanged.PropertyChanged
+            OnPropertyChanged("MyGroupType");
+        }
+
+
+        public GroupType MyGroupType
+        {
+            get { return (GroupType)GetValue(MyGroupTypeProperty); }
+            set { 
+                SetValue(MyGroupTypeProperty, value);
+                OnPropertyChanged("MyGroupType");
+                PopulateGroupTable((GroupType)MyGroupType);
+            }
+        }
+
+        public static readonly DependencyProperty MyGroupTypeProperty =
+            DependencyProperty.Register("MyGroupType", typeof(GroupType), typeof(GroupTableUserControl), new PropertyMetadata(OnCustomerChangedCallBack));
+
+        
 
         public void PopulateGroupTable(GroupType gt)
         {
@@ -184,49 +248,6 @@ namespace TreatPraktik.View
             }
         }
 
-        //private void btnRemove_Click(object sender, RoutedEventArgs e)
-        //{
-        //    Button btn = sender as Button;
-        //    btn.Visibility = Visibility.Hidden;
-
-        //    Grid gridCell = (Grid)btn.Parent;
-        //    Border border = (Border)gridCell.Parent;
-        //    Grid gridGroupTable = (Grid)border.Parent;
-        //    gridGroupTable.RemoveRow(gridGroupTable.RowDefinitions.Count - 1);
-        //    GroupTypeOrder gto = (GroupTypeOrder)gridGroupTable.DataContext;
-        //    GroupType gt = gto.Group;
-
-        //    ItemTypeOrder itToBeDeleted = (ItemTypeOrder)border.DataContext;
-        //    gt.ItemOrder.Remove(itToBeDeleted);
-
-        //    int i = Convert.ToInt32(itToBeDeleted.ItemOrder);
-        //    //ItemType itemType = new ItemType();
-        //    ItemTypeOrder ito = new ItemTypeOrder();
-        //    border.DataContext = ito;
-
-        //    List<ItemTypeOrder> itemTypeList = GetItemTypes();
-        //    bool stopCounting = false;
-
-        //    while (i < itemTypeList.Count && !stopCounting)
-        //    {
-        //        itemTypeList[i].ItemOrder--;
-        //        i++;
-        //    }
-
-        //    itemTypeList = itemTypeList.OrderBy(o => o.ItemOrder).ToList();
-        //    ObservableCollection<ItemTypeOrder> ocItemTypeList = new ObservableCollection<ItemTypeOrder>();
-
-        //    //add list to observablecollection
-        //    foreach (ItemTypeOrder it in itemTypeList)
-        //    {
-        //        ocItemTypeList.Add(it);
-        //    }
-        //    gt.ItemOrder = ocItemTypeList;
-        //    gridGroupTable.ClearGrid();
-        //    PopulateGroupTable(gt);
-        //    DisableAllowDropByNewLineItem();
-        //}
-
         private void btnRemove_Click(object sender, RoutedEventArgs e)
         {
             Button btn = sender as Button;
@@ -301,58 +322,6 @@ namespace TreatPraktik.View
             }
             return isEmpty;
         }
-
-        //private void GenerateEmptyFields(int row, bool wholeRow)
-        //{
-        //    List<ItemType> itemTypeListCheck = GetItemsByRow(row);
-        //    GroupTypeOrder gto = (GroupTypeOrder)GroupTable.DataContext;
-        //    GroupType gt = gto.Group;
-        //    bool newLineItemExist = CheckForNewLineItem(row);
-        //    bool addEmptyfields = false;
-        //    int i = itemTypeListCheck.Count - 1;
-
-        //    while (i >= 0)
-        //    {
-        //        ItemType itemType = itemTypeListCheck[i];
-        //        string designID = itemType.DesignID;
-
-        //        if (newLineItemExist && !wholeRow)
-        //        {
-        //            addEmptyfields = false;
-        //        }
-
-        //        if (newLineItemExist && designID != null && itemType.DesignID.Equals("198") && !wholeRow)
-        //        {
-        //            addEmptyfields = true;
-        //            newLineItemExist = false;
-        //            wholeRow = false;
-        //        }
-
-        //        if (!newLineItemExist && !addEmptyfields && itemType.DesignID != null && !wholeRow)
-        //        {
-        //            addEmptyfields = true;
-        //        }
-
-        //        if (addEmptyfields && itemType.DesignID == null && !wholeRow)
-        //        {
-        //            itemType.DesignID = "197";
-        //            itemType.Header = "<EmptyField>";
-        //            itemType.GroupTypeID = gt.GroupTypeID;
-        //            itemType.IncludedTypeID = "1";
-        //            gt.Items.Add(itemType);
-        //        }
-
-        //        if (wholeRow && designID == null && !newLineItemExist)
-        //        {
-        //            itemType.DesignID = "197";
-        //            itemType.Header = "<EmptyField>";
-        //            itemType.GroupTypeID = gt.GroupTypeID;
-        //            itemType.IncludedTypeID = "1";
-        //            gt.Items.Add(itemType);
-        //        }
-        //        i--;
-        //    }
-        //}
 
         private void GenerateEmptyFields(GroupType gt)
         {
@@ -951,7 +920,7 @@ namespace TreatPraktik.View
             Grid targetGroupTable = GroupTable;
             Grid draggedGroupTable = e.Data.GetData("System.Windows.Controls.Grid") as Grid;
 
-            ParentGroupTableContainerUserControl.MoveGroup((GroupTableUserControl)draggedGroupTable.Parent, (GroupTableUserControl)targetGroupTable.Parent);
+            //ParentGroupTableContainerUserControl.MoveGroup((GroupTableUserControl)draggedGroupTable.Parent, (GroupTableUserControl)targetGroupTable.Parent);
         }
 
         void border_Drop(object sender, DragEventArgs e)
