@@ -32,7 +32,7 @@ namespace TreatPraktik.View
             string path = System.IO.Path.Combine(Environment.CurrentDirectory, @"Ressources\Configuration.xlsx");
             wvm.LoadWorkspace(path);
             ObservableCollection<PageType> pageTypeList = wvm.PageList;
-
+            pageTypeList.CollectionChanged += pageTypeList_CollectionChanged;
 
             for (int i = 0; i < pageTypeList.Count; i++)
             {
@@ -52,11 +52,17 @@ namespace TreatPraktik.View
                     GroupTableContainerUserControl ucGroupTableContainerUserControl = new GroupTableContainerUserControl();
                     ucGroupTableContainerUserControl.GtoObsCollection = pt.Groups;
                     //ucGroupTableContainerUserControl.CreateGroupTables();
+
                     ti.Content = ucGroupTableContainerUserControl;
 
                     myTabControl.Items.Add(ti);
                 }
             }
+        }
+
+        void pageTypeList_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            throw new NotImplementedException();
         }
     }
 }
