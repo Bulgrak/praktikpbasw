@@ -127,6 +127,7 @@
     <Compile Include="View\LanguageUserControl.xaml.cs">
       <DependentUpon>LanguageUserControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\ObservableCollectionExtensions.cs" />
     <Compile Include="View\SpecialFields.xaml.cs">
       <DependentUpon>SpecialFields.xaml</DependentUpon>
     </Compile>

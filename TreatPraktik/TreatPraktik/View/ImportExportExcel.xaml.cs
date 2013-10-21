@@ -59,12 +59,14 @@ namespace TreatPraktik.View
             GroupTypeOrder gto = pl[14].Groups[1];
             pl[14].Groups[0].GroupOrder = 2;
             pl[14].Groups[1].GroupOrder = 1;
-            pl[14].Groups.Remove(gto);
+            pl[14].Groups.Sort(i => i.GroupOrder);
+            //pl[14].Groups.Remove(gto);
             //List<GroupTypeOrder> gtoList = pl[14].Groups.ToList();
             //gtoList = gtoList.OrderBy(o => o.GroupOrder).ToList();
             //ObservableCollection<GroupTypeOrder> gtoListSorted = new ObservableCollection<GroupTypeOrder>(gtoList);
             //pl[14].Groups.RemoveAt(0);
-            pl[14].Groups.Insert(0, gto);
+            //pl[14].Groups.Insert(0, gto);
+
             //CollectionViewSource.GetDefaultView(gtoListSorted).Refresh();
             //pl[14].Groups = gtoListSorted;
             

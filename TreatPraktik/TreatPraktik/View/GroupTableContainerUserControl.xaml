@@ -11,31 +11,11 @@
     </UserControl.Resources>
     <ScrollViewer HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalScrollBarVisibility="Visible">
         <ItemsControl ItemsSource="{Binding GtoObsCollection}" >
-            <!--<ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>-->
-                    <!--<Grid v:GridHelpers.RowCount="{Binding GtoObsCollection.Count}">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
-                    </Grid>-->
-    
-                <!--</ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>-->
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <!--<StackPanel>-->                    
                         <v:GroupTableUserControl MyGroupType="{Binding Group,UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
-                    <!--</StackPanel>-->
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
-            <!--<ItemsControl.ItemContainerStyle>
-                <Style>
-                    <Style.Setters>
-                        <Setter Property="Grid.Row" Value="{Binding Path=GroupOrder, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource groupOrderToRow}}" />
-                        <Setter Property="Grid.Column" Value="0" />
-                    </Style.Setters>
-                </Style>
-            </ItemsControl.ItemContainerStyle>-->
         </ItemsControl>
     </ScrollViewer>
 </UserControl>

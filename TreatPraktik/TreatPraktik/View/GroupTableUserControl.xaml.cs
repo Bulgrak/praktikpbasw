@@ -49,23 +49,6 @@ namespace TreatPraktik.View
 
         #endregion
 
-        //public GroupType Gert
-        //{
-        //    get { return (GroupType)GetValue(GertProperty); }
-        //    set
-        //    {
-        //        SetValue(GertProperty, value);
-        //    }
-        //}
-
-        //// Using a DependencyProperty as the backing store for TableGroupType.  This enables animation, styling, binding, etc...
-        //public static readonly DependencyProperty GertProperty =
-        //    DependencyProperty.Register(
-        //    "Gert", 
-        //    typeof(GroupType), 
-        //    typeof(GroupTableContainerUserControl), 
-        //    new PropertyMetadata(null));
-
         private static void OnCustomerChangedCallBack(
                 DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
@@ -73,14 +56,6 @@ namespace TreatPraktik.View
             GroupType time = (GroupType)e.NewValue;
             control.MyGroupType = time;
         }
-
-        protected virtual void OnCustomerChanged()
-        {
-            // Grab related data.
-            // Raises INotifyPropertyChanged.PropertyChanged
-            OnPropertyChanged("MyGroupType");
-        }
-
 
         public GroupType MyGroupType
         {
@@ -94,8 +69,6 @@ namespace TreatPraktik.View
 
         public static readonly DependencyProperty MyGroupTypeProperty =
             DependencyProperty.Register("MyGroupType", typeof(GroupType), typeof(GroupTableUserControl), new PropertyMetadata(OnCustomerChangedCallBack));
-
-        
 
         public void PopulateGroupTable(GroupType gt)
         {
@@ -735,7 +708,8 @@ namespace TreatPraktik.View
                     AdjustItemOrder(gt);
                     draggedItemType.ItemOrder = targetItemType.ItemOrder;
                     gt.ItemOrder.Add(draggedItemType);
-                    SortItemList(gt);
+                    gt.ItemOrder.Sort(i => i.ItemOrder);
+                    //SortItemList(gt);
                     GenerateEmptyFields(gt);
                     RefreshGroupTable(gt);
                 }
@@ -759,7 +733,8 @@ namespace TreatPraktik.View
                         AdjustItemOrder(gt);
                     }
                     GenerateEmptyFields(gt);
-                    SortItemList(gt);
+                    gt.ItemOrder.Sort(i => i.ItemOrder);
+                    //SortItemList(gt);
                     RefreshGroupTable(gt);
                 }
 
@@ -786,7 +761,8 @@ namespace TreatPraktik.View
                     AdjustItemOrder(gt, targetPosition, draggedPosition);
 
                     GenerateEmptyFields(gt);
-                    SortItemList(gt);
+                    gt.ItemOrder.Sort(i => i.ItemOrder);
+                    //SortItemList(gt);
                     RefreshGroupTable(gt);
                 }
             }
@@ -897,15 +873,6 @@ namespace TreatPraktik.View
                 }
                 i++;
             }
-        }
-
-        GroupType SortItemList(GroupType gt)
-        {
-            List<ItemTypeOrder> itemTypeList = gt.ItemOrder.ToList();
-            itemTypeList = itemTypeList.OrderBy(o => o.ItemOrder).ToList();
-            ObservableCollection<ItemTypeOrder> ocItemTypeList = new ObservableCollection<ItemTypeOrder>(itemTypeList);
-            gt.ItemOrder = ocItemTypeList;
-            return gt;
         }
 
         void RefreshGroupTable(GroupType gt)
