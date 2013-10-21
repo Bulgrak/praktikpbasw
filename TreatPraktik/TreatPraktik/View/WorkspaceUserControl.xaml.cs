@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -22,26 +23,34 @@ namespace TreatPraktik.View
     /// </summary>
     public partial class WorkspaceUserControl : UserControl
     {
+        //private ObservableCollection<PageType> pageTypeList;
         private ExportExcel exExcel;
         private WorkspaceViewModel wvm;
 
         public WorkspaceUserControl()
         {
             InitializeComponent();
+
             wvm = WorkspaceViewModel.Instance;
             string path = System.IO.Path.Combine(Environment.CurrentDirectory, @"Ressources\Configuration.xlsx");
             wvm.LoadWorkspace(path);
-            ObservableCollection<PageType> pageTypeList = wvm.PageList;
-            pageTypeList.CollectionChanged += pageTypeList_CollectionChanged;
+            //pageTypeList = wvm.PageList;
+            LoadWorkspaceUserControl();
+        }
 
-            for (int i = 0; i < pageTypeList.Count; i++)
+        private void LoadWorkspaceUserControl()
+        {
+            //pageTypeList = wvm.PageList;
+            //wvm.PageList.CollectionChanged += pageTypeList_CollectionChanged;
+
+            for (int i = 0; i < wvm.PageList.Count; i++)
             {
-                PageType pt = pageTypeList[i];
+                PageType pt = wvm.PageList[i];
                 TabItem ti = new TabItem();
                 ti.DataContext = pt;
                 ti.SetBinding(TabItem.HeaderProperty, "PageName");
                 //ti.Header = pt.PageName;
-                
+
                 if (pt.PageTypeID.Equals("15") || pt.PageTypeID.Equals("16") || pt.PageTypeID.Equals("17")) //burde nok gøres i LINQ
                 {
                     //ObservableCollection<GroupType> groupType = new ObservableCollection<GroupType>();
@@ -58,11 +67,7 @@ namespace TreatPraktik.View
                     myTabControl.Items.Add(ti);
                 }
             }
-        }
 
-        void pageTypeList_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            throw new NotImplementedException();
         }
     }
 }
