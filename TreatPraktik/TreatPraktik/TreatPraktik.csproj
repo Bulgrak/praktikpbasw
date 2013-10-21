@@ -127,6 +127,9 @@
     <Compile Include="View\LanguageUserControl.xaml.cs">
       <DependentUpon>LanguageUserControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\MenuUserControl.xaml.cs">
+      <DependentUpon>MenuUserControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\ObservableCollectionExtensions.cs" />
     <Compile Include="View\SpecialFields.xaml.cs">
       <DependentUpon>SpecialFields.xaml</DependentUpon>
@@ -163,6 +166,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\LanguageUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\MenuUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -244,6 +251,11 @@
       <ProductName>Windows Installer 4.5</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Ressources\exit.ico" />
+    <Resource Include="Ressources\export.ico" />
+    <Resource Include="Ressources\import.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

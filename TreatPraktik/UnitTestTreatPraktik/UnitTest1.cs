@@ -79,48 +79,30 @@ namespace UnitTestTreatPraktik
         [TestMethod]
         public void AddItemsToExistingGroup()
         {
-            
-            
-            ////Create new items
-            //string resourceType1 = "2"; //<-- DataItemHeading
-            //string groupTypeID1 = "0";
-            //string designID1 = "12";
-            //double itemOrder1 = 35.00;
-            //string header1 = "Coughing";
-            //string includedType1 = "1";
-            //string danTransText1 = "Hoste (forværring)";
-            //string engTransText1 = "Coughing";
-            //string languageID1 = "1";
-            //ItemTypeOrder itemOne = new ItemTypeOrder(danTransText1, designID1, engTransText1, groupTypeID1, header1,
-            //    includedType1, itemOrder1, languageID1, resourceType1);
+            //Get items and add them to a group
+            string groupTypeID1 = "0";
+            double itemOrder1 = 35.00;
+            string designID1 = "12";
+            string includedType1 = "1";
+            ItemTypeOrder tempItemOrder1 =
+                (from a in _wvm.ItemList.Where(x => x.Item.DesignID.Equals(designID1)) 
+                 select a).FirstOrDefault();
+            ItemType item1 = tempItemOrder1.Item;
 
-            //string resourceType2 = "2"; //<-- DataItemHeading
-            //string groupTypeID2 = "0";
-            //string designID2 = "5";
-            //double itemOrder2 = 36.00;
-            //string header2 = "Smoking";
-            //string includedType2 = "1";
-            //string danTransText2 = "Aktiv ryger (> 5 cigaretter pr. dag inden for sidste 10 år)";
-            //string engTransText2 = "Active smoking >5 cigarettes per day prior to episode onset";
-            //string languageID2 = "1";
-            //ItemTypeOrder itemTwo = new ItemTypeOrder(danTransText2, designID2, engTransText2, groupTypeID2, header2,
-            //    includedType2, itemOrder2, languageID2, resourceType2);
-            
-            ////Add the items to the group
-            //foreach (PageType page in _wvm.PageList)
-            //{
-            //    foreach (GroupTypeOrder gtOrder in page.Groups)
-            //    {
-            //        if (gtOrder.Group.GroupTypeID.Equals(groupTypeID1))
-            //        {
-            //            gtOrder.Group.ItemOrder.Add(itemOne);
-            //        }
-            //        if (gtOrder.Group.GroupTypeID.Equals(groupTypeID2))
-            //        {
-            //            gtOrder.Group.ItemOrder.Add(itemTwo);
-            //        }
-            //    }
-            //}
+            string groupTypeID2 = "0";
+            double itemOrder2 = 36.00;
+            string designID2 = "5";
+            string includedType2 = "1";
+            ItemTypeOrder tempItemOrder2 =
+                (from a in _wvm.ItemList.Where(x => x.Item.DesignID.Equals(designID2))
+                 select a).FirstOrDefault();
+            ItemType item2 = tempItemOrder2.Item;
+
+            ItemTypeOrder itemTypeOrder1 = new ItemTypeOrder(item1, groupTypeID1, 
+                itemOrder1, designID1, includedType1);
+
+            ItemTypeOrder itemTypeOrder2 = new ItemTypeOrder(item2, groupTypeID2,
+                itemOrder2, designID2, includedType2);
 
             //Export excel with the added items in it
             _exExcel.CreateNewExcel(_exportPath);
@@ -128,8 +110,35 @@ namespace UnitTestTreatPraktik
             //Import the new excel file
             _impExcel.ImportExcelConfiguration(_exportPath);
 
-            int i = 0;
+            #region ktUIOrder tests
 
+            //Get the new group in ktUIOrder
+            List<ktUIOrder> orders1 =
+                _impExcel._workSheetktUIOrder.ktUIOrderList.Where(
+                    x => x.GroupTypeID.Equals(itemTypeOrder1.GroupTypeID)).ToList();
+
+            List<ktUIOrder> orders2 =
+                _impExcel._workSheetktUIOrder.ktUIOrderList.Where(
+                    x => x.GroupTypeID.Equals(itemTypeOrder2.GroupTypeID)).ToList();
+
+            foreach (var order in orders1)
+            {
+                if (order.DesignID.Equals(designID1))
+                {
+                    Assert.AreEqual(order.GroupOrder, itemOrder1);
+                    Assert.AreEqual(order.IncludedTypeID, includedType1);
+                }
+                if (order.DesignID.Equals(designID2))
+                {
+                    Assert.AreEqual(order.GroupOrder, itemOrder2);
+                    Assert.AreEqual(order.IncludedTypeID, includedType2);
+                }
+            }
+
+            //CollectionAssert.Contains(orders1, item1);
+            //CollectionAssert.Contains(orders2, item2);
+
+            #endregion
         }
 
         [TestMethod]

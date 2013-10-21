@@ -15,41 +15,60 @@ namespace TreatPraktik.ViewModel
 
         private ImportExcel _excel;
 
-        public ObservableCollection<PageType> PageList { get; private set; } // <-- The only list that changes should be made in
+        public ObservableCollection<PageType> PageList { get; private set; }     // <-- The only list that changes should be made in
         private ObservableCollection<GroupTypeOrder> GroupList { get; set; }
-        private ObservableCollection<ItemTypeOrder> ItemList { get; set; }
+        private ObservableCollection<ItemTypeOrder> _itemList;
 
         private int _groupCounter;
 
         public WorkspaceViewModel()
         {
-            
+            PageList = new ObservableCollection<PageType>();
+        }
+
+        public ObservableCollection<ItemTypeOrder> ItemList
+        {
+            get
+            {
+                return _itemList;
+            }
+            private set
+            {
+                _itemList = value;
+            }
         }
 
         public void LoadNewConfigurations(string path)
         {
-            _excel = ImportExcel.Instance;
+            PageList.Clear();
 
-            _excel.ImportExcelConfiguration(path);
+            //_excel = ImportExcel.Instance;
 
-            PageList = GetAllPages();
-            GroupList = GetAllGroups();
-            ItemList = GetAllItems();
+            //_excel.ImportExcelConfiguration(path);
 
-            LinkCollections(PageList, GroupList, ItemList);
+            //ObservableCollection<PageType> tempList = GetAllPages();
+            //GroupList = GetAllGroups();
+            //ItemList = GetAllItems();
 
-            _groupCounter = 0;
-            int index = 0;
+            //LinkCollections(tempList, GroupList, ItemList);
 
-            while (index < WorkSheetktResources.Instance.ktResourceList.Count)
-            {
-                if (Convert.ToInt32(WorkSheetktResources.Instance.ktResourceList[index].ResourceID) > _groupCounter)
-                {
-                    _groupCounter = Convert.ToInt32(WorkSheetktResources.Instance.ktResourceList[index].ResourceID);
-                }
+            //foreach (PageType page in tempList)
+            //{
+            //    PageList.Add(page);
+            //}
 
-                index++;
-            }
+            //_groupCounter = 0;
+            //int index = 0;
+
+            //while (index < WorkSheetktResources.Instance.ktResourceList.Count)
+            //{
+            //    if (Convert.ToInt32(WorkSheetktResources.Instance.ktResourceList[index].ResourceID) > _groupCounter)
+            //    {
+            //        _groupCounter = Convert.ToInt32(WorkSheetktResources.Instance.ktResourceList[index].ResourceID);
+            //    }
+
+            //    index++;
+            //}
 
         }
 
@@ -294,23 +313,6 @@ namespace TreatPraktik.ViewModel
                 }
             }
 
-            foreach (var it in itemList)
-            {
-                if (it.DesignID.Equals("63"))
-                {
-                    Console.WriteLine(it.Header);
-                }
-            }
-
-            foreach (var ito in itemOrders)
-            {
-                if (ito.DesignID.Equals("63"))
-                {
-                    Console.WriteLine(ito.DesignID + " - " + ito.GroupTypeID);
-                }
-
-            }
-
             ObservableCollection<ItemTypeOrder> obsCol = new ObservableCollection<ItemTypeOrder>(itemOrders);
 
             return obsCol;
@@ -490,90 +492,11 @@ namespace TreatPraktik.ViewModel
             group.Group.EnglishTranslationText = engTransText;
         }
 
-        ///// <summary>
-        ///// Rename an existing group
-        ///// </summary>
-        ///// <param name="pageTypeId">The id for the selected page</param>
-        ///// <param name="groupTypeID">The id for the selected group</param>
-        ///// <param name="englishTranslationText">The english group name</param>
-        ///// <param name="danishTranslationText">The danish group name</param>
-        //public void RenameGroup2(string pageTypeId, string groupTypeID, string englishTranslationText, string danishTranslationText)
-        //{
-        //    PageType page = (from a in PageList where a.PageTypeID.Equals(pageTypeId) select a).FirstOrDefault();
-        //    GroupTypeOrder oldGroup = (from b in page.Groups where b.GroupTypeID.Equals(groupTypeID) select b).FirstOrDefault();
+        public void AddToPageFifteen
+        {
 
-        //    GroupTypeOrder newGroup = new GroupTypeOrder();
-            
-        //    GroupType newGroupType = new GroupType();
-        //    newGroup.Group = newGroupType;
-        //    List<Item> temp = oldGroup.Group.Items.Select(
-        //            item =>
-        //                new Item(item.DanishTranslationText, item.DesignID, item.EnglishTranslationText,
-        //                    item.GroupTypeID, item.Header, item.IncludedTypeID, item.ItemOrder, item.LanguageID,
-        //                    item.ResourceType)).ToList();
-        //    ObservableCollection<Item> obsCol = new ObservableCollection<Item>(temp);
-        //    newGroup.Group.Items = obsCol;
 
-        //    newGroup.Group.DanishTranslationText = danishTranslationText;
-        //    newGroup.Group.EnglishTranslationText = englishTranslationText;
-        //    newGroup.Group.LanguageID = oldGroup.Group.LanguageID;
+        }
 
-        //    //newGroup.Group = oldGroup.Group;
-        //    newGroup.DepartmentID = oldGroup.DepartmentID;
-        //    newGroup.GroupOrder = oldGroup.GroupOrder;
-
-        //    int highestId = 0;
-
-        //    foreach (PageType pageType in PageList)
-        //    {
-        //        int index = 0;
-
-        //        while (index < pageType.Groups.Count)
-        //        {
-        //            if (Convert.ToInt32(pageType.Groups[index].GroupTypeID) > highestId)
-        //            {
-        //                highestId = Convert.ToInt32(pageType.Groups[index].GroupTypeID);
-        //            }
-
-        //            index++;
-        //        }
-        //    }
-
-        //    foreach (Item item in newGroup.Group.Items)
-        //    {
-        //        item.GroupTypeID = (highestId + 1).ToString();
-        //    }
-
-        //    newGroup.GroupTypeID = (highestId + 1).ToString();
-        //    newGroup.Group.GroupTypeID = newGroup.GroupTypeID;
-        //    newGroup.PageTypeID = pageTypeId;
-            
-            
-        //    string hej = englishTranslationText.Replace(" ", string.Empty);
-        //    int i = 1;
-        //    foreach (PageType pType in PageList)
-        //    {
-        //        while ((from a in pType.Groups where a.Group.ResourceType.Equals(hej + i) select a).Any())
-        //        {
-        //            i++;
-        //        }
-        //    }
-            
-        //    hej = hej + i;
-
-        //    newGroup.Group.ResourceType = hej;
-        //    newGroup.Group.ResourceID = (_groupCounter + 1).ToString();
-        //    _groupCounter++;
-        //    newGroup.Group.ResourceTypeID = oldGroup.Group.ResourceTypeID;
-
-        //    foreach (PageType pageType in PageList)
-        //    {
-        //        if (pageType.PageTypeID.Equals(pageTypeId))
-        //        {
-        //            pageType.Groups.Remove(oldGroup);
-        //            pageType.Groups.Add(newGroup);
-        //        }
-        //    }
-        //}
     }
 }
