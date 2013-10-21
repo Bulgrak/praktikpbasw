@@ -7,13 +7,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d">
     <UserControl.Resources>
-        <v:GroupOrderToRow x:Key="groupOrderToRow"/>
+        <v:GroupTableContainerUserControl x:Key="GroupTableContainerUserControl"/>
     </UserControl.Resources>
     <ScrollViewer HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalScrollBarVisibility="Visible">
-        <ItemsControl ItemsSource="{Binding GtoObsCollection}" >
+        <ItemsControl ItemsSource="{Binding GtoObsCollection}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                        <v:GroupTableUserControl MyGroupType="{Binding Group,UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                    <v:GroupTableUserControl MyGroupTypeOrder="{Binding Path=.,UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>

@@ -73,7 +73,7 @@
     <Compile Include="Model\WorkspaceObjects\ItemTypeOrder.cs" />
     <Compile Include="Ressources\ExcelClasses\ResourceTranslation.cs" />
     <Compile Include="Ressources\Exceptions.cs" />
-    <Compile Include="ViewModel\GroupTableViewModel.cs" />
+    <Compile Include="ViewModel\GroupTableContainerViewModel.cs" />
     <Compile Include="ViewModel\LanguageViewModel.cs" />
     <Compile Include="ViewModel\SpecialFieldsViewModel.cs" />
     <Compile Include="Ressources\ExcelClasses\Order.cs" />
@@ -113,7 +113,7 @@
     <Compile Include="Ressources\ExcelClasses\Resources.cs" />
     <Compile Include="Ressources\ExcelClasses\SharedRessources.cs" />
     <Compile Include="ViewModel\ExportExcel.cs" />
-    <Compile Include="ViewModel\GroupViewModel.cs" />
+    <Compile Include="ViewModel\GroupTableViewModel.cs" />
     <Compile Include="ViewModel\ImportExcel.cs" />
     <Compile Include="ViewModel\ItemFilterViewModel.cs" />
     <Compile Include="ViewModel\WorkspaceViewModel.cs" />
