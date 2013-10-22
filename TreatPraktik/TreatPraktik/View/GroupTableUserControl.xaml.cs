@@ -693,10 +693,10 @@ namespace TreatPraktik.View
         {
             Grid targetGroupTable = e.Data.GetData("System.Windows.Controls.Grid") as Grid;
             GroupTableUserControl gtUC = (GroupTableUserControl)targetGroupTable.Parent;
-            GroupTypeOrder targetGroupTypeOrder = gtUC.MyGroupTypeOrder;
-            GroupTypeOrder draggedGroupTypeOrder = MyGroupTypeOrder;
-            targetGroupTypeOrder.GroupOrder = 3;
-            draggedGroupTypeOrder.GroupOrder = 2;
+            GroupTypeOrder targetGroupTypeOrder = MyGroupTypeOrder;
+
+            GroupTypeOrder draggedGroupTypeOrder = gtUC.MyGroupTypeOrder;
+            GTViewModel.HandleGroupTableDrop(targetGroupTypeOrder, draggedGroupTypeOrder);
             //ParentGroupTableContainerUserControl.AdjustGroupOrder(draggedGroupTypeOrder, targetGroupTypeOrder);
             //ParentGroupTableContainerUserControl.MoveGroup((GroupTableUserControl)draggedGroupTable.Parent, (GroupTableUserControl)targetGroupTable.Parent);
         }
@@ -845,7 +845,10 @@ namespace TreatPraktik.View
                     adorner = new DragAdornerItem(groupTable, e.GetPosition(draggedItem));
                     AdornerLayer.GetAdornerLayer(this).Add(adorner);
                     DragDrop.DoDragDrop(draggedItem, groupTable, DragDropEffects.None | DragDropEffects.Move);
-                    AdornerLayer.GetAdornerLayer(this).Remove(adorner);
+                    if (AdornerLayer.GetAdornerLayer(this) != null)
+                    {
+                        AdornerLayer.GetAdornerLayer(this).Remove(adorner);
+                    }
                 }
             }
         }

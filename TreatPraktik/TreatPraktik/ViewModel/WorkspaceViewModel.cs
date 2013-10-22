@@ -492,11 +492,11 @@ namespace TreatPraktik.ViewModel
             group.Group.EnglishTranslationText = engTransText;
         }
 
-        public void AddToPageFifteen
-        {
+        //public void AddToPageFifteen
+        //{
 
 
-        }
+        //}
 
     }
 }

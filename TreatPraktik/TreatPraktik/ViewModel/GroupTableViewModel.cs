@@ -17,7 +17,7 @@ namespace TreatPraktik.ViewModel
 
         public GroupTableViewModel()
         {
-            
+
         }
 
         public void AdjustItemOrder(GroupType gt, int targetPosition, int draggedPosition)
@@ -228,6 +228,65 @@ namespace TreatPraktik.ViewModel
             itemTypeList.Sort(ito => ito.ItemOrder);
         }
 
-        //public void AdjustGroupOrder()
+        public void HandleGroupTableDrop(GroupTypeOrder targetGroupTypeOrder, GroupTypeOrder draggedGroupTypeOrder)
+        {
+            int draggedPosition = GroupTypeOrderCollection.IndexOf(draggedGroupTypeOrder);
+            int targetPosition = GroupTypeOrderCollection.IndexOf(targetGroupTypeOrder);
+            GroupTypeOrderCollection.Remove(draggedGroupTypeOrder);
+
+            
+            if (draggedGroupTypeOrder.GroupOrder > targetGroupTypeOrder.GroupOrder)
+            {
+                GroupTypeOrderCollection.Insert(targetPosition, draggedGroupTypeOrder);
+                draggedGroupTypeOrder.GroupOrder = targetGroupTypeOrder.GroupOrder;
+            }
+            else
+            {
+                if (GroupTypeOrderCollection.Count != targetPosition)
+                {
+                    draggedGroupTypeOrder.GroupOrder = targetGroupTypeOrder.GroupOrder;
+                    GroupTypeOrderCollection.Insert(targetPosition, draggedGroupTypeOrder);
+                }
+                else
+                {
+                    draggedGroupTypeOrder.GroupOrder = targetGroupTypeOrder.GroupOrder;
+                    GroupTypeOrderCollection.Add(draggedGroupTypeOrder);
+                }
+            }
+            AdjustGroupOrder(targetPosition, draggedPosition);
+            GroupTypeOrderCollection.Sort(gto => gto.GroupOrder);
+        }
+
+        public void AdjustGroupOrder(int targetPosition, int draggedPosition)
+        {
+            if (targetPosition < draggedPosition)
+            {
+                IncrementGroupOrderType(targetPosition, draggedPosition);
+            }
+            else
+            {
+                DecrementGroupOrderType(targetPosition, draggedPosition);
+            }
+        }
+
+        public void DecrementGroupOrderType(int targetPosition, int draggedPosition)
+        {
+            int i = targetPosition - 1;
+            while (i >= draggedPosition)
+            {
+                GroupTypeOrderCollection[i].GroupOrder--;
+                i--;
+            }
+        }
+
+        public void IncrementGroupOrderType(int position, int startPosition)
+        {
+            int i = position + 1;
+            while (i <= startPosition)
+            {
+                GroupTypeOrderCollection[i].GroupOrder++;
+                i++;
+            }
+        }
     }
 }

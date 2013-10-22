@@ -13,7 +13,7 @@
         <ItemsControl ItemsSource="{Binding GtoObsCollection}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <v:GroupTableUserControl MyGroupTypeOrder="{Binding Path=.,UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                    <v:GroupTableUserControl GroupTypeOrderCollection="{Binding DataContext.GtoObsCollection, RelativeSource={RelativeSource AncestorType=ItemsControl}}" MyGroupTypeOrder="{Binding Path=.,UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
