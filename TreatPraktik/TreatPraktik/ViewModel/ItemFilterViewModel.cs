@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
@@ -41,11 +42,10 @@ namespace TreatPraktik.ViewModel
         {
             ToolboxItemList = new List<ToolboxItem>();
             //TextNoToolboxItemsFound = "No items to display";
-            
             //LanguageID = "2";
             LanguageID = "2";
             filterString = "";
-            PopulateToolbox();
+            //PopulateToolbox();
         }
 
         public static ItemFilterViewModel Instance
@@ -94,11 +94,17 @@ namespace TreatPraktik.ViewModel
         public void PopulateToolbox()
         {
             ToolboxItemList = CreateToolboxItems();
+            SetupToolBoxItemCollectionView();
+            //DesignItemsView.Refresh();
+        }
 
+        public void SetupToolBoxItemCollectionView()
+        {
             DesignItemsView = CollectionViewSource.GetDefaultView(ToolboxItemList);
+
             DesignItemsView.GroupDescriptions.Add(new PropertyGroupDescription("Category"));
-//            DesignItemsView.SortDescriptions.Add(
-  //  new SortDescription("Group", ListSortDirection.Ascending));
+            //            DesignItemsView.SortDescriptions.Add(
+            //  new SortDescription("Group", ListSortDirection.Ascending));
             DesignItemsView.SortDescriptions.Add(
                 new SortDescription("Header", ListSortDirection.Ascending));
 

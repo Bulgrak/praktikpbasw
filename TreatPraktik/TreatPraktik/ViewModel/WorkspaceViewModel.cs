@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Windows.Data;
 using TreatPraktik.Model;
 using TreatPraktik.Model.WorkSheets;
 using TreatPraktik.Model.WorkspaceObjects;
@@ -20,12 +21,21 @@ namespace TreatPraktik.ViewModel
         public ObservableCollection<PageType> PageList { get; private set; }     // <-- The only list that changes should be made in
         private ObservableCollection<GroupTypeOrder> GroupList { get; set; }
         private ObservableCollection<ItemTypeOrder> _itemList;
+        public ICollectionView PageTypeItemsView { get; set; }
 
         private int _groupCounter;
 
         public WorkspaceViewModel()
         {
             PageList = new ObservableCollection<PageType>();
+            string path = System.IO.Path.Combine(Environment.CurrentDirectory, @"Ressources\Configuration.xlsx");
+            LoadWorkspace(path);
+
+            //PageList = wvm.PageList;
+            PageTypeItemsView = CollectionViewSource.GetDefaultView(PageList);
+            PageTypeItemsView.Filter = ItemFilter;
+            PageTypeItemsView.Refresh();
+            
         }
 
         public ObservableCollection<ItemTypeOrder> ItemList
@@ -496,6 +506,19 @@ namespace TreatPraktik.ViewModel
 
             group.Group.DanishTranslationText = danTransText;
             group.Group.EnglishTranslationText = engTransText;
+        }
+
+        private bool ItemFilter(object item)
+        {
+            PageType pt = (PageType)item;
+            if (pt.PageTypeID.Equals("15") || pt.PageTypeID.Equals("16") || pt.PageTypeID.Equals("17"))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

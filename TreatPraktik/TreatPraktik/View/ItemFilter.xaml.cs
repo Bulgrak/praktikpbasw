@@ -28,7 +28,9 @@ namespace TreatPraktik.View
         public ItemFilter()
         {
             InitializeComponent();
-            DataContext = ItemFilterViewModel.Instance;
+            ItemFilterViewModel ifvm = ItemFilterViewModel.Instance;
+            ifvm.PopulateToolbox();
+            DataContext = ifvm;
             Style itemContainerStyle = new Style(typeof(ListBoxItem));
             //itemContainerStyle.Setters.Add(new Setter(ListBoxItem.AllowDropProperty, true));
             //itemContainerStyle.Setters.Add(new EventSetter(ListBoxItem.PreviewMouseLeftButtonDownEvent, new MouseButtonEventHandler(List_PreviewMouseLeftButtonDown)));
