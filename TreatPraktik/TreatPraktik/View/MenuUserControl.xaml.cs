@@ -34,11 +34,13 @@ namespace TreatPraktik.View
             _workspaceVM = WorkspaceViewModel.Instance;
         }
 
+        //Change language to English
         private void English_Click(object sender, RoutedEventArgs e)
         {
             LanguageID = "1";
         }
 
+        //Change language to Danish
         private void Danish_Click(object sender, RoutedEventArgs e)
         {
             LanguageID = "2";
@@ -68,7 +70,7 @@ namespace TreatPraktik.View
                 _workspaceVM.LoadNewConfigurations(openFile.FileName);
             }
 
-           
+            //_workspaceVM.PageList[14].Groups.RemoveAt(2);
             //MessageBox.Show("Ikke implementeret");
         }
 
@@ -81,6 +83,20 @@ namespace TreatPraktik.View
             if (saveFile.ShowDialog() == true)
             {
                 _exExcel.CreateNewExcel(saveFile.FileName);
+            }
+        }
+
+        private void Exit_Click(object sender, RoutedEventArgs e)
+        {
+            if (_workspaceVM._changedFlag && MessageBox.Show("Save your changes before exit?", "Save changes?", MessageBoxButton.OKCancel) ==  MessageBoxResult.OK)
+            {
+                ExportExcel_Click(null, null);
+
+                Application.Current.Shutdown();
+            }
+            else
+            {
+                Application.Current.Shutdown();
             }
         }
     }

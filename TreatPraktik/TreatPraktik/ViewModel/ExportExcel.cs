@@ -17,8 +17,11 @@ namespace TreatPraktik.ViewModel
         Resources _resources;
         ResourceTranslation _rTranslation;
 
+        private WorkspaceViewModel _wvm;
+
         private ExportExcel()
         {
+            _wvm = WorkspaceViewModel.Instance;
         }
 
         /// <summary>
@@ -33,8 +36,8 @@ namespace TreatPraktik.ViewModel
             _resources = new Resources();
             _rTranslation = new ResourceTranslation();
 
-            //try
-            //{
+            try
+            {
                 // Create a spreadsheet document by supplying the filepath.
                 // By default, AutoSave = true, Editable = true, and Type = xlsx.
                 SpreadsheetDocument spreadsheetDocument =
@@ -59,12 +62,14 @@ namespace TreatPraktik.ViewModel
 
                 // Close the document.
                 spreadsheetDocument.Close();
-            //}
-            //catch (Exception e)
-            //{
-                //// Maybe save exception in a log file
-                //MessageBox.Show(e.Message);
-            //}
+
+                _wvm._changedFlag = false;
+            }
+            catch (Exception e)
+            {
+                // Maybe save exception in a log file
+                MessageBox.Show(e.Message);
+            }
         }
 
         /// <summary>

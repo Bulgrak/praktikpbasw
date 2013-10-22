@@ -11,6 +11,8 @@ namespace TreatPraktik.ViewModel
 {
     public class WorkspaceViewModel : INotifyPropertyChanged
     {
+        public bool _changedFlag; // Changes to true if there are new changes to the PageList
+
         private static WorkspaceViewModel _instance;
 
         private ImportExcel _excel;
@@ -40,40 +42,44 @@ namespace TreatPraktik.ViewModel
 
         public void LoadNewConfigurations(string path)
         {
+            _changedFlag = false;
+
             PageList.Clear();
 
-            //_excel = ImportExcel.Instance;
+            _excel = ImportExcel.Instance;
 
-            //_excel.ImportExcelConfiguration(path);
+            _excel.ImportExcelConfiguration(path);
 
-            //ObservableCollection<PageType> tempList = GetAllPages();
-            //GroupList = GetAllGroups();
-            //ItemList = GetAllItems();
+            ObservableCollection<PageType> tempList = GetAllPages();
+            GroupList = GetAllGroups();
+            ItemList = GetAllItems();
 
-            //LinkCollections(tempList, GroupList, ItemList);
+            LinkCollections(tempList, GroupList, ItemList);
 
-            //foreach (PageType page in tempList)
-            //{
-            //    PageList.Add(page);
-            //}
+            foreach (PageType page in tempList)
+            {
+                PageList.Add(page);
+            }
 
-            //_groupCounter = 0;
-            //int index = 0;
+            _groupCounter = 0;
+            int index = 0;
 
-            //while (index < WorkSheetktResources.Instance.ktResourceList.Count)
-            //{
-            //    if (Convert.ToInt32(WorkSheetktResources.Instance.ktResourceList[index].ResourceID) > _groupCounter)
-            //    {
-            //        _groupCounter = Convert.ToInt32(WorkSheetktResources.Instance.ktResourceList[index].ResourceID);
-            //    }
+            while (index < WorkSheetktResources.Instance.ktResourceList.Count)
+            {
+                if (Convert.ToInt32(WorkSheetktResources.Instance.ktResourceList[index].ResourceID) > _groupCounter)
+                {
+                    _groupCounter = Convert.ToInt32(WorkSheetktResources.Instance.ktResourceList[index].ResourceID);
+                }
 
-            //    index++;
-            //}
+                index++;
+            }
 
         }
 
         public void LoadWorkspace(string path)
         {
+            _changedFlag = false;
+
             _excel = ImportExcel.Instance;
 
             _excel.ImportExcelFromFile(path);
@@ -491,12 +497,5 @@ namespace TreatPraktik.ViewModel
             group.Group.DanishTranslationText = danTransText;
             group.Group.EnglishTranslationText = engTransText;
         }
-
-        //public void AddToPageFifteen
-        //{
-
-
-        //}
-
     }
 }
