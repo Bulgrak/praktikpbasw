@@ -14,10 +14,11 @@ namespace TreatPraktik.ViewModel
     {
         public GroupType Group { get; set; }
         public ObservableCollection<GroupTypeOrder> GroupTypeOrderCollection { get; set; }
+        public WorkspaceViewModel _wvm;
 
         public GroupTableViewModel()
         {
-
+            _wvm = WorkspaceViewModel.Instance;
         }
 
         public void AdjustItemOrder(GroupType gt, int targetPosition, int draggedPosition)
@@ -30,6 +31,7 @@ namespace TreatPraktik.ViewModel
             {
                 DecrementItemOrder(gt, targetPosition, draggedPosition);
             }
+            _wvm._changedFlag = true;
         }
 
         public void AdjustItemOrderNewLineItem(GroupType gt, int draggedPosition)
@@ -60,6 +62,7 @@ namespace TreatPraktik.ViewModel
                     i++;
                 }
             }
+            _wvm._changedFlag = true;
         }
 
         public void AdjustItemOrder(GroupType gt)
@@ -90,6 +93,7 @@ namespace TreatPraktik.ViewModel
                     i++;
                 }
             }
+            _wvm._changedFlag = true;
         }
 
         public void DecrementItemOrder(GroupType gt, int targetPosition, int draggedPosition)
@@ -108,6 +112,7 @@ namespace TreatPraktik.ViewModel
                 }
                 i--;
             }
+            _wvm._changedFlag = true;
         }
 
         public void IncrementItemOrder(GroupType gt, int position, int startPosition)
@@ -125,6 +130,7 @@ namespace TreatPraktik.ViewModel
                 }
                 i++;
             }
+            _wvm._changedFlag = true;
         }
 
         public void GenerateEmptyFields(GroupType gt)
@@ -183,6 +189,7 @@ namespace TreatPraktik.ViewModel
                     break;
                 }
             }
+            _wvm._changedFlag = true;
         }
 
         public ItemTypeOrder CreateEmptyField(GroupType gt, int itemOrder)
@@ -196,6 +203,9 @@ namespace TreatPraktik.ViewModel
             itemTypeOrder.IncludedTypeID = "1";
             itemTypeOrder.ItemOrder = itemOrder;
             itemTypeOrder.Item = emptyFieldItemType;
+
+            _wvm._changedFlag = true;
+            
             return itemTypeOrder;
         }
 
@@ -226,6 +236,8 @@ namespace TreatPraktik.ViewModel
             }
             itemTypeList.Add(newItemType);
             itemTypeList.Sort(ito => ito.ItemOrder);
+
+            _wvm._changedFlag = true;
         }
 
         public void HandleGroupTableDrop(GroupTypeOrder targetGroupTypeOrder, GroupTypeOrder draggedGroupTypeOrder)
@@ -255,6 +267,8 @@ namespace TreatPraktik.ViewModel
             }
             AdjustGroupOrder(targetPosition, draggedPosition);
             GroupTypeOrderCollection.Sort(gto => gto.GroupOrder);
+
+            _wvm._changedFlag = true;
         }
 
         public void AdjustGroupOrder(int targetPosition, int draggedPosition)
@@ -277,6 +291,8 @@ namespace TreatPraktik.ViewModel
                 GroupTypeOrderCollection[i].GroupOrder--;
                 i--;
             }
+
+            _wvm._changedFlag = true;
         }
 
         public void IncrementGroupOrderType(int position, int startPosition)
@@ -287,6 +303,8 @@ namespace TreatPraktik.ViewModel
                 GroupTypeOrderCollection[i].GroupOrder++;
                 i++;
             }
+
+            _wvm._changedFlag = true;
         }
     }
 }

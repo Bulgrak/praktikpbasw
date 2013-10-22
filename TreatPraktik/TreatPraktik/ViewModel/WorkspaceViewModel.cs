@@ -11,6 +11,8 @@ namespace TreatPraktik.ViewModel
 {
     public class WorkspaceViewModel : INotifyPropertyChanged
     {
+        public bool _changedFlag; // Changes to true if there are new changes to the PageList
+
         private static WorkspaceViewModel _instance;
 
         private ImportExcel _excel;
@@ -40,6 +42,8 @@ namespace TreatPraktik.ViewModel
 
         public void LoadNewConfigurations(string path)
         {
+            _changedFlag = false;
+
             PageList.Clear();
 
             _excel = ImportExcel.Instance;
@@ -74,6 +78,8 @@ namespace TreatPraktik.ViewModel
 
         public void LoadWorkspace(string path)
         {
+            _changedFlag = false;
+
             _excel = ImportExcel.Instance;
 
             _excel.ImportExcelFromFile(path);
@@ -491,12 +497,5 @@ namespace TreatPraktik.ViewModel
             group.Group.DanishTranslationText = danTransText;
             group.Group.EnglishTranslationText = engTransText;
         }
-
-        //public void AddToPageFifteen
-        //{
-
-
-        //}
-
     }
 }

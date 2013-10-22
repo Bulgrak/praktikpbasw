@@ -121,12 +121,6 @@
     <Compile Include="View\GroupTableContainerUserControl.xaml.cs">
       <DependentUpon>GroupTableContainerUserControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\ImportExportExcel.xaml.cs">
-      <DependentUpon>ImportExportExcel.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\LanguageUserControl.xaml.cs">
-      <DependentUpon>LanguageUserControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="View\MenuUserControl.xaml.cs">
       <DependentUpon>MenuUserControl.xaml</DependentUpon>
     </Compile>
@@ -158,14 +152,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="View\GroupTableContainerUserControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="View\ImportExportExcel.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="View\LanguageUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

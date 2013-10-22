@@ -18,7 +18,7 @@
                     </MenuItem.Icon>
                 </MenuItem>
                 <Separator />
-                <MenuItem Header="Exit" >
+                <MenuItem Header="Exit" Click="Exit_Click">
                     <MenuItem.Icon>
                         <Image Source="/Ressources\exit.ico" />
                     </MenuItem.Icon>
