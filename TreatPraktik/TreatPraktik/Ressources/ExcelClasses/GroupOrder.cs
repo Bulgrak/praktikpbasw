@@ -200,7 +200,7 @@ namespace TreatPraktik.Ressources.ExcelClasses
 
             foreach (PageType page in _workspaceVm.PageList)
             {
-                foreach (GroupTypeOrder group in page.Groups)
+                foreach (GroupTypeOrder group in page.GroupTypeOrders)
                 {
                     if (columnCount >= 4)
                     {

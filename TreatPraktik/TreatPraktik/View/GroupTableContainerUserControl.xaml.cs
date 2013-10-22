@@ -30,7 +30,7 @@ namespace TreatPraktik.View
         public GroupTableContainerUserControl()
         {
             InitializeComponent();
-            this.DataContext = this;
+            //this.DataContext = this;
             //GtoObsCollection = new ObservableCollection<GroupTypeOrder>();
             //GtoObsCollection.CollectionChanged += items_CollectionChanged;
         }
@@ -64,5 +64,29 @@ namespace TreatPraktik.View
                 OnPropertyChanged("GtoObsCollection");
             }
         }
+
+        #region DependencyProperty GtoCol
+        private static void OnGtoColChangedCallBack(
+         DependencyObject sender, DependencyPropertyChangedEventArgs e)
+        {
+            GroupTableContainerUserControl groupTableUserControl = sender as GroupTableContainerUserControl;
+            ObservableCollection<GroupTypeOrder> groupTypeOrder = (ObservableCollection<GroupTypeOrder>)e.NewValue;
+            groupTableUserControl.GtoCol = groupTypeOrder;
+        }
+
+        public ObservableCollection<GroupTypeOrder> GtoCol
+        {
+            get { return (ObservableCollection<GroupTypeOrder>)GetValue(GtoColProperty); }
+            set
+            {
+                SetValue(GtoColProperty, value);
+                OnPropertyChanged("GtoCol");
+                //DataContext = this;
+            }
+        }
+
+        public static readonly DependencyProperty GtoColProperty =
+            DependencyProperty.Register("GtoCol", typeof(ObservableCollection<GroupTypeOrder>), typeof(GroupTableContainerUserControl), new PropertyMetadata(OnGtoColChangedCallBack));
+        #endregion
     }
 }

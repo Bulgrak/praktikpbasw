@@ -56,10 +56,10 @@ namespace TreatPraktik.View
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             ObservableCollection<PageType> pl = _workspaceVM.PageList;
-            GroupTypeOrder gto = pl[14].Groups[1];
-            pl[14].Groups[0].GroupOrder = 2;
-            pl[14].Groups[1].GroupOrder = 1;
-            pl[14].Groups.Sort(i => i.GroupOrder);
+            GroupTypeOrder gto = pl[14].GroupTypeOrders[1];
+            pl[14].GroupTypeOrders[0].GroupOrder = 2;
+            pl[14].GroupTypeOrders[1].GroupOrder = 1;
+            pl[14].GroupTypeOrders.Sort(i => i.GroupOrder);
             //pl[14].Groups.Remove(gto);
             //List<GroupTypeOrder> gtoList = pl[14].Groups.ToList();
             //gtoList = gtoList.OrderBy(o => o.GroupOrder).ToList();

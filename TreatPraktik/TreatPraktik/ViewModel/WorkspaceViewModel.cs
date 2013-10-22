@@ -42,33 +42,33 @@ namespace TreatPraktik.ViewModel
         {
             PageList.Clear();
 
-            //_excel = ImportExcel.Instance;
+            _excel = ImportExcel.Instance;
 
-            //_excel.ImportExcelConfiguration(path);
+            _excel.ImportExcelConfiguration(path);
 
-            //ObservableCollection<PageType> tempList = GetAllPages();
-            //GroupList = GetAllGroups();
-            //ItemList = GetAllItems();
+            ObservableCollection<PageType> tempList = GetAllPages();
+            GroupList = GetAllGroups();
+            ItemList = GetAllItems();
 
-            //LinkCollections(tempList, GroupList, ItemList);
+            LinkCollections(tempList, GroupList, ItemList);
 
-            //foreach (PageType page in tempList)
-            //{
-            //    PageList.Add(page);
-            //}
+            foreach (PageType page in tempList)
+            {
+                PageList.Add(page);
+            }
 
-            //_groupCounter = 0;
-            //int index = 0;
+            _groupCounter = 0;
+            int index = 0;
 
-            //while (index < WorkSheetktResources.Instance.ktResourceList.Count)
-            //{
-            //    if (Convert.ToInt32(WorkSheetktResources.Instance.ktResourceList[index].ResourceID) > _groupCounter)
-            //    {
-            //        _groupCounter = Convert.ToInt32(WorkSheetktResources.Instance.ktResourceList[index].ResourceID);
-            //    }
+            while (index < WorkSheetktResources.Instance.ktResourceList.Count)
+            {
+                if (Convert.ToInt32(WorkSheetktResources.Instance.ktResourceList[index].ResourceID) > _groupCounter)
+                {
+                    _groupCounter = Convert.ToInt32(WorkSheetktResources.Instance.ktResourceList[index].ResourceID);
+                }
 
-            //    index++;
-            //}
+                index++;
+            }
 
         }
 
@@ -357,7 +357,7 @@ namespace TreatPraktik.ViewModel
                 {
                     if (pages[i].PageTypeID.Equals(groupOrderTypes[k].PageTypeID))
                     {
-                        pages[i].Groups.Add(groupOrderTypes[k]);
+                        pages[i].GroupTypeOrders.Add(groupOrderTypes[k]);
                     }
                 }
             }
@@ -423,11 +423,11 @@ namespace TreatPraktik.ViewModel
             {
                 int index = 0;
 
-                while (index < page.Groups.Count)
+                while (index < page.GroupTypeOrders.Count)
                 {
-                    if (Convert.ToInt32(page.Groups[index].GroupTypeID) > highestId)
+                    if (Convert.ToInt32(page.GroupTypeOrders[index].GroupTypeID) > highestId)
                     {
-                        highestId = Convert.ToInt32(page.Groups[index].GroupTypeID);
+                        highestId = Convert.ToInt32(page.GroupTypeOrders[index].GroupTypeID);
                     }
 
                     index++;
@@ -447,7 +447,7 @@ namespace TreatPraktik.ViewModel
             int i = 1;
             foreach (PageType page in PageList)
             {
-                while ((from a in page.Groups where a.Group.ResourceType.Equals(hej + i) select a).Any())
+                while ((from a in page.GroupTypeOrders where a.Group.ResourceType.Equals(hej + i) select a).Any())
                 {
                     i++;
                 }
@@ -470,7 +470,7 @@ namespace TreatPraktik.ViewModel
             {
                 if (PageList[hello].PageTypeID.Equals(pageTypeId))
                 {
-                    PageList[hello].Groups.Add(gtOrder);
+                    PageList[hello].GroupTypeOrders.Add(gtOrder);
                 }
                 hello++;
             }
@@ -486,7 +486,7 @@ namespace TreatPraktik.ViewModel
         public void RenameGroup(string pageTypeID, string groupTypeID, string engTransText, string danTransText)
         {
             PageType page = (from a in PageList where a.PageTypeID.Equals(pageTypeID) select a).FirstOrDefault();
-            GroupTypeOrder group = (from b in page.Groups where b.GroupTypeID.Equals(groupTypeID) select b).FirstOrDefault();
+            GroupTypeOrder group = (from b in page.GroupTypeOrders where b.GroupTypeID.Equals(groupTypeID) select b).FirstOrDefault();
 
             group.Group.DanishTranslationText = danTransText;
             group.Group.EnglishTranslationText = engTransText;

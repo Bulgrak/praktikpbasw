@@ -16,12 +16,12 @@ namespace TreatPraktik.Model.WorkspaceObjects
         public string DanishTranslationText { get; set; }
         public string EnglishTranslationText { get; set; }
         //public List<string> GroupTypeIDs { get; set; }
-        public ObservableCollection<GroupTypeOrder> Groups { get; set; }     //List of groups on the page
+        public ObservableCollection<GroupTypeOrder> GroupTypeOrders { get; set; }     //List of groups on the page
 
         public PageType()
         {
             //GroupTypeIDs = new List<string>();
-            Groups = new ObservableCollection<GroupTypeOrder>();
+            GroupTypeOrders = new ObservableCollection<GroupTypeOrder>();
         }
 
         public string PageName

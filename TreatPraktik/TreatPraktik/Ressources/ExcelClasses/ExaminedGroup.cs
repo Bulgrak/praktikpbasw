@@ -209,7 +209,7 @@ namespace TreatPraktik.Ressources.ExcelClasses
 
             foreach (PageType page in _workspaceVm.PageList)
             {
-                foreach (GroupTypeOrder gtOrder in page.Groups)
+                foreach (GroupTypeOrder gtOrder in page.GroupTypeOrders)
                 {
                     if (!_examinedGroup.ExaminedGroupList.Any(x => x.ID.Equals(gtOrder.GroupTypeID)))
                     {

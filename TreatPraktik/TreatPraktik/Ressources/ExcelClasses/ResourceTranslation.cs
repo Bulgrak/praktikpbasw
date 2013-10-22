@@ -116,7 +116,7 @@ namespace TreatPraktik.Ressources.ExcelClasses
 
             foreach (PageType page in _workspaceVM.PageList)
             {
-                foreach (GroupTypeOrder group in page.Groups)
+                foreach (GroupTypeOrder group in page.GroupTypeOrders)
                 {
                     if (group.GroupTypeID.Equals("58") || group.GroupTypeID.Equals("60"))
                     {

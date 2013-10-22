@@ -150,6 +150,7 @@ namespace TreatPraktik.View
                     if (gt.ItemOrder[j + skipped].DesignID.Equals("197"))
                     {
                         SolidColorBrush textColor = Brushes.Black;
+                        gt.ItemOrder[j + skipped].Item.Header = "<EmptyField>";
                         InsertItem(gt.ItemOrder[j + skipped], counterRow, j % 4, textColor);
                         //gt.ItemOrder[j + skipped].ItemOrder = j + skipped;
                     }

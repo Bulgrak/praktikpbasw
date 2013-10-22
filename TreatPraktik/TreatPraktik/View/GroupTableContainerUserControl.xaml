@@ -10,10 +10,10 @@
         <v:GroupTableContainerUserControl x:Key="GroupTableContainerUserControl"/>
     </UserControl.Resources>
     <ScrollViewer HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalScrollBarVisibility="Visible">
-        <ItemsControl ItemsSource="{Binding GtoObsCollection}">
+        <ItemsControl ItemsSource="{Binding .GroupTypeOrders}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <v:GroupTableUserControl GroupTypeOrderCollection="{Binding DataContext.GtoObsCollection, RelativeSource={RelativeSource AncestorType=ItemsControl}}" MyGroupTypeOrder="{Binding Path=.,UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                    <v:GroupTableUserControl GroupTypeOrderCollection="{Binding DataContext.GroupTypeOrders, RelativeSource={RelativeSource AncestorType=ItemsControl}}" MyGroupTypeOrder="{Binding Path=.,UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
