@@ -21,6 +21,12 @@ namespace TreatPraktik.ViewModel
             _wvm = WorkspaceViewModel.Instance;
         }
 
+        public void RemoveGroup(GroupTypeOrder gto)
+        {
+            GroupTypeOrderCollection.Remove(gto);
+            RefreshGroupOrder();
+        }
+
         public void AdjustItemOrder(GroupType gt, int targetPosition, int draggedPosition)
         {
             if (targetPosition < draggedPosition)
@@ -305,6 +311,16 @@ namespace TreatPraktik.ViewModel
             }
 
             _wvm._changedFlag = true;
+        }
+
+        public void RefreshGroupOrder()
+        {
+            int i = 0;
+            while(i < GroupTypeOrderCollection.Count)
+            {
+                GroupTypeOrderCollection[i].GroupOrder = i+1;
+                i++;
+            }
         }
     }
 }

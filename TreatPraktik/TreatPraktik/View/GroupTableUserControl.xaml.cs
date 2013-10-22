@@ -66,10 +66,11 @@ namespace TreatPraktik.View
         public GroupTypeOrder MyGroupTypeOrder
         {
             get { return (GroupTypeOrder)GetValue(MyGroupTypeProperty); }
-            set { 
+            set
+            {
                 SetValue(MyGroupTypeProperty, value);
                 OnPropertyChanged("MyGroupTypeOrder");
-                PopulateGroupTable(MyGroupTypeOrder.Group);
+                PopulateGroupTable(MyGroupTypeOrder);
             }
         }
 
@@ -102,13 +103,14 @@ namespace TreatPraktik.View
         #endregion
 
 
-        public void PopulateGroupTable(GroupType gt)
+        public void PopulateGroupTable(GroupTypeOrder gto)
         {
+            GroupType gt = gto.Group;
             CreateColumns(GroupTable, 4);
             int counterRow = 0;
             int counterColumn = 0;
             AddNewGroupRow();
-            InsertGroupItem(gt, 0, 0);
+            InsertGroupItem(gto, 0, 0);
             if (!gt.GroupTypeID.Equals("1") && !gt.GroupTypeID.Equals("11")) //Special groups, which shouldn't show any items
             {
                 int skipped = 0;
@@ -179,11 +181,11 @@ namespace TreatPraktik.View
             }
         }
 
-        public GroupType GetGroupType(Grid grid)
+        public GroupTypeOrder GetGroupType(Grid grid)
         {
             Border b = (Border)grid.GetCellChild(0, 0);
-            GroupType gt = (GroupType)b.DataContext;
-            return gt;
+            GroupTypeOrder gto = (GroupTypeOrder)b.DataContext;
+            return gto;
         }
 
         //public GroupTypeOrder GetGroupTypeOrder(Grid grid)
@@ -205,13 +207,13 @@ namespace TreatPraktik.View
             tb.Foreground = textColor;
         }
 
-        private void InsertGroupItem(GroupType groupType, int row, int column)
+        private void InsertGroupItem(GroupTypeOrder groupTypeOrder, int row, int column)
         {
             Border bCell = GetCellItem(row, column);
-            bCell.DataContext = groupType;
+            bCell.DataContext = groupTypeOrder;
             Grid gridGroupCell = (Grid)bCell.Child;
             TextBlock tb = (TextBlock)gridGroupCell.Children[1];
-            tb.SetBinding(TextBlock.TextProperty, "GroupHeader");
+            tb.SetBinding(TextBlock.TextProperty, "Group.GroupHeader");
         }
 
         public Border GetCellItem(int row, int column)
@@ -240,7 +242,7 @@ namespace TreatPraktik.View
             }
         }
 
-        private void btnRemove_Click(object sender, RoutedEventArgs e)
+        private void btnRemoveItem_Click(object sender, RoutedEventArgs e)
         {
             Button btn = sender as Button;
             btn.Visibility = Visibility.Hidden;
@@ -254,8 +256,25 @@ namespace TreatPraktik.View
             ItemTypeOrder itToBeDeleted = (ItemTypeOrder)border.DataContext;
             gt.ItemOrder.Remove(itToBeDeleted);
             GTViewModel.AdjustItemOrder(gt);
-            RefreshGroupTable(gt);
+            RefreshGroupTable(gto);
             DisableAllowDropByNewLineItem();
+        }
+
+        private void btnRemoveGroup_Click(object sender, RoutedEventArgs e)
+        {
+            if (MessageBox.Show("Are you sure?", "Confirmation", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+                Button btn = sender as Button;
+                btn.Visibility = Visibility.Hidden;
+
+                Grid gridCell = (Grid)btn.Parent;
+                Border border = (Border)gridCell.Parent;
+                GroupTypeOrder gto = (GroupTypeOrder)border.DataContext;
+
+                GTViewModel.RemoveGroup(gto);
+                RefreshGroupTable(gto);
+                DisableAllowDropByNewLineItem();
+            }
         }
 
         private List<ItemTypeOrder> GetItemsByRow(int row)
@@ -441,8 +460,10 @@ namespace TreatPraktik.View
             int draggedItemRow = Grid.GetRow(draggedBorderCell);
             Grid draggedGroupTable = (Grid)draggedBorderCell.Parent;
 
-            GroupType draggedGt = GetGroupType(draggedGroupTable);
-            GroupType gt = GetGroupType(GroupTable);
+            GroupTypeOrder draggedGto = GetGroupType(draggedGroupTable);
+            GroupTypeOrder gto = GetGroupType(GroupTable);
+            GroupType draggedGt = draggedGto.Group;
+            GroupType gt = gto.Group;
 
             ItemTypeOrder ito = (ItemTypeOrder)draggedTextBlock.DataContext;
             ItemType it = ito.Item;
@@ -476,7 +497,7 @@ namespace TreatPraktik.View
         {
             Border bCell = GetBorderByDropEvent(e);
 
-            if (bCell.DataContext is GroupType)
+            if (bCell.DataContext is GroupTypeOrder)
             {
                 e.Effects = DragDropEffects.Move;
             }
@@ -550,7 +571,7 @@ namespace TreatPraktik.View
                 int draggedIndex = gt.ItemOrder.IndexOf(itemTypeOrder);
 
                 GTViewModel.AdjustItemOrderNewLineItem(gt, draggedIndex);
-                RefreshGroupTable(gt);
+                RefreshGroupTable(gto);
                 DisableAllowDropByNewLineItem();
 
             }
@@ -572,7 +593,7 @@ namespace TreatPraktik.View
                 //List<ItemTypeOrder> itemTypeList = GetItemTypes();
                 int startPosition = gt.ItemOrder.IndexOf(itToBeMoved);
                 GTViewModel.MoveItemsForward(startPosition, itemTypeOrder, gt);
-                RefreshGroupTable(gt);
+                RefreshGroupTable(gto);
                 DisableAllowDropByNewLineItem();
             }
             if (designID == 0)
@@ -589,7 +610,7 @@ namespace TreatPraktik.View
                 itToBeMoved.Item = itemType;
                 gt.ItemOrder.Add(itToBeMoved);
                 GTViewModel.GenerateEmptyFields(gt);
-                RefreshGroupTable(gt);
+                RefreshGroupTable(gto);
                 if (tbi.DesignID.Equals("198"))
                 {
                     DisableAllowDropByNewLineItem();
@@ -616,7 +637,8 @@ namespace TreatPraktik.View
             ItemTypeOrder draggedItemType = (ItemTypeOrder)target2.DataContext;
             //Grid groupTable2 = (Grid)target2.Parent;
             Grid groupTable = (Grid)target.Parent;
-            GroupType gt = GetGroupType(groupTable);
+            GroupTypeOrder gto = GetGroupType(groupTable);
+            GroupType gt = gto.Group;
             int draggedPosition = gt.ItemOrder.IndexOf(draggedItemType);
             double targetItemTypeNo = targetItemType.ItemOrder; //affected item
             int targetPosition = gt.ItemOrder.IndexOf(targetItemType);
@@ -632,7 +654,7 @@ namespace TreatPraktik.View
                     gt.ItemOrder.Add(draggedItemType);
                     gt.ItemOrder.Sort(i => i.ItemOrder);
                     GTViewModel.GenerateEmptyFields(gt);
-                    RefreshGroupTable(gt);
+                    RefreshGroupTable(gto);
                 }
 
                 else if (draggedItemType.DesignID.Equals("198"))
@@ -651,7 +673,7 @@ namespace TreatPraktik.View
                     }
                     GTViewModel.GenerateEmptyFields(gt);
                     gt.ItemOrder.Sort(i => i.ItemOrder);
-                    RefreshGroupTable(gt);
+                    RefreshGroupTable(gto);
                 }
 
                 else if (targetItemType.DesignID != null && draggedItemType.DesignID != null /*&& !draggedItemType.DesignID.Equals("198")*/)
@@ -678,15 +700,15 @@ namespace TreatPraktik.View
 
                     GTViewModel.GenerateEmptyFields(gt);
                     gt.ItemOrder.Sort(i => i.ItemOrder);
-                    RefreshGroupTable(gt);
+                    RefreshGroupTable(gto);
                 }
             }
         }
 
-        void RefreshGroupTable(GroupType gt)
+        void RefreshGroupTable(GroupTypeOrder gto)
         {
             GroupTable.ClearGrid();
-            PopulateGroupTable(gt);
+            PopulateGroupTable(gto);
             DisableAllowDropByNewLineItem();
         }
 
@@ -775,7 +797,7 @@ namespace TreatPraktik.View
                     btnClearCell.Visibility = Visibility.Visible;
                 }
             }
-            if (bCell.DataContext is GroupType)
+            if (bCell.DataContext is GroupTypeOrder)
             {
                 Button btnClearCell = (Button)cellItem.Children[0];
                 btnClearCell.Visibility = Visibility.Visible;
@@ -839,7 +861,7 @@ namespace TreatPraktik.View
                         AdornerLayer.GetAdornerLayer(this).Remove(adorner);
                     }
                 }
-                if (draggedItem.DataContext is GroupType)
+                if (draggedItem.DataContext is GroupTypeOrder)
                 {
                     Grid groupTable = (Grid)draggedItem.Parent;
 
@@ -869,7 +891,7 @@ namespace TreatPraktik.View
                 Content = imgRemoveIcon,
                 Visibility = Visibility.Hidden
             };
-            btnClearCell.Click += btnRemove_Click;
+            btnClearCell.Click += btnRemoveItem_Click;
 
             return btnClearCell;
         }
@@ -889,7 +911,7 @@ namespace TreatPraktik.View
                 Content = imgRemoveIcon,
                 Visibility = Visibility.Hidden
             };
-            //btnClearCell.Click += btnRemove_Click;
+            btnClearCell.Click += btnRemoveGroup_Click;
 
             return btnClearCell;
         }
