@@ -276,8 +276,8 @@ namespace TreatPraktik.View
             {
                 Button btn = sender as Button;
                 btn.Visibility = Visibility.Hidden;
-
-                Grid gridCell = (Grid)btn.Parent;
+                StackPanel sp = (StackPanel)btn.Parent;
+                Grid gridCell = (Grid)sp.Parent;
                 Border border = (Border)gridCell.Parent;
                 GroupTypeOrder gto = (GroupTypeOrder)border.DataContext;
 
@@ -982,6 +982,7 @@ namespace TreatPraktik.View
         {
             // Instantiate the dialog box
             EditGroupDialogBox dlg = new EditGroupDialogBox();
+            dlg.Title = "Edit Group - " + MyGroupTypeOrder.Group.GroupHeader;
             dlg.englishTextBox.Text = MyGroupTypeOrder.Group.EnglishTranslationText;
             dlg.danishTextBox.Text = MyGroupTypeOrder.Group.DanishTranslationText;
 

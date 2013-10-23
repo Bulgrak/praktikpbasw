@@ -32,7 +32,7 @@ namespace TreatPraktik.ViewModel
         {
             //PageType page = (from a in PageList where a.PageTypeID.Equals(pageTypeID) select a).FirstOrDefault();
             //GroupTypeOrder group = (from b in page.GroupTypeOrders where b.GroupTypeID.Equals(groupTypeID) select b).FirstOrDefault();
-            
+
             gto.Group.DanishTranslationText = danTransText;
             gto.Group.EnglishTranslationText = engTransText;
             foreach (string departmentID in departmentList)
@@ -59,21 +59,23 @@ namespace TreatPraktik.ViewModel
                     GroupTypeOrderCollection.Add(clonedGto);
                 }
             }
-
+            CleanUpRemovedDepartments(gto, departmentList);
             GroupTypeOrderCollection.Sort(gtoItem => gtoItem.GroupOrder);
         }
 
         public void CleanUpRemovedDepartments(GroupTypeOrder gto, List<string> departmentList)
         {
-            foreach (GroupTypeOrder gtoItem in GroupTypeOrderCollection)
+            int j = 0;
+            while (j < GroupTypeOrderCollection.Count)
             {
+                GroupTypeOrder gtoItem = GroupTypeOrderCollection[j];
                 if (gtoItem.GroupTypeID.Equals(gto.GroupTypeID))
                 {
                     bool remove = true;
                     int i = 0;
                     while (i < departmentList.Count && remove)
                     {
-                        if (gtoItem.DepartmentID.Equals(gto.DepartmentID))
+                        if (gtoItem.DepartmentID.Equals(departmentList[i]))
                         {
                             remove = false;
                         }
@@ -82,9 +84,10 @@ namespace TreatPraktik.ViewModel
 
                     if (remove)
                     {
-                        GroupTypeOrderCollection.Remove(gto);
+                        GroupTypeOrderCollection.Remove(gtoItem);
                     }
                 }
+                j++;
             }
         }
 
@@ -160,7 +163,7 @@ namespace TreatPraktik.ViewModel
                     {
                         i++;
                         gt.ItemOrder[i].ItemOrder = gt.ItemOrder[i - 1].ItemOrder +
-                                                    (4 - (gt.ItemOrder[i - 1].ItemOrder%4));
+                                                    (4 - (gt.ItemOrder[i - 1].ItemOrder % 4));
                         i++;
                     }
                     else
@@ -282,7 +285,7 @@ namespace TreatPraktik.ViewModel
             itemTypeOrder.Item = emptyFieldItemType;
 
             _wvm._changedFlag = true;
-            
+
             return itemTypeOrder;
         }
 
@@ -321,63 +324,225 @@ namespace TreatPraktik.ViewModel
         {
             int draggedPosition = GroupTypeOrderCollection.IndexOf(draggedGroupTypeOrder);
             int targetPosition = GroupTypeOrderCollection.IndexOf(targetGroupTypeOrder);
-            GroupTypeOrderCollection.Remove(draggedGroupTypeOrder);
+            List<GroupTypeOrder> gtoList = FindDuplicatesOfGroups(draggedGroupTypeOrder);
+            foreach (GroupTypeOrder gto in gtoList)
+            {
+                GroupTypeOrderCollection.Remove(gto);
+            }
 
-            
             if (draggedGroupTypeOrder.GroupOrder > targetGroupTypeOrder.GroupOrder)
             {
-                GroupTypeOrderCollection.Insert(targetPosition, draggedGroupTypeOrder);
-                draggedGroupTypeOrder.GroupOrder = targetGroupTypeOrder.GroupOrder;
+                foreach (GroupTypeOrder gto in gtoList)
+                {
+                    GroupTypeOrderCollection.Insert(targetPosition, gto);
+                }
+                //draggedGroupTypeOrder.GroupOrder = targetGroupTypeOrder.GroupOrder;
             }
             else
             {
                 if (GroupTypeOrderCollection.Count != targetPosition)
                 {
-                    draggedGroupTypeOrder.GroupOrder = targetGroupTypeOrder.GroupOrder;
-                    GroupTypeOrderCollection.Insert(targetPosition, draggedGroupTypeOrder);
+                    //draggedGroupTypeOrder.GroupOrder = targetGroupTypeOrder.GroupOrder;
+                    foreach (GroupTypeOrder gto in gtoList)
+                    {
+                        if (gtoList.Count > 1)
+                        {
+                            GroupTypeOrderCollection.Insert(targetPosition - 1, gto);
+                        }
+                        else
+                        {
+                            GroupTypeOrderCollection.Insert(targetPosition, gto);
+                        }
+                    }
                 }
                 else
                 {
-                    draggedGroupTypeOrder.GroupOrder = targetGroupTypeOrder.GroupOrder;
-                    GroupTypeOrderCollection.Add(draggedGroupTypeOrder);
+                    //draggedGroupTypeOrder.GroupOrder = targetGroupTypeOrder.GroupOrder;
+                    foreach (GroupTypeOrder gto in gtoList)
+                    {
+                        GroupTypeOrderCollection.Add(gto);
+                    }
                 }
             }
-            AdjustGroupOrder(targetPosition, draggedPosition);
+            AdjustGroupOrder();
             GroupTypeOrderCollection.Sort(gto => gto.GroupOrder);
 
             _wvm._changedFlag = true;
         }
 
-        public void AdjustGroupOrder(int targetPosition, int draggedPosition)
+        public List<GroupTypeOrder> FindDuplicatesOfGroups(GroupTypeOrder draggedGto)
         {
-            if (targetPosition < draggedPosition)
+            List<GroupTypeOrder> gtoList = new List<GroupTypeOrder>();
+            foreach (GroupTypeOrder gto in GroupTypeOrderCollection)
             {
-                IncrementGroupOrderType(targetPosition, draggedPosition);
+                if (gto.GroupTypeID.Equals(draggedGto.GroupTypeID))
+                {
+                    gtoList.Add(gto);
+                }
             }
-            else
-            {
-                DecrementGroupOrderType(targetPosition, draggedPosition);
-            }
+            return gtoList;
         }
+
+        //public void AdjustGroupOrder(int targetPosition, int draggedPosition)
+        //{
+        //    if (targetPosition < draggedPosition)
+        //    {
+        //        IncrementGroupOrderType(targetPosition, draggedPosition);
+        //    }
+        //    else
+        //    {
+        //        DecrementGroupOrderType(targetPosition, draggedPosition);
+        //    }
+        //}
+
+        public void AdjustGroupOrder()
+        {
+            GroupTypeOrder previousGto = null;
+            int i = 0;
+            int skipped = 0;
+            while (i < GroupTypeOrderCollection.Count)
+            {
+                GroupTypeOrder currentGto = GroupTypeOrderCollection[i];
+                if (i > 0)
+                {
+                    previousGto = GroupTypeOrderCollection[i - 1];
+                    if (currentGto.GroupTypeID.Equals(previousGto.GroupTypeID))
+                    {
+                        currentGto.GroupOrder = previousGto.GroupOrder;
+                        skipped++;
+                    }
+                    else
+                    {
+                        GroupTypeOrderCollection[i].GroupOrder = i + 1 - skipped;
+                    }
+                }
+                else
+                {
+                    GroupTypeOrderCollection[i].GroupOrder = i + 1;
+                }
+                i++;
+            }
+
+            _wvm._changedFlag = true;
+        }
+
+        //public void DecrementGroupOrderType(int targetPosition, int draggedPosition)
+        //{
+        //    GroupTypeOrder previousGto = null;
+        //    int i = targetPosition - 1;
+        //    while (i >= draggedPosition)
+        //    {
+        //        GroupTypeOrder currentGto = GroupTypeOrderCollection[i];
+        //        if (i < GroupTypeOrderCollection.Count - 1)
+        //        {
+        //            previousGto = GroupTypeOrderCollection[i + 1];
+        //            if (currentGto.GroupTypeID.Equals(previousGto.GroupTypeID))
+        //            {
+        //                currentGto.GroupOrder = previousGto.GroupOrder;
+        //            }
+        //            else
+        //            {
+        //                GroupTypeOrderCollection[i].GroupOrder--;
+        //            }
+        //        }
+        //        else
+        //        {
+        //            GroupTypeOrderCollection[i].GroupOrder--;
+        //        }
+        //        i--;
+        //    }
+
+        //    _wvm._changedFlag = true;
+        //}
 
         public void DecrementGroupOrderType(int targetPosition, int draggedPosition)
         {
-            int i = targetPosition - 1;
-            while (i >= draggedPosition)
+            GroupTypeOrder previousGto = null;
+            int i = GroupTypeOrderCollection.Count - 1;
+            int counter = GroupTypeOrderCollection.Count - FindNoOfDuplicates() + 1;
+            while (i >= 0)
             {
-                GroupTypeOrderCollection[i].GroupOrder--;
+                GroupTypeOrder currentGto = GroupTypeOrderCollection[i];
+                if (i < GroupTypeOrderCollection.Count - 1)
+                {
+                    previousGto = GroupTypeOrderCollection[i + 1];
+                    if (currentGto.GroupTypeID.Equals(previousGto.GroupTypeID))
+                    {
+                        currentGto.GroupOrder = previousGto.GroupOrder;
+                    }
+                    else
+                    {
+                        counter--;
+                        GroupTypeOrderCollection[i].GroupOrder = counter;
+                    }
+                }
+                else
+                {
+                    counter--;
+                    GroupTypeOrderCollection[i].GroupOrder = counter;
+                }
                 i--;
             }
 
             _wvm._changedFlag = true;
         }
 
+        public int FindNoOfDuplicates()
+        {
+            int noOfDuplicates = 0;
+            //foreach (GroupTypeOrder gto in GroupTypeOrderCollection)
+            //    foreach (GroupTypeOrder gtoCompare in GroupTypeOrderCollection)
+            //        if (gtoCompare.GroupTypeID.Equals(gto.GroupTypeID))
+            //            noOfIdenticalGroups++;
+            //if (noOfIdenticalGroups != 0)
+            //{
+            //    noOfIdenticalGroups--;
+            //}
+            //return noOfIdenticalGroups;
+
+
+            var duplicateList = from gto in GroupTypeOrderCollection
+                                group gto.GroupTypeID by gto.GroupTypeID into g
+                                let count = g.Count()
+                                orderby count descending
+                                select new { Value = g.Key, Count = count };
+            foreach (var x in duplicateList)
+            {
+                if (x.Count > 1)
+                {
+                    noOfDuplicates += x.Count;
+                }
+            }
+            if (noOfDuplicates > 1)
+            {
+                noOfDuplicates--;
+            }
+            return noOfDuplicates;
+        }
+
         public void IncrementGroupOrderType(int position, int startPosition)
         {
+            GroupTypeOrder previousGto = null;
             int i = position + 1;
             while (i <= startPosition)
             {
-                GroupTypeOrderCollection[i].GroupOrder++;
+                GroupTypeOrder currentGto = GroupTypeOrderCollection[i];
+                if (i > 0)
+                {
+                    previousGto = GroupTypeOrderCollection[i - 1];
+                    if (currentGto.GroupTypeID.Equals(previousGto.GroupTypeID))
+                    {
+                        currentGto.GroupOrder = previousGto.GroupOrder;
+                    }
+                    else
+                    {
+                        GroupTypeOrderCollection[i].GroupOrder++;
+                    }
+                }
+                else
+                {
+                    GroupTypeOrderCollection[i].GroupOrder++;
+                }
                 i++;
             }
 
@@ -387,9 +552,9 @@ namespace TreatPraktik.ViewModel
         public void RefreshGroupOrder()
         {
             int i = 0;
-            while(i < GroupTypeOrderCollection.Count)
+            while (i < GroupTypeOrderCollection.Count)
             {
-                GroupTypeOrderCollection[i].GroupOrder = i+1;
+                GroupTypeOrderCollection[i].GroupOrder = i + 1;
                 i++;
             }
         }
