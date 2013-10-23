@@ -88,7 +88,7 @@ namespace TreatPraktik.View
 
         private void Exit_Click(object sender, RoutedEventArgs e)
         {
-            if (_workspaceVM._changedFlag && MessageBox.Show("Save your changes before exit?", "Save changes?", MessageBoxButton.OKCancel) ==  MessageBoxResult.OK)
+            if (_workspaceVM._changedFlag && MessageBox.Show("Save your changes before exit?", "Save changes?", MessageBoxButton.OKCancel, MessageBoxImage.Question) ==  MessageBoxResult.OK)
             {
                 ExportExcel_Click(null, null);
 

@@ -82,6 +82,10 @@
     <Compile Include="View\DragAdornerGroup.cs" />
     <Compile Include="View\DragAdornerItem.cs" />
     <Compile Include="View\DragAdornerToolboxItem.cs" />
+    <Compile Include="View\EditGroupDialogBox.xaml.cs">
+      <DependentUpon>EditGroupDialogBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\EditGroupValidationRule.cs" />
     <Compile Include="View\GridHelpers.cs" />
     <Compile Include="View\GroupListUserControl.xaml.cs">
       <DependentUpon>GroupListUserControl.xaml</DependentUpon>
@@ -136,6 +140,10 @@
     <Compile Include="View\WorkspaceUserControl.xaml.cs">
       <DependentUpon>WorkspaceUserControl.xaml</DependentUpon>
     </Compile>
+    <Page Include="View\EditGroupDialogBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\GroupListUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -251,6 +259,9 @@
     <Resource Include="Ressources\exit.ico" />
     <Resource Include="Ressources\export.ico" />
     <Resource Include="Ressources\import.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Ressources\Edit-icon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

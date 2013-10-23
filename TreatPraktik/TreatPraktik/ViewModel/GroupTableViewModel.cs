@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Windows.Controls;
+using DocumentFormat.OpenXml.Bibliography;
 using TreatPraktik.Model.WorkspaceObjects;
 using TreatPraktik.View;
 
@@ -19,6 +20,72 @@ namespace TreatPraktik.ViewModel
         public GroupTableViewModel()
         {
             _wvm = WorkspaceViewModel.Instance;
+        }
+
+        /// <summary>
+        /// Rename an existing group
+        /// </summary>
+        /// <param name="gto">The group to be renamed</param>
+        /// <param name="engTransText">The english group name</param>
+        /// <param name="danTransText">The danish group name</param>
+        public void EditGroup(GroupTypeOrder gto, string engTransText, string danTransText, List<string> departmentList)
+        {
+            //PageType page = (from a in PageList where a.PageTypeID.Equals(pageTypeID) select a).FirstOrDefault();
+            //GroupTypeOrder group = (from b in page.GroupTypeOrders where b.GroupTypeID.Equals(groupTypeID) select b).FirstOrDefault();
+            
+            gto.Group.DanishTranslationText = danTransText;
+            gto.Group.EnglishTranslationText = engTransText;
+            foreach (string departmentID in departmentList)
+            {
+                int i = 0;
+                bool departmentIDExist = false;
+                while (i < GroupTypeOrderCollection.Count && !departmentIDExist)
+                {
+                    if (departmentID.Equals(GroupTypeOrderCollection[i].DepartmentID) && GroupTypeOrderCollection[i].GroupTypeID.Equals(gto.GroupTypeID))
+                    {
+                        departmentIDExist = true;
+                    }
+                    i++;
+                }
+
+                if (!departmentIDExist)
+                {
+                    GroupTypeOrder clonedGto = new GroupTypeOrder();
+                    clonedGto.DepartmentID = departmentID;
+                    clonedGto.Group = gto.Group;
+                    clonedGto.GroupOrder = gto.GroupOrder;
+                    clonedGto.GroupTypeID = gto.GroupTypeID;
+                    clonedGto.PageTypeID = gto.PageTypeID;
+                    GroupTypeOrderCollection.Add(clonedGto);
+                }
+            }
+
+            GroupTypeOrderCollection.Sort(gtoItem => gtoItem.GroupOrder);
+        }
+
+        public void CleanUpRemovedDepartments(GroupTypeOrder gto, List<string> departmentList)
+        {
+            foreach (GroupTypeOrder gtoItem in GroupTypeOrderCollection)
+            {
+                if (gtoItem.GroupTypeID.Equals(gto.GroupTypeID))
+                {
+                    bool remove = true;
+                    int i = 0;
+                    while (i < departmentList.Count && remove)
+                    {
+                        if (gtoItem.DepartmentID.Equals(gto.DepartmentID))
+                        {
+                            remove = false;
+                        }
+                        i++;
+                    }
+
+                    if (remove)
+                    {
+                        GroupTypeOrderCollection.Remove(gto);
+                    }
+                }
+            }
         }
 
         public void RemoveGroup(GroupTypeOrder gto)
@@ -85,18 +152,22 @@ namespace TreatPraktik.ViewModel
                 j++;
             }
             int i = j - 1;
-            while (i < gt.ItemOrder.Count)
+            if (i > 0)
             {
-                if (gt.ItemOrder[i].DesignID.Equals("198"))
+                while (i < gt.ItemOrder.Count)
                 {
-                    i++;
-                    gt.ItemOrder[i].ItemOrder = gt.ItemOrder[i - 1].ItemOrder + (4 - (gt.ItemOrder[i - 1].ItemOrder % 4));
-                    i++;
-                }
-                else
-                {
-                    gt.ItemOrder[i].ItemOrder = gt.ItemOrder[i - 1].ItemOrder + 1;
-                    i++;
+                    if (gt.ItemOrder[i].DesignID.Equals("198"))
+                    {
+                        i++;
+                        gt.ItemOrder[i].ItemOrder = gt.ItemOrder[i - 1].ItemOrder +
+                                                    (4 - (gt.ItemOrder[i - 1].ItemOrder%4));
+                        i++;
+                    }
+                    else
+                    {
+                        gt.ItemOrder[i].ItemOrder = gt.ItemOrder[i - 1].ItemOrder + 1;
+                        i++;
+                    }
                 }
             }
             _wvm._changedFlag = true;

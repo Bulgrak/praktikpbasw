@@ -30,6 +30,7 @@ namespace TreatPraktik.View
     {
         public GroupTableContainerUserControl ParentGroupTableContainerUserControl { get; set; }
         public GroupTableViewModel GTViewModel { get; set; }
+        private static GroupTypeOrder PreviousGroupTypeOrder { get; set; }
 
         public GroupTableUserControl()
         {
@@ -94,6 +95,10 @@ namespace TreatPraktik.View
             {
                 SetValue(GroupTypeOrderCollectionProperty, value);
                 GTViewModel.GroupTypeOrderCollection = GroupTypeOrderCollection;
+                if (GroupTypeOrderCollection.IndexOf(PreviousGroupTypeOrder) == GroupTypeOrderCollection.Count - 1)
+                {
+                    PreviousGroupTypeOrder = null;
+                }
                 OnPropertyChanged("GroupTypeOrderCollection");
             }
         }
@@ -105,70 +110,75 @@ namespace TreatPraktik.View
 
         public void PopulateGroupTable(GroupTypeOrder gto)
         {
-            GroupType gt = gto.Group;
-            CreateColumns(GroupTable, 4);
-            int counterRow = 0;
-            int counterColumn = 0;
-            AddNewGroupRow();
-            InsertGroupItem(gto, 0, 0);
-            if (!gt.GroupTypeID.Equals("1") && !gt.GroupTypeID.Equals("11")) //Special groups, which shouldn't show any items
+            if (PreviousGroupTypeOrder == null || PreviousGroupTypeOrder.GroupTypeID != gto.GroupTypeID)
             {
-                int skipped = 0;
-                for (int j = 0; j < gt.ItemOrder.Count - skipped; j++)
+                PreviousGroupTypeOrder = gto;
+                GroupType gt = gto.Group;
+                CreateColumns(GroupTable, 4);
+                int counterRow = 0;
+                int counterColumn = 0;
+                AddNewGroupRow();
+                InsertGroupItem(gto, 0, 0);
+                if (!gt.GroupTypeID.Equals("1") && !gt.GroupTypeID.Equals("11"))
+                    //Special groups, which shouldn't show any items
                 {
-                    if (gt.ItemOrder[j + skipped].DesignID.Equals("198"))
+                    int skipped = 0;
+                    for (int j = 0; j < gt.ItemOrder.Count - skipped; j++)
                     {
-                        if (j % 4 == 0)
+                        if (gt.ItemOrder[j + skipped].DesignID.Equals("198"))
+                        {
+                            if (j%4 == 0)
+                            {
+                                AddNewEmptyItemRow();
+                                counterRow++;
+                                gt.ItemOrder[j + skipped].Item.Header = "<NewLineItem>";
+                                //gt.ItemOrder[j + skipped].ItemOrder = j + skipped;
+                                SolidColorBrush textColor2 = Brushes.Black;
+                                InsertItem(gt.ItemOrder[j + skipped], counterRow, j%4, textColor2);
+                                j--;
+                                skipped++;
+
+                                continue;
+                            }
+                            gt.ItemOrder[j + skipped].Item.Header = "<NewLineItem>";
+                            //gt.ItemOrder[j + skipped].ItemOrder = j + skipped;
+                            SolidColorBrush textColor = Brushes.Black;
+                            InsertItem(gt.ItemOrder[j + skipped], counterRow, j%4, textColor);
+                            skipped = skipped + j;
+                            j = 0;
+                        }
+                        else if (j%4 == 0)
                         {
                             AddNewEmptyItemRow();
                             counterRow++;
-                            gt.ItemOrder[j + skipped].Item.Header = "<NewLineItem>";
-                            //gt.ItemOrder[j + skipped].ItemOrder = j + skipped;
-                            SolidColorBrush textColor2 = Brushes.Black;
-                            InsertItem(gt.ItemOrder[j + skipped], counterRow, j % 4, textColor2);
+                        }
+                        if (gt.ItemOrder[j + skipped].DesignID.Equals("198"))
+                        {
                             j--;
                             skipped++;
-
                             continue;
                         }
-                        gt.ItemOrder[j + skipped].Item.Header = "<NewLineItem>";
-                        //gt.ItemOrder[j + skipped].ItemOrder = j + skipped;
-                        SolidColorBrush textColor = Brushes.Black;
-                        InsertItem(gt.ItemOrder[j + skipped], counterRow, j % 4, textColor);
-                        skipped = skipped + j;
-                        j = 0;
-                    }
-                    else if (j % 4 == 0)
-                    {
-                        AddNewEmptyItemRow();
-                        counterRow++;
-                    }
-                    if (gt.ItemOrder[j + skipped].DesignID.Equals("198"))
-                    {
-                        j--;
-                        skipped++;
-                        continue;
-                    }
-                    if (gt.ItemOrder[j + skipped].DesignID.Equals("197"))
-                    {
-                        SolidColorBrush textColor = Brushes.Black;
-                        gt.ItemOrder[j + skipped].Item.Header = "<EmptyField>";
-                        InsertItem(gt.ItemOrder[j + skipped], counterRow, j % 4, textColor);
-                        //gt.ItemOrder[j + skipped].ItemOrder = j + skipped;
-                    }
-                    else
-                    {
-                        if (counterColumn >= 4)
+                        if (gt.ItemOrder[j + skipped].DesignID.Equals("197"))
                         {
-                            counterColumn = 0;
+                            SolidColorBrush textColor = Brushes.Black;
+                            gt.ItemOrder[j + skipped].Item.Header = "<EmptyField>";
+                            InsertItem(gt.ItemOrder[j + skipped], counterRow, j%4, textColor);
+                            //gt.ItemOrder[j + skipped].ItemOrder = j + skipped;
                         }
-                        SolidColorBrush textColor = Brushes.Black;
-                        InsertItem(gt.ItemOrder[j + skipped], counterRow, j % 4, textColor);
-                        //gt.ItemOrder[j + skipped].ItemOrder = j + skipped;
+                        else
+                        {
+                            if (counterColumn >= 4)
+                            {
+                                counterColumn = 0;
+                            }
+                            SolidColorBrush textColor = Brushes.Black;
+                            InsertItem(gt.ItemOrder[j + skipped], counterRow, j%4, textColor);
+                            //gt.ItemOrder[j + skipped].ItemOrder = j + skipped;
+                        }
+                        counterColumn++;
                     }
-                    counterColumn++;
+                    AddNewEmptyItemRow();
                 }
-                AddNewEmptyItemRow();
             }
         }
 
@@ -262,7 +272,7 @@ namespace TreatPraktik.View
 
         private void btnRemoveGroup_Click(object sender, RoutedEventArgs e)
         {
-            if (MessageBox.Show("Are you sure?", "Confirmation", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            if (MessageBox.Show("Are you sure?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
             {
                 Button btn = sender as Button;
                 btn.Visibility = Visibility.Hidden;
@@ -351,9 +361,19 @@ namespace TreatPraktik.View
             Grid gridCell = new Grid();
             CreateColumns(gridCell, 2);
             Button clearGroupBtn = CreateClearGroupBtn();
-            Grid.SetColumn(clearGroupBtn, 1);
+            Button editGroupBtn = CreateEditGroupBtn();
+            StackPanel spBtn = new StackPanel();
+            spBtn.Orientation = Orientation.Horizontal;
+            spBtn.HorizontalAlignment = HorizontalAlignment.Right;
+            spBtn.VerticalAlignment = VerticalAlignment.Top;
+            spBtn.Children.Add(editGroupBtn);
+            spBtn.Children.Add(clearGroupBtn);
+            //Grid.SetColumn(clearGroupBtn, 1);
+            Grid.SetColumn(spBtn, 1);
             Grid.SetColumn(tb, 0);
-            gridCell.Children.Add(clearGroupBtn);
+            //Grid.SetColumn(editGroupBtn, 1);
+            //gridCell.Children.Add(clearGroupBtn);
+            gridCell.Children.Add(spBtn);
             gridCell.Children.Add(tb);
             bGroupCell.Child = gridCell;
             return bGroupCell;
@@ -431,7 +451,7 @@ namespace TreatPraktik.View
             ListBoxItem lbi = e.Data.GetData("System.Windows.Controls.ListBoxItem") as ListBoxItem;
             ToolboxItem tbi = (ToolboxItem)lbi.Content;
 
-            if (!(bCell.DataContext is GroupType))
+            if (!(bCell.DataContext is GroupTypeOrder))
             {
                 int row = Grid.GetRow(bCell);
                 bool containsRow = CheckForNewLineItem(row);
@@ -486,7 +506,7 @@ namespace TreatPraktik.View
                     }
                 }
             }
-            if (borderCell.DataContext is GroupType)
+            if (borderCell.DataContext is GroupTypeOrder)
             {
 
                 e.Effects = DragDropEffects.None;
@@ -799,17 +819,39 @@ namespace TreatPraktik.View
             }
             if (bCell.DataContext is GroupTypeOrder)
             {
-                Button btnClearCell = (Button)cellItem.Children[0];
-                btnClearCell.Visibility = Visibility.Visible;
+                //Button btnClearCell = (Button)cellItem.Children[0];
+                StackPanel spBtn = (StackPanel)cellItem.Children[0];
+                Button btnEditGroup = (Button)spBtn.Children[0];
+                Button btnRemoveGroup = (Button)spBtn.Children[1];
+                btnEditGroup.Visibility = Visibility.Visible;
+                btnRemoveGroup.Visibility = Visibility.Visible;
+                //btnClearCell.Visibility = Visibility.Visible;
             }
         }
 
         void border_MouseLeave(object sender, MouseEventArgs e)
         {
+            //Border bCell = sender as Border;
+            //Grid cellItem = (Grid)bCell.Child;
+            //Button btnClearCell = (Button)cellItem.Children[0];
+            //btnClearCell.Visibility = Visibility.Hidden;
             Border bCell = sender as Border;
-            Grid cellItem = (Grid)bCell.Child;
-            Button btnClearCell = (Button)cellItem.Children[0];
-            btnClearCell.Visibility = Visibility.Hidden;
+            if (bCell.DataContext is ItemTypeOrder)
+            {
+                Grid cellItem = (Grid)bCell.Child;
+                Button btnClearCell = (Button)cellItem.Children[0];
+                btnClearCell.Visibility = Visibility.Hidden;
+            }
+            else if (bCell.DataContext is GroupTypeOrder)
+            {
+                Grid cellItem = (Grid)bCell.Child;
+                StackPanel spBtn = (StackPanel)cellItem.Children[0];
+                Button btnEditGroup = (Button)spBtn.Children[0];
+                Button btnRemoveGroup = (Button)spBtn.Children[1];
+                btnEditGroup.Visibility = Visibility.Hidden;
+                btnRemoveGroup.Visibility = Visibility.Hidden;
+            }
+
         }
 
         public Border CreateBorderContainer(Color borderBrush, Color background)
@@ -915,6 +957,72 @@ namespace TreatPraktik.View
 
             return btnClearCell;
         }
+
+        public Button CreateEditGroupBtn()
+        {
+            var uriSource = new Uri(@"/TreatPraktik;component/Ressources/Edit-icon.png", UriKind.Relative); //Icon from http://www.turbomilk.com/
+            Image imgRemoveIcon = new Image();
+            imgRemoveIcon.Source = new BitmapImage(uriSource);
+
+            Button btnEditGroup = new Button
+            {
+                Width = 16.0,
+                Height = 16.0,
+                HorizontalAlignment = HorizontalAlignment.Right,
+                VerticalAlignment = VerticalAlignment.Top,
+                Content = imgRemoveIcon,
+                Visibility = Visibility.Hidden
+            };
+            btnEditGroup.Click += btnEditGroup_Click;
+
+            return btnEditGroup;
+        }
+
+        public void btnEditGroup_Click(object sender, RoutedEventArgs e)
+        {
+            // Instantiate the dialog box
+            EditGroupDialogBox dlg = new EditGroupDialogBox();
+            dlg.englishTextBox.Text = MyGroupTypeOrder.Group.EnglishTranslationText;
+            dlg.danishTextBox.Text = MyGroupTypeOrder.Group.DanishTranslationText;
+
+            ObservableCollection<string> obscDepartmentList = new ObservableCollection<string>();
+            int i = 0;
+            while (i < GroupTypeOrderCollection.Count)
+            {
+                if(GroupTypeOrderCollection[i].GroupTypeID == MyGroupTypeOrder.GroupTypeID)
+                    obscDepartmentList.Add(GroupTypeOrderCollection[i].DepartmentID);
+                i++;
+            }
+            dlg.departmentsListBox.ItemsSource = obscDepartmentList;
+            //dlg.departmentsListBox.Items.Add(GroupTypeOrderCollection[i].DepartmentID);
+            // Configure the dialog box
+            //dlg.Owner = this;
+            //dlg.FontFamily = this.documentTextBox.FontFamily;
+            //dlg.FontSize = this.documentTextBox.FontSize;
+            //dlg.FontWeight = this.documentTextBox.FontWeight;
+            //dlg.FontStyle = this.documentTextBox.FontStyle;
+            //dlg.bottomMarginTextBox 
+
+            // Open the dialog box modally 
+            dlg.ShowDialog();
+
+            // Process data entered by user if dialog box is accepted
+            if (dlg.DialogResult == true)
+            {
+                List<string> departmentList = new List<string>();
+                foreach(string s in dlg.departmentsListBox.Items)
+                    departmentList.Add(s);
+                GTViewModel.EditGroup(MyGroupTypeOrder, dlg.englishTextBox.Text, dlg.danishTextBox.Text, departmentList);
+                //GTViewModel.EditGroup();
+
+                //    // Update fonts
+                //    this.documentTextBox.FontFamily = dlg.FontFamily;
+                //    this.documentTextBox.FontSize = dlg.FontSize;
+                //    this.documentTextBox.FontWeight = dlg.FontWeight;
+                //    this.documentTextBox.FontStyle = dlg.FontStyle;
+            }
+        }
+
 
         #region MousePositionLogic
         [DllImport("user32.dll")]

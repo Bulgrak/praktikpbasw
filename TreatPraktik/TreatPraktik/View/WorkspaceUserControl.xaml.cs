@@ -27,6 +27,7 @@ namespace TreatPraktik.View
         {
             InitializeComponent();
             DataContext = WorkspaceViewModel.Instance;
+            myTabControl.SelectedIndex = 0;
         }
     }
 }
