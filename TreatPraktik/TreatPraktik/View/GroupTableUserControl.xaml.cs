@@ -443,6 +443,7 @@ namespace TreatPraktik.View
             {
                 CheckGroupTableDrop(sender, e);
             }
+            PreviousGroupTypeOrder = null;
         }
 
         void CheckToolboxItemDrop(object sender, DragEventArgs e)
@@ -740,7 +741,10 @@ namespace TreatPraktik.View
             GroupTypeOrder targetGroupTypeOrder = MyGroupTypeOrder;
 
             GroupTypeOrder draggedGroupTypeOrder = gtUC.MyGroupTypeOrder;
-            GTViewModel.HandleGroupTableDrop(targetGroupTypeOrder, draggedGroupTypeOrder);
+            if (!targetGroupTypeOrder.GroupTypeID.Equals(draggedGroupTypeOrder.GroupTypeID))
+            {
+                GTViewModel.HandleGroupTableDrop(targetGroupTypeOrder, draggedGroupTypeOrder);
+            }
             //ParentGroupTableContainerUserControl.AdjustGroupOrder(draggedGroupTypeOrder, targetGroupTypeOrder);
             //ParentGroupTableContainerUserControl.MoveGroup((GroupTableUserControl)draggedGroupTable.Parent, (GroupTableUserControl)targetGroupTable.Parent);
         }

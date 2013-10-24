@@ -23,8 +23,17 @@ namespace TreatPraktik.View
         {
             _offset = offset;
             ListBoxItem lbi = (ListBoxItem)adornedElement;
-            ToolboxItem tbi = (ToolboxItem)lbi.DataContext;
-            Text = tbi.Header;
+            if (lbi.DataContext is ToolboxItem)
+            {
+                ToolboxItem tbi = (ToolboxItem) lbi.DataContext;
+                Text = tbi.Header;
+            }
+            else if (lbi.DataContext is ToolboxGroup)
+            {
+                ToolboxGroup tbi = (ToolboxGroup)lbi.DataContext;
+                Text = tbi.Group.GroupHeader;
+                
+            }
             IsHitTestVisible = false;
         }
 
