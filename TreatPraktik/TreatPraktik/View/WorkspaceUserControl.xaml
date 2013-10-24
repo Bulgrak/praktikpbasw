@@ -11,7 +11,7 @@
         <my:WorkspaceViewModel/>
     </UserControl.DataContext>-->
     <Grid Background="Azure">
-        <TabControl Background="AliceBlue"  Name="myTabControl" HorizontalAlignment="Stretch" Margin="10,10,0,0" VerticalAlignment="Stretch" ItemsSource="{Binding PageTypeItemsView}" >
+        <TabControl Background="AliceBlue"  Name="myTabControl" HorizontalAlignment="Stretch" Margin="10,10,0,0" VerticalAlignment="Stretch" ItemsSource="{Binding PageTypeItemsView}" SelectionChanged="myTabControl_SelectionChanged" >
             <TabControl.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding PageName}"></TextBlock>

@@ -29,5 +29,12 @@ namespace TreatPraktik.View
             DataContext = WorkspaceViewModel.Instance;
             myTabControl.SelectedIndex = 0;
         }
+
+        private void myTabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            PageType pt = (PageType)e.AddedItems[0];
+            WorkspaceViewModel wvm = WorkspaceViewModel.Instance;
+            wvm.SelectedPage = pt.PageTypeID;
+        }
     }
 }

@@ -12,7 +12,7 @@
                     <DataTemplate>
                         <TextBlock>
                             <TextBlock.Text>
-                                <MultiBinding StringFormat="{}{0} + {1}">
+                                <MultiBinding StringFormat="{}{0} - {1}">
                                     <Binding Path="Group.GroupHeader" />
                                     <Binding Path="Group.ItemOrder.Count" />
                                 </MultiBinding>

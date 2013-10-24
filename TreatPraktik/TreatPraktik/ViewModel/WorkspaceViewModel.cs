@@ -15,6 +15,7 @@ namespace TreatPraktik.ViewModel
         public bool _changedFlag; // Changes to true if there are new changes to the PageList
 
         private static WorkspaceViewModel _instance;
+        public string SelectedPage { get; set; } // Selected PageType
 
         private ImportExcel _excel;
 

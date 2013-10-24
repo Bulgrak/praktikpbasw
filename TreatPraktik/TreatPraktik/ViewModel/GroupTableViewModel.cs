@@ -332,6 +332,22 @@ namespace TreatPraktik.ViewModel
             _wvm._changedFlag = true;
         }
 
+        public void InsertGroup(GroupTypeOrder targetGroupTypeOrder, GroupType groupType)
+        {
+            int targetPosition = GroupTypeOrderCollection.IndexOf(targetGroupTypeOrder);
+            
+            GroupTypeOrder gto = new GroupTypeOrder();
+            gto.DepartmentID = "-1";
+            gto.GroupOrder = targetGroupTypeOrder.GroupOrder - 1;
+            gto.PageTypeID = targetGroupTypeOrder.PageTypeID;
+            gto.GroupTypeID = groupType.GroupTypeID;
+            gto.Group = groupType;
+            
+
+            GroupTypeOrderCollection.Insert(targetPosition, gto);
+
+        }
+
         public void HandleGroupTableDrop(GroupTypeOrder targetGroupTypeOrder, GroupTypeOrder draggedGroupTypeOrder)
         {
             int draggedPosition = GroupTypeOrderCollection.IndexOf(draggedGroupTypeOrder);

@@ -450,24 +450,42 @@ namespace TreatPraktik.View
         {
             Border bCell = GetBorderByDropEvent(e);
             ListBoxItem lbi = e.Data.GetData("System.Windows.Controls.ListBoxItem") as ListBoxItem;
-            ToolboxItem tbi = (ToolboxItem)lbi.Content;
-
-            if (!(bCell.DataContext is GroupTypeOrder))
+            if (lbi.Content is ToolboxItem)
             {
-                int row = Grid.GetRow(bCell);
-                bool containsRow = CheckForNewLineItem(row);
-                if (tbi.DesignID.Equals("198") && containsRow)
+                ToolboxItem tbi = (ToolboxItem) lbi.Content;
+
+                if (!(bCell.DataContext is GroupTypeOrder))
                 {
-                    e.Effects = DragDropEffects.None;
+                    int row = Grid.GetRow(bCell);
+                    bool containsRow = CheckForNewLineItem(row);
+                    if (tbi.DesignID.Equals("198") && containsRow)
+                    {
+                        e.Effects = DragDropEffects.None;
+                    }
+                    else
+                    {
+                        e.Effects = DragDropEffects.Copy;
+                    }
                 }
                 else
                 {
-                    e.Effects = DragDropEffects.Copy;
+                    e.Effects = DragDropEffects.None;
                 }
             }
-            else
+            else if (lbi.Content is ToolboxGroup)
             {
-                e.Effects = DragDropEffects.None;
+                ToolboxGroup tbg = (ToolboxGroup)lbi.Content;
+
+                if (bCell.DataContext is GroupTypeOrder)
+                {
+                    
+                 
+                    e.Effects = DragDropEffects.Copy;
+                }
+                else
+                {
+                    e.Effects = DragDropEffects.None;
+                }
             }
         }
 
@@ -749,12 +767,36 @@ namespace TreatPraktik.View
             //ParentGroupTableContainerUserControl.MoveGroup((GroupTableUserControl)draggedGroupTable.Parent, (GroupTableUserControl)targetGroupTable.Parent);
         }
 
+        void HandleToolboxGroupDrop(ToolboxGroup tbg)
+        {
+            GroupTypeOrder targetGroupTypeOrder = MyGroupTypeOrder;
+            GroupType draggedGroupType = tbg.Group;
+            GTViewModel.InsertGroup(targetGroupTypeOrder, draggedGroupType);
+        }
+
         void border_Drop(object sender, DragEventArgs e)
         {
             e.Handled = true;
             if (e.Data.GetData("System.Windows.Controls.ListBoxItem") is ListBoxItem) //Drag and drop toolboxitem
             {
-                HandleToolboxItemDrop(sender, e);
+                ListBoxItem lbi = (ListBoxItem) e.Data.GetData("System.Windows.Controls.ListBoxItem");
+                if (lbi.DataContext is ToolboxItem)
+                {
+                    HandleToolboxItemDrop(sender, e);
+                }
+                else if (lbi.DataContext is ToolboxGroup)
+                {
+                    ToolboxGroup tbg = (ToolboxGroup)lbi.DataContext;
+                    if (GroupTypeOrderCollection.Any(x => x.Group.GroupTypeID.Equals(tbg.Group.GroupTypeID)))
+                    {
+                        MessageBox.Show("The group already exists", "Error", MessageBoxButton.OK,
+                            MessageBoxImage.Error);
+                    }
+                    else
+                    {
+                        HandleToolboxGroupDrop(tbg);
+                    }
+                }
             }
             if (e.Data.GetData("System.Windows.Controls.Border") is Border) //Drag and drop between items
             {
