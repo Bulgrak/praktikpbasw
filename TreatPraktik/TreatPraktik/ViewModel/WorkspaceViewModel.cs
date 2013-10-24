@@ -492,21 +492,21 @@ namespace TreatPraktik.ViewModel
             }
         }
 
-        /// <summary>
-        /// Rename an existing group
-        /// </summary>
-        /// <param name="pageTypeID">The id for the selected page</param>
-        /// <param name="groupTypeID">The id for the selected group</param>
-        /// <param name="engTransText">The english group name</param>
-        /// <param name="danTransText">The danish group name</param>
-        public void RenameGroup(string pageTypeID, string groupTypeID, string engTransText, string danTransText)
-        {
-            PageType page = (from a in PageList where a.PageTypeID.Equals(pageTypeID) select a).FirstOrDefault();
-            GroupTypeOrder group = (from b in page.GroupTypeOrders where b.GroupTypeID.Equals(groupTypeID) select b).FirstOrDefault();
+        ///// <summary>
+        ///// Rename an existing group
+        ///// </summary>
+        ///// <param name="pageTypeID">The id for the selected page</param>
+        ///// <param name="groupTypeID">The id for the selected group</param>
+        ///// <param name="engTransText">The english group name</param>
+        ///// <param name="danTransText">The danish group name</param>
+        //public void RenameGroup(string pageTypeID, string groupTypeID, string engTransText, string danTransText)
+        //{
+        //    PageType page = (from a in PageList where a.PageTypeID.Equals(pageTypeID) select a).FirstOrDefault();
+        //    GroupTypeOrder group = (from b in page.GroupTypeOrders where b.GroupTypeID.Equals(groupTypeID) select b).FirstOrDefault();
 
-            group.Group.DanishTranslationText = danTransText;
-            group.Group.EnglishTranslationText = engTransText;
-        }
+        //    group.Group.DanishTranslationText = danTransText;
+        //    group.Group.EnglishTranslationText = engTransText;
+        //}
 
         private bool ItemFilter(object item)
         {
