@@ -36,5 +36,23 @@ namespace TreatPraktik.View
             WorkspaceViewModel wvm = WorkspaceViewModel.Instance;
             wvm.SelectedPage = pt.PageTypeID;
         }
+
+        private void btnCreateGroup_Click(object sender, RoutedEventArgs e)
+        {
+            WorkspaceViewModel wvm = WorkspaceViewModel.Instance;
+            string pageTypeID = wvm.SelectedPage;
+            CreateGroupDialogBox dlg = new CreateGroupDialogBox();
+
+                       dlg.ShowDialog();
+
+            // Process data entered by user if dialog box is accepted
+            if (dlg.DialogResult == true)
+            {
+                string danishText = dlg.danishTextBox.Text;
+                string englishText = dlg.englishTextBox.Text;
+                wvm.CreateGroup(pageTypeID, englishText, danishText);
+            }
+            //wvm.CreateGroup();
+        }
     }
 }

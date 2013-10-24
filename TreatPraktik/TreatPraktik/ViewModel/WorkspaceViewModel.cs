@@ -417,6 +417,82 @@ namespace TreatPraktik.ViewModel
             }
         }
 
+        ///// <summary>
+        ///// Creates a new group on a the page
+        ///// </summary>
+        ///// <param name="pageTypeId">The id for the selected page</param>
+        ///// <param name="languageId">The selected language of the application</param>
+        ///// <param name="groupOrder">The group order number on the selected page</param>
+        ///// <param name="englishTranslationText">The english group name</param>
+        ///// <param name="danishTranslationText">The danish group name</param>
+        //public void CreateGroup(string pageTypeId, string languageId, double groupOrder, string englishTranslationText, string danishTranslationText)
+        //{
+        //    GroupTypeOrder gtOrder = new GroupTypeOrder();
+        //    GroupType groupType = new GroupType();
+
+        //    //Create new GroupTypeOrder
+        //    gtOrder.DepartmentID = "-1";
+        //    gtOrder.PageTypeID = pageTypeId;
+
+        //    int highestId = 0;
+
+        //    foreach (PageType page in PageList)
+        //    {
+        //        int index = 0;
+
+        //        while (index < page.GroupTypeOrders.Count)
+        //        {
+        //            if (Convert.ToInt32(page.GroupTypeOrders[index].GroupTypeID) > highestId)
+        //            {
+        //                highestId = Convert.ToInt32(page.GroupTypeOrders[index].GroupTypeID);
+        //            }
+
+        //            index++;
+        //        }
+        //    }
+
+        //    gtOrder.GroupTypeID = (highestId + 1).ToString();
+        //    gtOrder.GroupOrder = groupOrder;
+
+        //    //Create new GroupType
+        //    groupType.GroupTypeID = (highestId + 1).ToString();
+        //    groupType.DanishTranslationText = danishTranslationText;
+        //    groupType.EnglishTranslationText = englishTranslationText;
+        //    groupType.LanguageID = languageId;
+
+        //    string hej = englishTranslationText.Replace(" ", string.Empty);
+        //    int i = 1;
+        //    foreach (PageType page in PageList)
+        //    {
+        //        while ((from a in page.GroupTypeOrders where a.Group.ResourceType.Equals(hej + i) select a).Any())
+        //        {
+        //            i++;
+        //        }
+        //    }
+            
+        //    hej = hej + i;
+            
+        //    groupType.ResourceType = hej;
+
+        //    groupType.ResourceID = (_groupCounter + 1).ToString();
+        //    _groupCounter++;
+        //    groupType.ResourceTypeID = "1";
+
+        //    //Reference GroupTypeOrder with GroupType
+        //    gtOrder.Group = groupType;
+
+            
+        //    int hello = 0;
+        //    while (hello < PageList.Count)
+        //    {
+        //        if (PageList[hello].PageTypeID.Equals(pageTypeId))
+        //        {
+        //            PageList[hello].GroupTypeOrders.Add(gtOrder);
+        //        }
+        //        hello++;
+        //    }
+        //}
+
         /// <summary>
         /// Creates a new group on a the page
         /// </summary>
@@ -425,7 +501,7 @@ namespace TreatPraktik.ViewModel
         /// <param name="groupOrder">The group order number on the selected page</param>
         /// <param name="englishTranslationText">The english group name</param>
         /// <param name="danishTranslationText">The danish group name</param>
-        public void CreateGroup(string pageTypeId, string languageId, double groupOrder, string englishTranslationText, string danishTranslationText)
+        public void CreateGroup(string pageTypeId, string englishTranslationText, string danishTranslationText)
         {
             GroupTypeOrder gtOrder = new GroupTypeOrder();
             GroupType groupType = new GroupType();
@@ -452,13 +528,15 @@ namespace TreatPraktik.ViewModel
             }
 
             gtOrder.GroupTypeID = (highestId + 1).ToString();
-            gtOrder.GroupOrder = groupOrder;
+            GroupTypeOrder gtoCompare =
+                PageList.First(x => x.PageTypeID.Equals(pageTypeId)).GroupTypeOrders.Last();
+            gtOrder.GroupOrder = gtoCompare.GroupOrder + 1;
 
             //Create new GroupType
             groupType.GroupTypeID = (highestId + 1).ToString();
             groupType.DanishTranslationText = danishTranslationText;
             groupType.EnglishTranslationText = englishTranslationText;
-            groupType.LanguageID = languageId;
+            groupType.LanguageID = gtoCompare.Group.LanguageID;
 
             string hej = englishTranslationText.Replace(" ", string.Empty);
             int i = 1;
@@ -469,9 +547,9 @@ namespace TreatPraktik.ViewModel
                     i++;
                 }
             }
-            
+
             hej = hej + i;
-            
+
             groupType.ResourceType = hej;
 
             groupType.ResourceID = (_groupCounter + 1).ToString();
@@ -481,7 +559,11 @@ namespace TreatPraktik.ViewModel
             //Reference GroupTypeOrder with GroupType
             gtOrder.Group = groupType;
 
-            
+            GroupListViewModel glvm = GroupListViewModel.Instance;
+            ToolboxGroup tbg = new ToolboxGroup();
+            tbg.Group = groupType;
+            glvm.GTList.Add(tbg);
+
             int hello = 0;
             while (hello < PageList.Count)
             {

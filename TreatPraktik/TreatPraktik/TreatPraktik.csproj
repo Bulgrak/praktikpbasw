@@ -81,6 +81,9 @@
     <Compile Include="ViewModel\LanguageViewModel.cs" />
     <Compile Include="ViewModel\SpecialFieldsViewModel.cs" />
     <Compile Include="Ressources\ExcelClasses\Order.cs" />
+    <Compile Include="View\CreateGroupDialogBox.xaml.cs">
+      <DependentUpon>CreateGroupDialogBox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\DragAdornerGroup.cs" />
     <Compile Include="View\DragAdornerItem.cs" />
     <Compile Include="View\DragAdornerToolboxItem.cs" />
@@ -142,6 +145,10 @@
     <Compile Include="View\WorkspaceUserControl.xaml.cs">
       <DependentUpon>WorkspaceUserControl.xaml</DependentUpon>
     </Compile>
+    <Page Include="View\CreateGroupDialogBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\EditGroupDialogBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

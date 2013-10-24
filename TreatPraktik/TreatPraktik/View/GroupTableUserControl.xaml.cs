@@ -244,7 +244,7 @@ namespace TreatPraktik.View
             {
                 ItemTypeOrder item = new ItemTypeOrder();
                 item.ItemOrder = ((row - 1) * 4) + i;
-                Border border = CreateItemCell(Colors.Black, Colors.Yellow, item);
+                Border border = CreateItemCell(Color.FromRgb(151, 203, 255), Color.FromRgb(228, 241, 255), item);
                 Grid.SetRow(border, row);
                 Grid.SetColumn(border, i);
                 GroupTable.Children.Add(border);
