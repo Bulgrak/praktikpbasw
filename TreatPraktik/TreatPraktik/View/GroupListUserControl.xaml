@@ -8,18 +8,43 @@
     <GroupBox Header="Groups">
         <Grid>
             <ListBox x:Name="lstItems" ItemsSource="{Binding Path=DesignItemsView}" HorizontalContentAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,25,0,0">
-                <ListBox.GroupStyle>
-                    <GroupStyle>
-                        <GroupStyle.HeaderTemplate>
-                            <DataTemplate>
-                                <TextBlock FontWeight="Bold" FontSize="14" Text="{Binding Name}"/>
-                            </DataTemplate>
-                        </GroupStyle.HeaderTemplate>
-                    </GroupStyle>
-                </ListBox.GroupStyle>
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{Binding Path=Header}" ToolTip="{Binding Path=ToolTip}"/>
+                        <TextBlock>
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="{}{0} + {1}">
+                                    <Binding Path="Group.GroupHeader" />
+                                    <Binding Path="Group.ItemOrder.Count" />
+                                </MultiBinding>
+                            </TextBlock.Text>
+                            <TextBlock.ToolTip>
+                                <ListBox ItemsSource="{Binding Path=Group.ItemOrder}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Path=Item.Header}" ></TextBlock>
+                                    </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                    <ListBox.Style>
+                                        <Style TargetType="{x:Type ListBox}">
+                                            <Setter Property="Visibility" Value="Visible" />
+                                            <Style.Triggers>
+                                                <DataTrigger 
+            Binding="{Binding HasItems, RelativeSource={RelativeSource Self}}"
+            Value="False">
+                                                    <Setter Property="Template">
+                                                            <Setter.Value>
+                                                                <ControlTemplate>
+                                                                    <TextBlock Text="n/a"></TextBlock>
+                                                                </ControlTemplate>
+                                                            </Setter.Value>
+                                                    </Setter>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ListBox.Style>
+                                </ListBox>
+                            </TextBlock.ToolTip>
+                            </TextBlock>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
                 <ListBox.Style>

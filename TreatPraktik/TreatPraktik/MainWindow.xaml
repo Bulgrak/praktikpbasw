@@ -5,10 +5,9 @@
         Title="MainWindow" Height="622.103" Width="1040.845">
     <Grid>
         <View:WorkspaceUserControl Margin="325,25,10,10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-        <View:ItemFilter HorizontalAlignment="Left" Margin="10,97,0,0" VerticalAlignment="Top" Width="310" Height="auto"/>
+        <View:ItemFilter HorizontalAlignment="Left" Margin="10,97,0,0" VerticalAlignment="Top" Width="310" Height="306"/>
         <View:SpecialFields HorizontalAlignment="Left" Margin="10,25,0,0" VerticalAlignment="Top" Height="67" Width="310"/>
         <View:MenuUserControl VerticalAlignment="Top" Height="30" Width="auto" HorizontalAlignment="Stretch"/>
-    
-    
+        <View:GroupListUserControl HorizontalAlignment="Left" Margin="10,403,0,0" VerticalAlignment="Top" Width="310" Height="Auto"/>
     </Grid>
 </Window>
