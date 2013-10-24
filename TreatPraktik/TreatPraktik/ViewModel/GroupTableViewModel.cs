@@ -35,6 +35,7 @@ namespace TreatPraktik.ViewModel
 
             gto.Group.DanishTranslationText = danTransText;
             gto.Group.EnglishTranslationText = engTransText;
+            RefreshLanguage(gto);
             foreach (string departmentID in departmentList)
             {
                 int i = 0;
@@ -62,6 +63,13 @@ namespace TreatPraktik.ViewModel
             CleanUpRemovedDepartments(gto, departmentList);
             GroupTypeOrderCollection.Sort(gtoItem => gtoItem.GroupOrder);
         }
+
+        public void RefreshLanguage(GroupTypeOrder gto)
+        {
+            string languageID = gto.Group.LanguageID;
+            gto.Group.LanguageID = languageID;
+        }
+
 
         public void CleanUpRemovedDepartments(GroupTypeOrder gto, List<string> departmentList)
         {
@@ -93,7 +101,11 @@ namespace TreatPraktik.ViewModel
 
         public void RemoveGroup(GroupTypeOrder gto)
         {
-            GroupTypeOrderCollection.Remove(gto);
+            List<GroupTypeOrder> gtoList = FindDuplicatesOfGroups(gto);
+            foreach (GroupTypeOrder groupTypeOrder in gtoList)
+            {
+                GroupTypeOrderCollection.Remove(groupTypeOrder);
+            }
             RefreshGroupOrder();
         }
 

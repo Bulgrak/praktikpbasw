@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using TreatPraktik.ViewModel;
 
 namespace TreatPraktik.View
 {
@@ -22,6 +23,9 @@ namespace TreatPraktik.View
         public GroupListUserControl()
         {
             InitializeComponent();
+            GroupListViewModel glvm = GroupListViewModel.Instance;
+            DataContext = glvm;
+            glvm.PopulateToolbox();
         }
     }
 }

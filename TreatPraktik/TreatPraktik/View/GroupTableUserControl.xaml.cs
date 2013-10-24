@@ -727,6 +727,7 @@ namespace TreatPraktik.View
 
         void RefreshGroupTable(GroupTypeOrder gto)
         {
+            PreviousGroupTypeOrder = null;
             GroupTable.ClearGrid();
             PopulateGroupTable(gto);
             DisableAllowDropByNewLineItem();

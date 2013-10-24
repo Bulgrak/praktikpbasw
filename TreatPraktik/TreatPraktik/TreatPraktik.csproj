@@ -75,6 +75,7 @@
     <Compile Include="Model\WorkspaceObjects\ItemTypeOrder.cs" />
     <Compile Include="Ressources\ExcelClasses\ResourceTranslation.cs" />
     <Compile Include="Ressources\Exceptions.cs" />
+    <Compile Include="ViewModel\GroupListViewModel.cs" />
     <Compile Include="ViewModel\GroupTableContainerViewModel.cs" />
     <Compile Include="ViewModel\LanguageViewModel.cs" />
     <Compile Include="ViewModel\SpecialFieldsViewModel.cs" />

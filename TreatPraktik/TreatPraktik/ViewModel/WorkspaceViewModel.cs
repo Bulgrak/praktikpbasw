@@ -19,7 +19,7 @@ namespace TreatPraktik.ViewModel
         private ImportExcel _excel;
 
         public ObservableCollection<PageType> PageList { get; private set; }     // <-- The only list that changes should be made in
-        private ObservableCollection<GroupTypeOrder> GroupList { get; set; }
+        public ObservableCollection<GroupTypeOrder> GroupList { get; private set; }
         private ObservableCollection<ItemTypeOrder> _itemList;
         public ICollectionView PageTypeItemsView { get; set; }
 
