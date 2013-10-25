@@ -335,14 +335,14 @@ namespace TreatPraktik.ViewModel
         public void InsertGroup(GroupTypeOrder targetGroupTypeOrder, GroupType groupType)
         {
             int targetPosition = GroupTypeOrderCollection.IndexOf(targetGroupTypeOrder);
-            
+
             GroupTypeOrder gto = new GroupTypeOrder();
             gto.DepartmentID = "-1";
             gto.GroupOrder = targetGroupTypeOrder.GroupOrder - 1;
             gto.PageTypeID = targetGroupTypeOrder.PageTypeID;
             gto.GroupTypeID = groupType.GroupTypeID;
             gto.Group = groupType;
-            
+
 
             GroupTypeOrderCollection.Insert(targetPosition, gto);
 
@@ -352,15 +352,16 @@ namespace TreatPraktik.ViewModel
         {
             int draggedPosition = GroupTypeOrderCollection.IndexOf(draggedGroupTypeOrder);
             int targetPosition = GroupTypeOrderCollection.IndexOf(targetGroupTypeOrder);
-            List<GroupTypeOrder> gtoList = FindDuplicatesOfGroups(draggedGroupTypeOrder);
-            foreach (GroupTypeOrder gto in gtoList)
+            List<GroupTypeOrder> draggedMultipleGTOList = FindDuplicatesOfGroups(draggedGroupTypeOrder);
+            List<GroupTypeOrder> targetMultipleGTOList = FindDuplicatesOfGroups(targetGroupTypeOrder);
+            foreach (GroupTypeOrder gto in draggedMultipleGTOList)
             {
                 GroupTypeOrderCollection.Remove(gto);
             }
 
             if (draggedGroupTypeOrder.GroupOrder > targetGroupTypeOrder.GroupOrder)
             {
-                foreach (GroupTypeOrder gto in gtoList)
+                foreach (GroupTypeOrder gto in draggedMultipleGTOList)
                 {
                     GroupTypeOrderCollection.Insert(targetPosition, gto);
                 }
@@ -371,11 +372,16 @@ namespace TreatPraktik.ViewModel
                 if (GroupTypeOrderCollection.Count != targetPosition)
                 {
                     //draggedGroupTypeOrder.GroupOrder = targetGroupTypeOrder.GroupOrder;
-                    foreach (GroupTypeOrder gto in gtoList)
+                    foreach (GroupTypeOrder gto in draggedMultipleGTOList)
                     {
-                        if (gtoList.Count > 1)
+                        if (draggedMultipleGTOList.Count > 1)
                         {
                             GroupTypeOrderCollection.Insert(targetPosition - 1, gto);
+                        }
+                        else if (targetMultipleGTOList.Count > 1)
+                        {
+                            targetPosition = GroupTypeOrderCollection.IndexOf(targetMultipleGTOList.Last());
+                            GroupTypeOrderCollection.Insert(targetPosition + 1, gto);
                         }
                         else
                         {
@@ -386,7 +392,7 @@ namespace TreatPraktik.ViewModel
                 else
                 {
                     //draggedGroupTypeOrder.GroupOrder = targetGroupTypeOrder.GroupOrder;
-                    foreach (GroupTypeOrder gto in gtoList)
+                    foreach (GroupTypeOrder gto in draggedMultipleGTOList)
                     {
                         GroupTypeOrderCollection.Add(gto);
                     }
