@@ -32,9 +32,17 @@ namespace TreatPraktik.View
 
         private void myTabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            PageType pt = (PageType)e.AddedItems[0];
             WorkspaceViewModel wvm = WorkspaceViewModel.Instance;
-            wvm.SelectedPage = pt.PageTypeID;
+            if (e.AddedItems.Count > 0)
+            {
+                PageType pt = (PageType) e.AddedItems[0];
+                
+                wvm.SelectedPage = pt.PageTypeID;
+            }
+            else
+            {
+                wvm.SelectedPage = "15";
+            }
         }
 
         private void btnCreateGroup_Click(object sender, RoutedEventArgs e)
