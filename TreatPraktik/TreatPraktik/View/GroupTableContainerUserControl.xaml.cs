@@ -88,5 +88,59 @@ namespace TreatPraktik.View
         public static readonly DependencyProperty GtoColProperty =
             DependencyProperty.Register("GtoCol", typeof(ObservableCollection<GroupTypeOrder>), typeof(GroupTableContainerUserControl), new PropertyMetadata(OnGtoColChangedCallBack));
         #endregion
+
+        private void dropZoneToolboxGroup_Drop(object sender, DragEventArgs e)
+        {
+            ListBoxItem lbi = (ListBoxItem)e.Data.GetData("System.Windows.Controls.ListBoxItem");
+            ToolboxGroup tbg = (ToolboxGroup)lbi.DataContext;
+            GroupType gt = tbg.Group;
+            WorkspaceViewModel wvm = WorkspaceViewModel.Instance;
+            string pageTypeID = wvm.SelectedPage;
+            ObservableCollection<PageType> pageList = wvm.PageList;
+            ObservableCollection<GroupTypeOrder> gtoList = pageList.First(x => x.PageTypeID.Equals(pageTypeID)).GroupTypeOrders;
+            GroupTableViewModel gtvm = new GroupTableViewModel();
+            gtvm.GroupTypeOrderCollection = gtoList;
+            gtvm.InsertGroupLast(gt, pageTypeID);
+            e.Handled = true;
+        }
+
+        private void dropZoneToolboxGroup_DragEnter(object sender, DragEventArgs e)
+        {
+            CheckDroppedElement(sender, e);
+            e.Handled = true;
+        }
+
+        private void dropZoneToolboxGroup_DragOver(object sender, DragEventArgs e)
+        {
+            CheckDroppedElement(sender, e);
+            e.Handled = true;
+        }
+
+        private void dropZoneToolboxGroup_DragLeave(object sender, DragEventArgs e)
+        {
+            CheckDroppedElement(sender, e);
+            e.Handled = true;
+        }
+
+        private void CheckDroppedElement(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetData("System.Windows.Controls.ListBoxItem") is ListBoxItem)
+            {
+                ListBoxItem lbi = (ListBoxItem)e.Data.GetData("System.Windows.Controls.ListBoxItem");
+                if (lbi.DataContext is ToolboxGroup)
+                {
+                    e.Effects = DragDropEffects.Copy;
+                }
+                else
+                {
+                    e.Effects = DragDropEffects.None;
+                }
+            }
+            else
+            {
+                e.Effects = DragDropEffects.None;
+            }
+            e.Handled = true;
+        }
     }
 }

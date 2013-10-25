@@ -345,7 +345,18 @@ namespace TreatPraktik.ViewModel
 
 
             GroupTypeOrderCollection.Insert(targetPosition, gto);
+        }
 
+        public void InsertGroupLast(GroupType gt, string pageTypeID)
+        {
+            GroupTypeOrder gtoCompare = GroupTypeOrderCollection.Last();
+            GroupTypeOrder gto = new GroupTypeOrder();
+            gto.DepartmentID = "-1";
+            gto.PageTypeID = pageTypeID;
+            gto.Group = gt;
+            gto.GroupTypeID = gt.GroupTypeID;
+            gto.GroupOrder = gtoCompare.GroupOrder + 1;
+            GroupTypeOrderCollection.Add(gto);
         }
 
         public void HandleGroupTableDrop(GroupTypeOrder targetGroupTypeOrder, GroupTypeOrder draggedGroupTypeOrder)
