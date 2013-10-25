@@ -87,6 +87,9 @@
     <Compile Include="View\DragAdornerGroup.cs" />
     <Compile Include="View\DragAdornerItem.cs" />
     <Compile Include="View\DragAdornerToolboxItem.cs" />
+    <Compile Include="View\EditDepartmentUserControl.xaml.cs">
+      <DependentUpon>EditDepartmentUserControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\EditGroupDialogBox.xaml.cs">
       <DependentUpon>EditGroupDialogBox.xaml</DependentUpon>
     </Compile>
@@ -146,6 +149,10 @@
       <DependentUpon>WorkspaceUserControl.xaml</DependentUpon>
     </Compile>
     <Page Include="View\CreateGroupDialogBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\EditDepartmentUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

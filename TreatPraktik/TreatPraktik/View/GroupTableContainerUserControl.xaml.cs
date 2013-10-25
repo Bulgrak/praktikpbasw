@@ -93,15 +93,23 @@ namespace TreatPraktik.View
         {
             ListBoxItem lbi = (ListBoxItem)e.Data.GetData("System.Windows.Controls.ListBoxItem");
             ToolboxGroup tbg = (ToolboxGroup)lbi.DataContext;
-            GroupType gt = tbg.Group;
             WorkspaceViewModel wvm = WorkspaceViewModel.Instance;
             string pageTypeID = wvm.SelectedPage;
             ObservableCollection<PageType> pageList = wvm.PageList;
-            ObservableCollection<GroupTypeOrder> gtoList = pageList.First(x => x.PageTypeID.Equals(pageTypeID)).GroupTypeOrders;
-            GroupTableViewModel gtvm = new GroupTableViewModel();
-            gtvm.GroupTypeOrderCollection = gtoList;
-            gtvm.InsertGroupLast(gt, pageTypeID);
-            e.Handled = true;
+            ObservableCollection<GroupTypeOrder> GroupTypeOrderCollection = pageList.First(x => x.PageTypeID.Equals(pageTypeID)).GroupTypeOrders;
+            if (GroupTypeOrderCollection.Any(x => x.Group.GroupTypeID.Equals(tbg.Group.GroupTypeID)))
+            {
+                MessageBox.Show("The group already exists", "Error", MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
+            else
+            {
+
+                GroupType gt = tbg.Group;
+                GroupTableViewModel gtvm = new GroupTableViewModel();
+                gtvm.GroupTypeOrderCollection = GroupTypeOrderCollection;
+                gtvm.InsertGroupLast(gt, pageTypeID);
+            }
         }
 
         private void dropZoneToolboxGroup_DragEnter(object sender, DragEventArgs e)
@@ -141,6 +149,23 @@ namespace TreatPraktik.View
                 e.Effects = DragDropEffects.None;
             }
             e.Handled = true;
+        }
+
+        private void ScrollViewer_PreviewDragOver(object sender, DragEventArgs e)
+        {
+            ScrollViewer sv = (ScrollViewer)sender;
+            double tolerance = 30;
+            double verticalPos = e.GetPosition(sv).Y;
+            double offset = 5;
+
+            if (verticalPos < tolerance) // Top of visible list?
+            {
+                sv.ScrollToVerticalOffset(sv.VerticalOffset - offset); //Scroll up.
+            }
+            else if (verticalPos > sv.ActualHeight - tolerance) //Bottom of visible list?
+            {
+                sv.ScrollToVerticalOffset(sv.VerticalOffset + offset); //Scroll down.    
+            }
         }
     }
 }

@@ -194,7 +194,7 @@ namespace UnitTestTreatPraktik
             double groupOrder = 35.00;
             string engTransText = "New group";
             string danTransText = "Ny gruppe";
-            _wvm.CreateGroup(pageTypeID, languageID, groupOrder, engTransText, danTransText);
+            //_wvm.CreateGroup(pageTypeID, languageID, groupOrder, engTransText, danTransText);
 
             //Add the new ItemTypeOrder items to page 15, group 35
             PageType testPage = _wvm.PageList.FirstOrDefault(x => x.PageTypeID.Equals(pageTypeID));
@@ -243,7 +243,7 @@ namespace UnitTestTreatPraktik
             double groupOrder = 35.00;
             string engTransText = "New group";
             string danTransText = "Ny gruppe";
-            _wvm.CreateGroup(pageTypeID, languageID, groupOrder, engTransText, danTransText);
+            //_wvm.CreateGroup(pageTypeID, languageID, groupOrder, engTransText, danTransText);
 
             //Export excel with the new group in it
             _exExcel.CreateNewExcel(_exportPath);
@@ -358,7 +358,7 @@ namespace UnitTestTreatPraktik
             double groupOrder1 = 35.00;
             string engTransText1 = "New group one";
             string danTransText1 = "Ny gruppe one";
-            _wvm.CreateGroup(pageTypeID1, languageID1, groupOrder1, engTransText1, danTransText1);
+            //_wvm.CreateGroup(pageTypeID1, languageID1, groupOrder1, engTransText1, danTransText1);
 
             //Create a new group
             string pageTypeID2 = "15";
@@ -366,7 +366,7 @@ namespace UnitTestTreatPraktik
             double groupOrder2 = 36.00;
             string engTransText2 = "New group two";
             string danTransText2 = "Ny gruppe two";
-            _wvm.CreateGroup(pageTypeID2, languageID2, groupOrder2, engTransText2, danTransText2);
+            //_wvm.CreateGroup(pageTypeID2, languageID2, groupOrder2, engTransText2, danTransText2);
 
             //Export excel with the new groups in it
             _exExcel.CreateNewExcel(_exportPath);
@@ -521,7 +521,7 @@ namespace UnitTestTreatPraktik
             double groupOrder1 = 35.00;
             string engTransText1 = "New group";
             string danTransText1 = "Ny gruppe";
-            _wvm.CreateGroup(pageTypeID1, languageID1, groupOrder1, engTransText1, danTransText1);
+            //_wvm.CreateGroup(pageTypeID1, languageID1, groupOrder1, engTransText1, danTransText1);
 
             //Create a new group
             string pageTypeID2 = "15";
@@ -529,7 +529,7 @@ namespace UnitTestTreatPraktik
             double groupOrder2 = 36.00;
             string engTransText2 = "New group";
             string danTransText2 = "Ny gruppe";
-            _wvm.CreateGroup(pageTypeID2, languageID2, groupOrder2, engTransText2, danTransText2);
+            //_wvm.CreateGroup(pageTypeID2, languageID2, groupOrder2, engTransText2, danTransText2);
 
             //Export excel with the new groups in it
             _exExcel.CreateNewExcel(_exportPath);

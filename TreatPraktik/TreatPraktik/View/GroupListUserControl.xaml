@@ -57,7 +57,7 @@
                                 <Setter Property="Template">
                                     <Setter.Value>
                                         <ControlTemplate>
-                                            <TextBlock Text="{Binding Path=TextNoToolboxItemsFound}"></TextBlock>
+                                            <TextBlock Text="{Binding Path=TextNoGroupsFound}"></TextBlock>
                                         </ControlTemplate>
                                     </Setter.Value>
                                 </Setter>

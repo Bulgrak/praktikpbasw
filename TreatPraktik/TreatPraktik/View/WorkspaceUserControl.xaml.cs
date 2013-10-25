@@ -35,8 +35,8 @@ namespace TreatPraktik.View
             WorkspaceViewModel wvm = WorkspaceViewModel.Instance;
             if (e.AddedItems.Count > 0)
             {
-                PageType pt = (PageType) e.AddedItems[0];
-                
+                PageType pt = (PageType)e.AddedItems[0];
+
                 wvm.SelectedPage = pt.PageTypeID;
             }
             else
@@ -50,17 +50,21 @@ namespace TreatPraktik.View
             WorkspaceViewModel wvm = WorkspaceViewModel.Instance;
             string pageTypeID = wvm.SelectedPage;
             CreateGroupDialogBox dlg = new CreateGroupDialogBox();
-
-                       dlg.ShowDialog();
+            ObservableCollection<string> obscDepartmentList = new ObservableCollection<string>();
+            obscDepartmentList.Add("-1");
+            dlg.departmentUserControl.departmentsListBox.ItemsSource = obscDepartmentList;
+            dlg.ShowDialog();
 
             // Process data entered by user if dialog box is accepted
             if (dlg.DialogResult == true)
             {
                 string danishText = dlg.danishTextBox.Text;
                 string englishText = dlg.englishTextBox.Text;
-                wvm.CreateGroup(pageTypeID, englishText, danishText);
+                List<string> departmentList = new List<string>();
+                foreach (string s in dlg.departmentUserControl.departmentsListBox.Items)
+                    departmentList.Add(s);
+                wvm.CreateGroup(pageTypeID, englishText, danishText, departmentList);
             }
-            //wvm.CreateGroup();
         }
     }
 }

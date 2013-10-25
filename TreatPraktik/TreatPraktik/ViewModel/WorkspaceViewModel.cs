@@ -501,14 +501,11 @@ namespace TreatPraktik.ViewModel
         /// <param name="groupOrder">The group order number on the selected page</param>
         /// <param name="englishTranslationText">The english group name</param>
         /// <param name="danishTranslationText">The danish group name</param>
-        public void CreateGroup(string pageTypeId, string englishTranslationText, string danishTranslationText)
+        public void CreateGroup(string pageTypeId, string englishTranslationText, string danishTranslationText, List<string> departmentList)
         {
-            GroupTypeOrder gtOrder = new GroupTypeOrder();
             GroupType groupType = new GroupType();
 
             //Create new GroupTypeOrder
-            gtOrder.DepartmentID = "-1";
-            gtOrder.PageTypeID = pageTypeId;
 
             int highestId = 0;
 
@@ -527,10 +524,8 @@ namespace TreatPraktik.ViewModel
                 }
             }
 
-            gtOrder.GroupTypeID = (highestId + 1).ToString();
-            GroupTypeOrder gtoCompare =
-                PageList.First(x => x.PageTypeID.Equals(pageTypeId)).GroupTypeOrders.Last();
-            gtOrder.GroupOrder = gtoCompare.GroupOrder + 1;
+            ObservableCollection<GroupTypeOrder> groupTypeOrderCollection = PageList.First(x => x.PageTypeID.Equals(pageTypeId)).GroupTypeOrders;
+            GroupTypeOrder gtoCompare = groupTypeOrderCollection.Last();
 
             //Create new GroupType
             groupType.GroupTypeID = (highestId + 1).ToString();
@@ -557,21 +552,34 @@ namespace TreatPraktik.ViewModel
             groupType.ResourceTypeID = "1";
 
             //Reference GroupTypeOrder with GroupType
-            gtOrder.Group = groupType;
 
             GroupListViewModel glvm = GroupListViewModel.Instance;
             ToolboxGroup tbg = new ToolboxGroup();
             tbg.Group = groupType;
             glvm.GTList.Add(tbg);
 
-            int hello = 0;
-            while (hello < PageList.Count)
+
+            //int hello = 0;
+            //while (hello < PageList.Count)
+            //{
+            //    if (PageList[hello].PageTypeID.Equals(pageTypeId))
+            //    {
+            //        PageList[hello].GroupTypeOrders.Add(gtOrder);
+            //    }
+            //    hello++;
+            //}
+
+
+            foreach (string departmentID in departmentList)
             {
-                if (PageList[hello].PageTypeID.Equals(pageTypeId))
-                {
-                    PageList[hello].GroupTypeOrders.Add(gtOrder);
-                }
-                hello++;
+
+                    GroupTypeOrder clonedGto = new GroupTypeOrder();
+                    clonedGto.DepartmentID = departmentID;
+                    clonedGto.Group = groupType;
+                    clonedGto.GroupOrder = gtoCompare.GroupOrder + 1;
+                    clonedGto.GroupTypeID = (highestId + 1).ToString();
+                    clonedGto.PageTypeID = pageTypeId;
+                    groupTypeOrderCollection.Add(clonedGto);
             }
         }
 

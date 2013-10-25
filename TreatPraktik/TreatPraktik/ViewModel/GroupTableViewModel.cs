@@ -38,18 +38,29 @@ namespace TreatPraktik.ViewModel
             RefreshLanguage(gto);
             foreach (string departmentID in departmentList)
             {
-                int i = 0;
-                bool departmentIDExist = false;
-                while (i < GroupTypeOrderCollection.Count && !departmentIDExist)
-                {
-                    if (departmentID.Equals(GroupTypeOrderCollection[i].DepartmentID) && GroupTypeOrderCollection[i].GroupTypeID.Equals(gto.GroupTypeID))
-                    {
-                        departmentIDExist = true;
-                    }
-                    i++;
-                }
+                //int i = 0;
+                //bool departmentIDExist = false;
 
-                if (!departmentIDExist)
+                //while (i < GroupTypeOrderCollection.Count && !departmentIDExist)
+                //{
+                //    if (departmentID.Equals(GroupTypeOrderCollection[i].DepartmentID) && GroupTypeOrderCollection[i].GroupTypeID.Equals(gto.GroupTypeID))
+                //    {
+                //        departmentIDExist = true;
+                //    }
+                //    i++;
+                //}
+                //                if (!departmentIDExist)
+                //{
+                //    GroupTypeOrder clonedGto = new GroupTypeOrder();
+                //    clonedGto.DepartmentID = departmentID;
+                //    clonedGto.Group = gto.Group;
+                //    clonedGto.GroupOrder = gto.GroupOrder;
+                //    clonedGto.GroupTypeID = gto.GroupTypeID;
+                //    clonedGto.PageTypeID = gto.PageTypeID;
+                //    GroupTypeOrderCollection.Add(clonedGto);
+                //}
+
+                if (!GroupTypeOrderCollection.Any(x => x.DepartmentID.Equals(departmentID)) && GroupTypeOrderCollection.Any(x => x.GroupTypeID.Equals(gto.GroupTypeID)))
                 {
                     GroupTypeOrder clonedGto = new GroupTypeOrder();
                     clonedGto.DepartmentID = departmentID;
@@ -59,6 +70,7 @@ namespace TreatPraktik.ViewModel
                     clonedGto.PageTypeID = gto.PageTypeID;
                     GroupTypeOrderCollection.Add(clonedGto);
                 }
+
             }
             CleanUpRemovedDepartments(gto, departmentList);
             GroupTypeOrderCollection.Sort(gtoItem => gtoItem.GroupOrder);
@@ -171,7 +183,7 @@ namespace TreatPraktik.ViewModel
             {
                 while (i < gt.ItemOrder.Count)
                 {
-                    if (gt.ItemOrder[i].DesignID.Equals("198"))
+                    if (gt.ItemOrder[i].DesignID.Equals("198") && i+1 != gt.ItemOrder.Count)
                     {
                         i++;
                         gt.ItemOrder[i].ItemOrder = gt.ItemOrder[i - 1].ItemOrder +

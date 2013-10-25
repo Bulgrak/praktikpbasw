@@ -1041,15 +1041,7 @@ namespace TreatPraktik.View
                     obscDepartmentList.Add(GroupTypeOrderCollection[i].DepartmentID);
                 i++;
             }
-            dlg.departmentsListBox.ItemsSource = obscDepartmentList;
-            //dlg.departmentsListBox.Items.Add(GroupTypeOrderCollection[i].DepartmentID);
-            // Configure the dialog box
-            //dlg.Owner = this;
-            //dlg.FontFamily = this.documentTextBox.FontFamily;
-            //dlg.FontSize = this.documentTextBox.FontSize;
-            //dlg.FontWeight = this.documentTextBox.FontWeight;
-            //dlg.FontStyle = this.documentTextBox.FontStyle;
-            //dlg.bottomMarginTextBox 
+            dlg.departmentUserControl.departmentsListBox.ItemsSource = obscDepartmentList;
 
             // Open the dialog box modally 
             dlg.ShowDialog();
@@ -1058,16 +1050,10 @@ namespace TreatPraktik.View
             if (dlg.DialogResult == true)
             {
                 List<string> departmentList = new List<string>();
-                foreach(string s in dlg.departmentsListBox.Items)
+                foreach (string s in dlg.departmentUserControl.departmentsListBox.Items)
                     departmentList.Add(s);
                 GTViewModel.EditGroup(MyGroupTypeOrder, dlg.englishTextBox.Text, dlg.danishTextBox.Text, departmentList);
-                //GTViewModel.EditGroup();
 
-                //    // Update fonts
-                //    this.documentTextBox.FontFamily = dlg.FontFamily;
-                //    this.documentTextBox.FontSize = dlg.FontSize;
-                //    this.documentTextBox.FontWeight = dlg.FontWeight;
-                //    this.documentTextBox.FontStyle = dlg.FontStyle;
             }
         }
 

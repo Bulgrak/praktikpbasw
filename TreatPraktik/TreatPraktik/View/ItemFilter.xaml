@@ -67,7 +67,7 @@
             </TextBox>
             <Border MinWidth="1000000" MinHeight="1000000" Visibility="Hidden">
                 <!--Hacky hacky solution-->
-                <Label Name="lblSearchField" Content="{Binding Path=TextSearchDescription}" HorizontalAlignment="Left" Margin="320,195,0,0" VerticalAlignment="Top" MinWidth="335" Foreground='Gray' Width="335"/>
+                <Label x:Name="lblSearchField" Content="{Binding Path=TextSearchDescription}" HorizontalAlignment="Left" Margin="320,195,0,0" VerticalAlignment="Top" MinWidth="335" Foreground='Gray' Width="335"/>
             </Border>
         </Grid>
     </GroupBox>
