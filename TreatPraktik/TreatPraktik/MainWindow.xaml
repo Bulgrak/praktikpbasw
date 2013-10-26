@@ -4,10 +4,20 @@
         xmlns:local="clr-namespace:TreatPraktik" xmlns:View="clr-namespace:TreatPraktik.View" x:Class="TreatPraktik.MainWindow"
         Title="MainWindow" Height="622.103" Width="1040.845">
     <Grid>
-        <View:WorkspaceUserControl Margin="325,25,10,10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-        <View:ItemFilter HorizontalAlignment="Left" Margin="10,97,0,0" VerticalAlignment="Top" Width="310" Height="306"/>
-        <View:SpecialFields HorizontalAlignment="Left" Margin="10,25,0,0" VerticalAlignment="Top" Height="67" Width="310"/>
-        <View:MenuUserControl VerticalAlignment="Top" Height="30" Width="auto" HorizontalAlignment="Stretch"/>
-        <View:GroupListUserControl HorizontalAlignment="Left" Margin="10,403,0,0" VerticalAlignment="Top" Width="310" Height="Auto"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="315"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="22"></RowDefinition>
+            <RowDefinition Height="70"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <View:WorkspaceUserControl Grid.Row="1" Grid.Column="2" Grid.RowSpan="3" Margin="5, 0, 2, 0" />
+        <View:ItemFilter Grid.Row="2" Grid.Column="0" Margin="2, 0, 0, 0" />
+        <View:SpecialFields Grid.Row="1" Grid.Column="0" Margin="2, 0, 0, 0" />
+        <View:MenuUserControl Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Top" Width="Auto"/>
+        <View:GroupListUserControl Grid.Row="3" Grid.Column="0" Margin="2, 0, 0, 5"/>
     </Grid>
 </Window>

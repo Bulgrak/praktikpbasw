@@ -8,7 +8,7 @@
     <UserControl.Resources>
         <v:GroupTableContainerUserControl x:Key="GroupTableContainerUserControl"/>
     </UserControl.Resources>
-    <ScrollViewer HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalScrollBarVisibility="Visible" PreviewDragOver="ScrollViewer_PreviewDragOver">
+    <ScrollViewer Name="gtSv" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalScrollBarVisibility="Visible" PreviewDragOver="ScrollViewer_PreviewDragOver">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"></RowDefinition>

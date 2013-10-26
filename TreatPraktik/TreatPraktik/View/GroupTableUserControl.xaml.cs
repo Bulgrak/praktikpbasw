@@ -570,8 +570,17 @@ namespace TreatPraktik.View
             else if (e.Source is Button)
             {
                 Button btn = e.Source as Button;
-                Grid gridCell = (Grid)btn.Parent;
-                bCell = (Border)gridCell.Parent;
+                if (btn.Parent is Grid)
+                {
+                    Grid gridCell = (Grid)btn.Parent;
+                    bCell = (Border)gridCell.Parent;
+                }
+                else if (btn.Parent is StackPanel)
+                {
+                    StackPanel spGroupBtns = (StackPanel)btn.Parent;
+                    Grid gridCell = (Grid)spGroupBtns.Parent;
+                    bCell = (Border)gridCell.Parent;
+                }
             }
             return bCell;
         }
@@ -686,13 +695,23 @@ namespace TreatPraktik.View
             if (targetItemType != draggedItemType)
             {
                 gt.ItemOrder.Remove(draggedItemType);
-                if (targetItemType.DesignID == null)
+                if (targetItemType.DesignID == null && !draggedItemType.DesignID.Equals("198"))
                 {
                     GTViewModel.AdjustItemOrder(gt);
                     draggedItemType.ItemOrder = targetItemType.ItemOrder;
                     gt.ItemOrder.Add(draggedItemType);
                     gt.ItemOrder.Sort(i => i.ItemOrder);
                     GTViewModel.GenerateEmptyFields(gt);
+                    RefreshGroupTable(gto);
+                }
+                else if (targetItemType.DesignID == null && draggedItemType.DesignID.Equals("198"))
+                {
+                    
+                    draggedItemType.ItemOrder = targetItemType.ItemOrder;
+                    gt.ItemOrder.Add(draggedItemType);
+                    gt.ItemOrder.Sort(i => i.ItemOrder);
+                    GTViewModel.GenerateEmptyFields(gt);
+                    GTViewModel.AdjustItemOrder(gt);
                     RefreshGroupTable(gto);
                 }
 
