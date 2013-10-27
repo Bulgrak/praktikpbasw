@@ -398,6 +398,7 @@ namespace TreatPraktik.View
                 //DataContext = itemType
             };
             tb.SetBinding(TextBlock.TextProperty, "Item.Header");
+            bCell.SetBinding(Border.ToolTipProperty, "Item.ToolTip");
 
             Grid gridCell = new Grid();
             CreateColumns(gridCell, 2);

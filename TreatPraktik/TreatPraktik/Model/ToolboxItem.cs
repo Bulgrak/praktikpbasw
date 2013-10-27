@@ -12,12 +12,14 @@ namespace TreatPraktik.Model
         public string ResourceID { get; set; }
         public string ResxID { get; set; }
         public string ResourceType { get; set; }
-        private string header { get; set; }
-        public string ToolTip { get; set; }
+        private string _header { get; set; }
+        public string _toolTip { get; set; }
         public string Category { get; set; }
         private string languageID { get; set; }
         public string DanishTranslationText { get; set; }
         public string EnglishTranslationText { get; set; }
+        public string DanishTranslationToolTip{ get; set; }
+        public string EnglishTranslationToolTip { get; set; }
 
         public ToolboxItem()
         {
@@ -42,12 +44,25 @@ namespace TreatPraktik.Model
         {
             get
             {
-                return header;
+                return _header;
             }
             set
             {
-                header = value;
+                _header = value;
                 OnPropertyChanged("Header");
+            }
+        }
+
+        public string ToolTip
+        {
+            get
+            {
+                return _toolTip;
+            }
+            set
+            {
+                _header = value;
+                OnPropertyChanged("_toolTip");
             }
         }
 
@@ -62,8 +77,14 @@ namespace TreatPraktik.Model
                 this.languageID = value;
                 switch (languageID)
                 {
-                    case "1": Header = EnglishTranslationText; break;
-                    case "2": Header = DanishTranslationText; break;
+                    case "1": 
+                        Header = EnglishTranslationText;
+                        _toolTip = EnglishTranslationToolTip;
+                        break;
+                    case "2": 
+                        Header = DanishTranslationText;
+                        _toolTip = DanishTranslationToolTip;
+                        break;
                     default: Header = EnglishTranslationText; break;
                 }
             }

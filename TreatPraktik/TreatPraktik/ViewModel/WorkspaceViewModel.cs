@@ -277,6 +277,17 @@ namespace TreatPraktik.ViewModel
                               bb.TranslationText
                           }).ToList();
 
+                            //joiner tabeller, der vedører tooltips
+            var toolTips = (from aa in _excel._workSheetktResources.ktResourceList
+                         join bb in _excel._workSheetktResourceTranslation.ktResourceTranslationList on aa.ResourceID equals bb.ResourceID
+                         join cc in _excel._workSheetktResourceType.ktResourceTypeList.Where(d => d.ResourceTypeID.Equals("3")) on aa.ResourceTypeID equals cc.ResourceTypeID
+                         select new
+                         {
+                             bb.LanguageID,
+                             aa.ResourceResxID,
+                             bb.TranslationText
+                         }).ToList();
+
             List<ItemTypeOrder> itemOrders =
                 (from a in _excel._workSheetktUIOrder.ktUIOrderList.OrderBy(m => m.GroupOrder)
                     select new ItemTypeOrder
@@ -312,6 +323,28 @@ namespace TreatPraktik.ViewModel
                         else if (item.LanguageID.Equals("1"))
                         {
                             itemType.EnglishTranslationText = item.TranslationText;
+                        }
+                    }
+                }
+                itemType.LanguageID = "2";
+            }
+
+            //Set DanishTranslationToolTip & EnglishTranslationToolTip
+            //Set LanguageID to 2 <-- Danish
+            foreach (ItemType itemType in itemList)
+            {
+                foreach (var item in toolTips)
+                {
+                    if (item.ResourceResxID == itemType.ResourceType)
+                    {
+                        if (item.LanguageID.Equals("2"))
+                        {
+                            itemType.DanishTranslationToolTip = item.TranslationText;
+
+                        }
+                        else if (item.LanguageID.Equals("1"))
+                        {
+                            itemType.EnglishTranslationToolTip = item.TranslationText;
                         }
                     }
                 }

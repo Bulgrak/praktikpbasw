@@ -10,10 +10,13 @@ namespace TreatPraktik.Model.WorkspaceObjects
         public string DesignID { get; set; }            //ID of the item
         //public Double ItemOrder { get; set; }          //Item order in the group
         private string _header;
+        private string _toolTip;
         
         private string _languageID;
         public string DanishTranslationText { get; set; }
         public string EnglishTranslationText { get; set; }
+        public string DanishTranslationToolTip { get; set; }
+        public string EnglishTranslationToolTip { get; set; }
 
         public ItemType()
         {
@@ -61,6 +64,19 @@ namespace TreatPraktik.Model.WorkspaceObjects
             }
         }
 
+        public string ToolTip
+        {
+            get
+            {
+                return _toolTip;
+            }
+            set
+            {
+                _toolTip = value;
+                OnPropertyChanged("ToolTip");
+            }
+        }
+
         public string LanguageID
         {
             get
@@ -74,9 +90,17 @@ namespace TreatPraktik.Model.WorkspaceObjects
                 {
                     switch (_languageID)
                     {
-                        case "1": Header = EnglishTranslationText; break;
-                        case "2": Header = DanishTranslationText; break;
-                        default: Header = EnglishTranslationText; break;
+                        case "1": 
+                            Header = EnglishTranslationText;
+                            _toolTip = EnglishTranslationToolTip;
+                            break;
+                        case "2": 
+                            Header = DanishTranslationText;
+                            _toolTip = DanishTranslationToolTip;
+                            break;
+                        default: 
+                            Header = EnglishTranslationText; 
+                            break;
                     }
                 }
             }

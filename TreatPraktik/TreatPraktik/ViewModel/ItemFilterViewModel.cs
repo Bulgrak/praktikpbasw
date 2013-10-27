@@ -133,6 +133,10 @@ namespace TreatPraktik.ViewModel
                 join f in resourceList on a.ResxID equals f.ResourceResxID
                 join g in resourceTranslationList.Where(d => d.LanguageID.Equals("1")) on f.ResourceID equals g.ResourceID
                 join h in resourceTypeList.Where(d => d.ResourceTypeID.Equals("3")) on f.ResourceTypeID equals h.ResourceTypeID
+                //joiner tabeller, der vedører tooltips
+                join ff in resourceList on a.ResxID equals ff.ResourceResxID
+                join gg in resourceTranslationList.Where(d => d.LanguageID.Equals("2")) on ff.ResourceID equals gg.ResourceID
+                join hh in resourceTypeList.Where(d => d.ResourceTypeID.Equals("3")) on ff.ResourceTypeID equals hh.ResourceTypeID
 
                 select new ToolboxItem
                 {
@@ -141,7 +145,9 @@ namespace TreatPraktik.ViewModel
                     ResxID = a.ResxID,
                     ResourceType = b.ResourceTypeID,
                     Header = c.TranslationText,
-                    ToolTip = g.TranslationText,
+                    //ToolTip = g.TranslationText,
+                    DanishTranslationToolTip = gg.TranslationText,
+                    EnglishTranslationToolTip = g.TranslationText,
                     Category = j.Type
                 }).ToList();
 
