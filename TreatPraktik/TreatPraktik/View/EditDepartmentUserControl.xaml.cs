@@ -47,6 +47,7 @@ namespace TreatPraktik.View
                     departmentList.Add("-1");
                 }
                 departmentNoTextBox.Clear();
+                departmentNoTextBox.Focus();
             }
         }
 

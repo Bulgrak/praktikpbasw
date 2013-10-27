@@ -30,6 +30,7 @@ namespace TreatPraktik.View
     {
         public GroupTableContainerUserControl ParentGroupTableContainerUserControl { get; set; }
         public GroupTableViewModel GTViewModel { get; set; }
+        public TextBlock GroupHeader { get; set; }
         private static GroupTypeOrder PreviousGroupTypeOrder { get; set; }
 
         public GroupTableUserControl()
@@ -52,31 +53,6 @@ namespace TreatPraktik.View
             }
         }
 
-        #endregion
-
-
-        #region DependencyProperty GroupTypeOrder
-        private static void OnGroupTableChangedCallBack(
-                DependencyObject sender, DependencyPropertyChangedEventArgs e)
-        {
-            GroupTableUserControl groupTableUserControl = sender as GroupTableUserControl;
-            GroupTypeOrder groupTypeOrder = (GroupTypeOrder)e.NewValue;
-            groupTableUserControl.MyGroupTypeOrder = groupTypeOrder;
-        }
-
-        public GroupTypeOrder MyGroupTypeOrder
-        {
-            get { return (GroupTypeOrder)GetValue(MyGroupTypeProperty); }
-            set
-            {
-                SetValue(MyGroupTypeProperty, value);
-                OnPropertyChanged("MyGroupTypeOrder");
-                PopulateGroupTable(MyGroupTypeOrder);
-            }
-        }
-
-        public static readonly DependencyProperty MyGroupTypeProperty =
-            DependencyProperty.Register("MyGroupTypeOrder", typeof(GroupTypeOrder), typeof(GroupTableUserControl), new PropertyMetadata(OnGroupTableChangedCallBack));
         #endregion
 
         #region DependencyProperty GroupTypeOrderCollection
@@ -106,6 +82,32 @@ namespace TreatPraktik.View
         public static readonly DependencyProperty GroupTypeOrderCollectionProperty =
             DependencyProperty.Register("GroupTypeOrderCollection", typeof(ObservableCollection<GroupTypeOrder>), typeof(GroupTableUserControl), new PropertyMetadata(OnGroupTableCollectionChangedCallBack));
         #endregion
+
+        #region DependencyProperty GroupTypeOrder
+        private static void OnGroupTableChangedCallBack(
+                DependencyObject sender, DependencyPropertyChangedEventArgs e)
+        {
+            GroupTableUserControl groupTableUserControl = sender as GroupTableUserControl;
+            GroupTypeOrder groupTypeOrder = (GroupTypeOrder)e.NewValue;
+            groupTableUserControl.MyGroupTypeOrder = groupTypeOrder;
+        }
+
+        public GroupTypeOrder MyGroupTypeOrder
+        {
+            get { return (GroupTypeOrder)GetValue(MyGroupTypeProperty); }
+            set
+            {
+                SetValue(MyGroupTypeProperty, value);
+                OnPropertyChanged("MyGroupTypeOrder");
+                PopulateGroupTable(MyGroupTypeOrder);
+            }
+        }
+
+        public static readonly DependencyProperty MyGroupTypeProperty =
+            DependencyProperty.Register("MyGroupTypeOrder", typeof(GroupTypeOrder), typeof(GroupTableUserControl), new PropertyMetadata(OnGroupTableChangedCallBack));
+        #endregion
+
+
 
 
         public void PopulateGroupTable(GroupTypeOrder gto)
@@ -224,6 +226,16 @@ namespace TreatPraktik.View
             Grid gridGroupCell = (Grid)bCell.Child;
             TextBlock tb = (TextBlock)gridGroupCell.Children[1];
             tb.SetBinding(TextBlock.TextProperty, "Group.GroupHeader");
+
+            WorkspaceViewModel wvm = WorkspaceViewModel.Instance;
+            List<GroupTypeOrder> gtoList = wvm.PageList.First(x => x.PageTypeID.Equals(wvm.SelectedPage)).GroupTypeOrders.Where(x => x.GroupTypeID.Equals(MyGroupTypeOrder.GroupTypeID)).ToList();
+            //List<GroupTypeOrder> gtoList = GroupTypeOrderCollection.Where(x => x.GroupTypeID.Equals(MyGroupTypeOrder.GroupTypeID)).ToList();
+            List<string> departmentList = new List<string>();
+            foreach (GroupTypeOrder gto in gtoList)
+                departmentList.Add(gto.DepartmentID);
+            departmentList.Sort();
+            tb.Text = tb.Text + " (" + string.Join(",", departmentList.ToArray()) + ")";
+
         }
 
         public Border GetCellItem(int row, int column)
@@ -394,12 +406,14 @@ namespace TreatPraktik.View
             {
                 FontSize = 14.0,
                 HorizontalAlignment = HorizontalAlignment.Stretch,
-                VerticalAlignment = VerticalAlignment.Stretch//,
+                VerticalAlignment = VerticalAlignment.Stretch
+
                 //DataContext = itemType
             };
             tb.SetBinding(TextBlock.TextProperty, "Item.Header");
-            bCell.SetBinding(Border.ToolTipProperty, "Item.ToolTip");
-
+            //bCell.SetBinding(Border.ToolTipProperty, "Item.ToolTip");
+            tb.SetBinding(TextBlock.ToolTipProperty, "Item.ToolTip");
+            //ToolTipService.SetInitialShowDelay(bCell, 700);
             Grid gridCell = new Grid();
             CreateColumns(gridCell, 2);
             Button clearCellBtn = CreateClearCellBtn();

@@ -36,31 +36,26 @@ namespace TreatPraktik.ViewModel
             gto.Group.DanishTranslationText = danTransText;
             gto.Group.EnglishTranslationText = engTransText;
             RefreshLanguage(gto);
+            //if(departmentList.Contains("-1") && departmentList.Count == 1)
+            //{
+            //    GroupTypeOrder gtoRemoved = GroupTypeOrderCollection.First(x => x.DepartmentID.Equals("-1");
+            //}
+            //if(GroupTypeOrderCollection.Any<
+
             foreach (string departmentID in departmentList)
             {
-                //int i = 0;
-                //bool departmentIDExist = false;
+                int i = 0;
+                bool departmentIDExist = false;
 
-                //while (i < GroupTypeOrderCollection.Count && !departmentIDExist)
-                //{
-                //    if (departmentID.Equals(GroupTypeOrderCollection[i].DepartmentID) && GroupTypeOrderCollection[i].GroupTypeID.Equals(gto.GroupTypeID))
-                //    {
-                //        departmentIDExist = true;
-                //    }
-                //    i++;
-                //}
-                //                if (!departmentIDExist)
-                //{
-                //    GroupTypeOrder clonedGto = new GroupTypeOrder();
-                //    clonedGto.DepartmentID = departmentID;
-                //    clonedGto.Group = gto.Group;
-                //    clonedGto.GroupOrder = gto.GroupOrder;
-                //    clonedGto.GroupTypeID = gto.GroupTypeID;
-                //    clonedGto.PageTypeID = gto.PageTypeID;
-                //    GroupTypeOrderCollection.Add(clonedGto);
-                //}
-
-                if (!GroupTypeOrderCollection.Any(x => x.DepartmentID.Equals(departmentID)) && GroupTypeOrderCollection.Any(x => x.GroupTypeID.Equals(gto.GroupTypeID)))
+                while (i < GroupTypeOrderCollection.Count && !departmentIDExist)
+                {
+                    if (departmentID.Equals(GroupTypeOrderCollection[i].DepartmentID) && GroupTypeOrderCollection[i].GroupTypeID.Equals(gto.GroupTypeID))
+                    {
+                        departmentIDExist = true;
+                    }
+                    i++;
+                }
+                if (!departmentIDExist)
                 {
                     GroupTypeOrder clonedGto = new GroupTypeOrder();
                     clonedGto.DepartmentID = departmentID;
@@ -70,6 +65,17 @@ namespace TreatPraktik.ViewModel
                     clonedGto.PageTypeID = gto.PageTypeID;
                     GroupTypeOrderCollection.Add(clonedGto);
                 }
+
+                //if (!GroupTypeOrderCollection.Any(x => x.DepartmentID.Equals(departmentID)) && GroupTypeOrderCollection.Any(x => x.GroupTypeID.Equals(gto.GroupTypeID)))
+                //{
+                //    GroupTypeOrder clonedGto = new GroupTypeOrder();
+                //    clonedGto.DepartmentID = departmentID;
+                //    clonedGto.Group = gto.Group;
+                //    clonedGto.GroupOrder = gto.GroupOrder;
+                //    clonedGto.GroupTypeID = gto.GroupTypeID;
+                //    clonedGto.PageTypeID = gto.PageTypeID;
+                //    GroupTypeOrderCollection.Add(clonedGto);
+                //}
 
             }
             CleanUpRemovedDepartments(gto, departmentList);
@@ -371,12 +377,30 @@ namespace TreatPraktik.ViewModel
             GroupTypeOrderCollection.Add(gto);
         }
 
+        public int FindLastOccurrence(GroupTypeOrder gto)
+        {
+            int i = GroupTypeOrderCollection.IndexOf(GroupTypeOrderCollection.First(x => x.GroupTypeID.Equals(gto.GroupTypeID)));
+
+            while (i < GroupTypeOrderCollection.Count)
+            {
+                if (!GroupTypeOrderCollection[i].GroupTypeID.Equals(gto.GroupTypeID))
+                    break;
+                i++;
+            }
+            return i;
+        }
+
         public void HandleGroupTableDrop(GroupTypeOrder targetGroupTypeOrder, GroupTypeOrder draggedGroupTypeOrder)
         {
-            int draggedPosition = GroupTypeOrderCollection.IndexOf(draggedGroupTypeOrder);
-            int targetPosition = GroupTypeOrderCollection.IndexOf(targetGroupTypeOrder);
+            //int draggedPosition = GroupTypeOrderCollection.IndexOf(draggedGroupTypeOrder);
+            //int draggedPosition = (int)draggedGroupTypeOrder.GroupOrder - 1; // not 0 indexed hence - 1
+            
+            //int targetPosition = (int)targetGroupTypeOrder.GroupOrder - 1;
             List<GroupTypeOrder> draggedMultipleGTOList = FindDuplicatesOfGroups(draggedGroupTypeOrder);
+            int draggedPosition = FindLastOccurrence(draggedGroupTypeOrder);
             List<GroupTypeOrder> targetMultipleGTOList = FindDuplicatesOfGroups(targetGroupTypeOrder);
+            int targetPosition = GroupTypeOrderCollection.IndexOf(targetGroupTypeOrder);
+            
             foreach (GroupTypeOrder gto in draggedMultipleGTOList)
             {
                 GroupTypeOrderCollection.Remove(gto);
@@ -384,10 +408,10 @@ namespace TreatPraktik.ViewModel
 
             if (draggedGroupTypeOrder.GroupOrder > targetGroupTypeOrder.GroupOrder)
             {
-                foreach (GroupTypeOrder gto in draggedMultipleGTOList)
-                {
-                    GroupTypeOrderCollection.Insert(targetPosition, gto);
-                }
+                    foreach (GroupTypeOrder gto in draggedMultipleGTOList)
+                    {
+                        GroupTypeOrderCollection.Insert(targetPosition, gto);
+                    }
                 //draggedGroupTypeOrder.GroupOrder = targetGroupTypeOrder.GroupOrder;
             }
             else
@@ -397,19 +421,20 @@ namespace TreatPraktik.ViewModel
                     //draggedGroupTypeOrder.GroupOrder = targetGroupTypeOrder.GroupOrder;
                     foreach (GroupTypeOrder gto in draggedMultipleGTOList)
                     {
-                        if (draggedMultipleGTOList.Count > 1)
-                        {
-                            GroupTypeOrderCollection.Insert(targetPosition - 1, gto);
-                        }
-                        else if (targetMultipleGTOList.Count > 1)
-                        {
-                            targetPosition = GroupTypeOrderCollection.IndexOf(targetMultipleGTOList.Last());
-                            GroupTypeOrderCollection.Insert(targetPosition + 1, gto);
-                        }
-                        else
-                        {
+                        //if (draggedMultipleGTOList.Count > 1)
+                        //{
+                        //    targetPosition = FindLastOccurrence(targetGroupTypeOrder);
+                        //    GroupTypeOrderCollection.Insert(targetPosition, gto);
+                        //}
+                        //else if (targetMultipleGTOList.Count > 1)
+                        //{
+                            targetPosition = FindLastOccurrence(targetGroupTypeOrder);
                             GroupTypeOrderCollection.Insert(targetPosition, gto);
-                        }
+                        //}
+                        //else
+                        //{
+                        //    GroupTypeOrderCollection.Insert(targetPosition, gto);
+                        //}
                     }
                 }
                 else
