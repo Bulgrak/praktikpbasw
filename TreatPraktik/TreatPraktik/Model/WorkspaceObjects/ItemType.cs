@@ -92,11 +92,11 @@ namespace TreatPraktik.Model.WorkspaceObjects
                     {
                         case "1": 
                             Header = EnglishTranslationText;
-                            _toolTip = EnglishTranslationToolTip;
+                            ToolTip = EnglishTranslationToolTip;
                             break;
                         case "2": 
                             Header = DanishTranslationText;
-                            _toolTip = DanishTranslationToolTip;
+                            ToolTip = DanishTranslationToolTip;
                             break;
                         default: 
                             Header = EnglishTranslationText; 
