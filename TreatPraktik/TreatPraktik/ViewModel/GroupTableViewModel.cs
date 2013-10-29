@@ -390,6 +390,11 @@ namespace TreatPraktik.ViewModel
             return i;
         }
 
+        public double FindHighestGroupOrder()
+        {
+            return (double)GroupTypeOrderCollection.Max(x => x.GroupOrder);
+        }
+
         public void HandleGroupTableDrop(GroupTypeOrder targetGroupTypeOrder, GroupTypeOrder draggedGroupTypeOrder)
         {
             //int draggedPosition = GroupTypeOrderCollection.IndexOf(draggedGroupTypeOrder);
@@ -400,7 +405,8 @@ namespace TreatPraktik.ViewModel
             int draggedPosition = FindLastOccurrence(draggedGroupTypeOrder);
             List<GroupTypeOrder> targetMultipleGTOList = FindDuplicatesOfGroups(targetGroupTypeOrder);
             int targetPosition = GroupTypeOrderCollection.IndexOf(targetGroupTypeOrder);
-            
+            double targetGroupOrder = targetGroupTypeOrder.GroupOrder;
+
             foreach (GroupTypeOrder gto in draggedMultipleGTOList)
             {
                 GroupTypeOrderCollection.Remove(gto);
@@ -416,7 +422,8 @@ namespace TreatPraktik.ViewModel
             }
             else
             {
-                if (GroupTypeOrderCollection.Count != targetPosition)
+                //if (GroupTypeOrderCollection.Count != targetPosition)
+                if (GroupTypeOrderCollection.Max(x => x.GroupOrder) != targetGroupOrder)
                 {
                     //draggedGroupTypeOrder.GroupOrder = targetGroupTypeOrder.GroupOrder;
                     foreach (GroupTypeOrder gto in draggedMultipleGTOList)

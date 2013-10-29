@@ -225,7 +225,7 @@ namespace TreatPraktik.View
             bCell.DataContext = groupTypeOrder;
             Grid gridGroupCell = (Grid)bCell.Child;
             TextBlock tb = (TextBlock)gridGroupCell.Children[1];
-            tb.SetBinding(TextBlock.TextProperty, "Group.GroupHeader");
+            //tb.SetBinding(TextBlock.TextProperty, "Group.GroupHeader");
 
             WorkspaceViewModel wvm = WorkspaceViewModel.Instance;
             List<GroupTypeOrder> gtoList = wvm.PageList.First(x => x.PageTypeID.Equals(wvm.SelectedPage)).GroupTypeOrders.Where(x => x.GroupTypeID.Equals(MyGroupTypeOrder.GroupTypeID)).ToList();
@@ -234,8 +234,17 @@ namespace TreatPraktik.View
             foreach (GroupTypeOrder gto in gtoList)
                 departmentList.Add(gto.DepartmentID);
             departmentList.Sort();
-            tb.Text = tb.Text + " (" + string.Join(",", departmentList.ToArray()) + ")";
-
+            //tb.Text = tb.Text + " (" + string.Join(",", departmentList.ToArray()) + ")";
+            MultiBinding multiBinding = new MultiBinding();
+            multiBinding.StringFormat = "{0} ({1})";
+            multiBinding.Bindings.Add(new Binding("Group.GroupHeader"));
+            multiBinding.Bindings.Add(new Binding() { Source = string.Join(",", departmentList.ToArray()) });
+            tb.SetBinding(TextBlock.TextProperty, multiBinding);
+            //multiBinding.Bindings.Add(new Binding
+            //{
+            //    ElementName = "SecondSlider",
+            //    Path = new PropertyPath("Value")
+            //});
         }
 
         public Border GetCellItem(int row, int column)
