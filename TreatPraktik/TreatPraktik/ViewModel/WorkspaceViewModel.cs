@@ -530,10 +530,9 @@ namespace TreatPraktik.ViewModel
         /// Creates a new group on a the page
         /// </summary>
         /// <param name="pageTypeId">The id for the selected page</param>
-        /// <param name="languageId">The selected language of the application</param>
-        /// <param name="groupOrder">The group order number on the selected page</param>
         /// <param name="englishTranslationText">The english group name</param>
         /// <param name="danishTranslationText">The danish group name</param>
+        /// <param name="departmentList">The selected departments the group is in</param>
         public void CreateGroup(string pageTypeId, string englishTranslationText, string danishTranslationText, List<string> departmentList)
         {
             GroupType groupType = new GroupType();
