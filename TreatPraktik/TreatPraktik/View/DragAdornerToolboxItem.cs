@@ -26,7 +26,7 @@ namespace TreatPraktik.View
             if (lbi.DataContext is ToolboxItem)
             {
                 ToolboxItem tbi = (ToolboxItem) lbi.DataContext;
-                Text = tbi.Header;
+                Text = tbi.ItemType.Header;
             }
             else if (lbi.DataContext is ToolboxGroup)
             {

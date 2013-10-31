@@ -14,11 +14,13 @@ namespace UnitTestTreatPraktik
     public class UnitTest2
     {
         private ItemFilterViewModel ifvm;
+        private GroupListViewModel glvm;
 
         [TestInitialize()]
         public void Initialize()
         {
             ifvm = ItemFilterViewModel.Instance;
+            glvm = GroupListViewModel.Instance;
             //_importPath = @"C:\UITablesToStud.xlsx";
 
             //_wvm = WorkspaceViewModel.Instance;
@@ -48,28 +50,81 @@ namespace UnitTestTreatPraktik
             //groupContainerUserControl.PopulateGroupTable();
         }
 
+
+        /// <summary>
+        /// Checks if the filter takes header and tooltip into account
+        /// </summary>
         [TestMethod]
-        public void FilterTest()
+        //[UNTP-00x]
+        public void FilterListToolboxItemsTest()
         {
             ToolboxItem tbi = new ToolboxItem();
-            tbi.ToolTip = "This is a test";
-            tbi.DanishTranslationText = "Dette er en test";
-            tbi.EnglishTranslationText = "This is a test";
-            tbi.LanguageID = "2";
+            ItemType it = new ItemType();
+            it.DanishTranslationToolTip = "ToolTip - Dette er en test";
+            it.EnglishTranslationToolTip = "ToolTip - This is a test";
+            it.DanishTranslationText = "Dette er en test";
+            it.EnglishTranslationText = "This is a test";
+            it.LanguageID = "2";
+            tbi.ItemType = it;
 
             ToolboxItem tbi2 = new ToolboxItem();
-            tbi2.ToolTip = "Tooltip - This is another test";
-            tbi2.DanishTranslationText = "Header - Dette er endnu en test";
-            tbi2.EnglishTranslationText = "Header - This is another test";
-            tbi.LanguageID = "2";
+            ItemType it2 = new ItemType();
+            it2.DanishTranslationToolTip = "ToolTip - This is another test";
+            it2.EnglishTranslationToolTip = "ToolTip - This is another test";
+            it2.DanishTranslationText = "Header - Dette er endnu en test";
+            it2.EnglishTranslationText = "Header - This is another test";
+            it2.LanguageID = "2";
+            tbi2.ItemType = it2;
 
             ifvm.ToolboxItemList.Add(tbi);
             ifvm.ToolboxItemList.Add(tbi2);
             ifvm.LanguageID = "2";
             ifvm.SetupToolBoxItemCollectionView();
             ifvm.FilterString = "another";
-            //ifvm.DesignItemsView = CollectionViewSource.GetDefaultView(ifvm.ToolboxItemList);
             Assert.IsTrue(ifvm.DesignItemsView.Contains(tbi2));
+            Assert.IsFalse(ifvm.DesignItemsView.Contains(tbi));
+        }
+
+        /// <summary>
+        /// Checks if the filter takes the group name into account
+        /// </summary>
+        [TestMethod]
+        //[SRS-001]
+        public void FilterListToolboxGroupsTest()
+        {
+            GroupType gt = new GroupType();
+            gt.DanishTranslationText = "Øre, næse og hals";
+            gt.EnglishTranslationText = "Ear, nose and throat";
+            gt.GroupTypeID = "10";
+            gt.ItemOrder = null;
+            gt.LanguageID = "2";
+            gt.ResourceID = "";
+            gt.ResourceType = null;
+            gt.ResourceTypeID = null;
+            ToolboxGroup tbGroup = new ToolboxGroup();
+            tbGroup.Group = gt;
+
+            
+            GroupType gt2 = new GroupType();
+            gt2.DanishTranslationText = "Risikofaktorer for infektion";
+            gt2.EnglishTranslationText = "Risk Factors for infection";
+            gt2.GroupTypeID = "10";
+            gt2.ItemOrder = null;
+            gt2.LanguageID = "2";
+            gt2.ResourceID = "";
+            gt2.ResourceType = null;
+            gt2.ResourceTypeID = null;
+            ToolboxGroup tbGroup2 = new ToolboxGroup();
+            tbGroup2.Group = gt2;
+
+            glvm.GTList.Add(tbGroup);
+            glvm.GTList.Add(tbGroup2);
+            glvm.LanguageID = "2";
+            glvm.SetupToolBoxItemCollectionView();
+            glvm.FilterString = "Risk Factors";
+            //ifvm.DesignItemsView = CollectionViewSource.GetDefaultView(ifvm.ToolboxItemList);
+            Assert.IsTrue(glvm.DesignItemsView.Contains(tbGroup2));
+            Assert.IsFalse(glvm.DesignItemsView.Contains(tbGroup));
         }
     }
 }

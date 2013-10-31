@@ -18,12 +18,10 @@ namespace TreatPraktik.ViewModel
 {
     public class GroupListViewModel : INotifyPropertyChanged
     {
-        //private ICollectionView designItemsView;
         private string filterString;
         private string textSearchDescription;
         public string languageID { get; set; }
         public string textNoGroupsFound;
-        //public string TextSearchDescription { get; set; } //Beskrivelse
         public ICollectionView DesignItemsView { get; set; }
         public ObservableCollection<ToolboxGroup> GTList { get; set; }
         private static GroupListViewModel instance;
@@ -43,12 +41,9 @@ namespace TreatPraktik.ViewModel
 
         private GroupListViewModel()
         {
-            //TextNoToolboxItemsFound = "No items to display";
-            //LanguageID = "2";
             GTList = new ObservableCollection<ToolboxGroup>();
             LanguageID = "2";
             filterString = "";
-            //PopulateToolbox();
         }
 
         public void PopulateGTList()
@@ -57,74 +52,78 @@ namespace TreatPraktik.ViewModel
             List<string> checkList = new List<string>();
             List<string> blackList = new List<string>();
             //Blacklist the following pages: 3, 18, 19, 255, 100
-            foreach (PageType pt in wvm.PageList)
-            {
-                if (
-                    pt.PageTypeID.Equals("3") ||
-                    pt.PageTypeID.Equals("18") ||
-                    pt.PageTypeID.Equals("19") ||
-                    pt.PageTypeID.Equals("255") ||
-                    pt.PageTypeID.Equals("100")
-                    )
-                {
-                    foreach (GroupTypeOrder gto in pt.GroupTypeOrders)
-                    {
-  
-                        blackList.Add(gto.GroupTypeID);
-                    }
-                }
-            }
-
-            foreach (PageType pt in wvm.PageList)
-            {
-
-                foreach (GroupTypeOrder gto in pt.GroupTypeOrders)
-                {
-                    if (!gto.GroupTypeID.Equals("60") && !gto.GroupTypeID.Equals("58") && !blackList.Exists(x => x.Equals(gto.GroupTypeID)) && !checkList.Exists(x => x.Equals(gto.GroupTypeID)))
-                    {
-                        ToolboxGroup tbGroup = new ToolboxGroup();
-                        tbGroup.Group = gto.Group;
-                        GTList.Add(tbGroup);
-                        //GTList.Add(gto.Group);
-                        checkList.Add(gto.GroupTypeID);
-                    }
-                }
-            }
-
-
             //foreach (PageType pt in wvm.PageList)
             //{
-            //    //3, 18, 19, 255, 100
             //    if (
-            //        !pt.PageTypeID.Equals("3") &&
-            //        !pt.PageTypeID.Equals("18") &&
-            //        !pt.PageTypeID.Equals("19") &&
-            //        !pt.PageTypeID.Equals("255") &&
-            //        !pt.PageTypeID.Equals("100")
+            //        pt.PageTypeID.Equals("3") ||
+            //        pt.PageTypeID.Equals("18") ||
+            //        pt.PageTypeID.Equals("19") ||
+            //        pt.PageTypeID.Equals("255") ||
+            //        pt.PageTypeID.Equals("100")
             //        )
             //    {
             //        foreach (GroupTypeOrder gto in pt.GroupTypeOrders)
             //        {
-            //            if (!gto.GroupTypeID.Equals("60") && !gto.GroupTypeID.Equals("58"))
-            //            {
-            //                int i = 0;
-            //                bool alreadyExist = false;
-            //                while (i < checkList.Count && !alreadyExist)
-            //                {
-            //                    if (checkList[i].Equals(gto.GroupTypeID))
-            //                        alreadyExist = true;
-            //                    i++;
-            //                }
-
-            //                if (!alreadyExist)
-            //                {
-            //                    GTList.Add(gto.Group);
-            //                    checkList.Add(gto.GroupTypeID);
-            //                }
-            //            }
+  
+            //            blackList.Add(gto.GroupTypeID);
             //        }
             //    }
             //}
+
+            //foreach (PageType pt in wvm.PageList)
+            //{
+
+            //    foreach (GroupTypeOrder gto in pt.GroupTypeOrders)
+            //    {
+            //        if (!gto.GroupTypeID.Equals("60") && !gto.GroupTypeID.Equals("58") && !blackList.Exists(x => x.Equals(gto.GroupTypeID)) && !checkList.Exists(x => x.Equals(gto.GroupTypeID)))
+            //        {
+            //            ToolboxGroup tbGroup = new ToolboxGroup();
+            //            tbGroup.Group = gto.Group;
+            //            GTList.Add(tbGroup);
+            //            //GTList.Add(gto.Group);
+            //            checkList.Add(gto.GroupTypeID);
+            //        }
+            //    }
+            //}
+
+
+            foreach (PageType pt in wvm.PageList)
+            {
+                //3, 18, 19, 255, 100
+                if (
+                    !pt.PageTypeID.Equals("3") &&
+                    !pt.PageTypeID.Equals("18") &&
+                    !pt.PageTypeID.Equals("19") &&
+                    !pt.PageTypeID.Equals("255") &&
+                    !pt.PageTypeID.Equals("100")
+                    )
+                {
+                    foreach (GroupTypeOrder gto in pt.GroupTypeOrders)
+                    {
+                        if (!gto.GroupTypeID.Equals("60") && !gto.GroupTypeID.Equals("58"))
+                        {
+                            int i = 0;
+                            bool alreadyExist = false;
+                            while (i < checkList.Count && !alreadyExist)
+                            {
+                                if (checkList[i].Equals(gto.GroupTypeID))
+                                    alreadyExist = true;
+                                i++;
+                            }
+
+                            if (!alreadyExist)
+                            {
+
+                                ToolboxGroup tbGroup = new ToolboxGroup();
+                                tbGroup.Group = gto.Group;
+                                GTList.Add(tbGroup);
+                                //GTList.Add(gto.Group);
+                                checkList.Add(gto.GroupTypeID);
+                            }
+                        }
+                    }
+                }
+            }
 
             SetupToolBoxItemCollectionView();
         }

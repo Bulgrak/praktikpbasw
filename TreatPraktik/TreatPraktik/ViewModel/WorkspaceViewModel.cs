@@ -21,7 +21,8 @@ namespace TreatPraktik.ViewModel
 
         public ObservableCollection<PageType> PageList { get; private set; }     // <-- The only list that changes should be made in
         public ObservableCollection<GroupTypeOrder> GroupList { get; private set; }
-        private ObservableCollection<ItemTypeOrder> _itemList;
+        private ObservableCollection<ItemTypeOrder> _itemTypeOrderList;
+        private ObservableCollection<ItemType> _itemTypeList;
         public ICollectionView PageTypeItemsView { get; set; }
 
         private int _groupCounter;
@@ -39,15 +40,28 @@ namespace TreatPraktik.ViewModel
             
         }
 
-        public ObservableCollection<ItemTypeOrder> ItemList
+        public ObservableCollection<ItemType> ItemTypeList
         {
             get
             {
-                return _itemList;
+                return _itemTypeList;
+            }
+            set
+            {
+                _itemTypeList = value;
+                OnPropertyChanged("ItemTypeList");
+            }
+        }
+
+        public ObservableCollection<ItemTypeOrder> ItemTypeOrderList
+        {
+            get
+            {
+                return _itemTypeOrderList;
             }
             private set
             {
-                _itemList = value;
+                _itemTypeOrderList = value;
             }
         }
 
@@ -63,9 +77,9 @@ namespace TreatPraktik.ViewModel
 
             ObservableCollection<PageType> tempList = GetAllPages();
             GroupList = GetAllGroups();
-            ItemList = GetAllItems();
+            ItemTypeOrderList = GetAllItems();
 
-            LinkCollections(tempList, GroupList, ItemList);
+            LinkCollections(tempList, GroupList, ItemTypeOrderList);
 
             foreach (PageType page in tempList)
             {
@@ -97,9 +111,9 @@ namespace TreatPraktik.ViewModel
 
             PageList = GetAllPages();
             GroupList = GetAllGroups();
-            ItemList = GetAllItems();
+            ItemTypeOrderList = GetAllItems();
 
-            LinkCollections(PageList, GroupList, ItemList);
+            LinkCollections(PageList, GroupList, ItemTypeOrderList);
 
             _groupCounter = 0;
             int index = 0;
@@ -290,6 +304,7 @@ namespace TreatPraktik.ViewModel
 
             List<ItemTypeOrder> itemOrders =
                 (from a in _excel._workSheetktUIOrder.ktUIOrderList.OrderBy(m => m.GroupOrder)
+
                     select new ItemTypeOrder
                     {
                         GroupTypeID = a.GroupTypeID,
@@ -298,13 +313,20 @@ namespace TreatPraktik.ViewModel
                         IncludedTypeID = a.IncludedTypeID
                     }).ToList();
 
-            List<ItemType> itemList = (from a in _excel._workSheetUIDesign.ktUIDesignList 
-                
+            var category = (from a in _excel._workSheetUIDesign.ktUIDesignList
+                                       join  b in _excel._workSheetQAktUIDesign.QAktUIDesignList on a.DesignID equals b.DesignID
+                                       join c in _excel._workSheetQAGroups.QAGroupsList on b.TypeID equals c.TypeID
+                                select new
+                                {
+                                   a.DesignID,
+                                   c.Type
+                                }).ToList();
+
+            List<ItemType> itemList = (from a in _excel._workSheetUIDesign.ktUIDesignList
                 select new ItemType
                 {
                     ResourceType = a.ResxID,
-                    DesignID = a.DesignID,
-                    //IncludedTypeID = a.IncludedTypeID
+                    DesignID = a.DesignID
                 }).ToList();
 
             //Set DanishTranslationText & EnglishTranslationText
@@ -329,6 +351,36 @@ namespace TreatPraktik.ViewModel
                 itemType.LanguageID = "2";
             }
 
+            foreach (ItemType itemType in itemList)
+            {
+                int i = 0;
+                bool found = false;
+                while (i < category.Count && !found)
+                {
+                    if (itemType.DesignID.Equals(category[i].DesignID))
+                    {
+                        itemType.Category = category[i].Type;
+                        found = true;
+                    }
+                    i++;
+                }
+                if (!found)
+                    itemType.Category = "n/a";
+            }
+
+            //foreach (var cat in category)
+            //{
+            //    ItemType itemType = (ItemType)itemList.FirstOrDefault(x => x.DesignID.Equals(cat.DesignID));
+            //    if (itemType != null)
+            //    {
+            //        itemType.Category = cat.Type;
+            //    }
+            //    else
+            //    {
+            //        int i = 0;
+            //    }
+            //}
+
             //Set DanishTranslationToolTip & EnglishTranslationToolTip
             //Set LanguageID to 2 <-- Danish
             foreach (ItemType itemType in itemList)
@@ -350,6 +402,8 @@ namespace TreatPraktik.ViewModel
                 }
                 itemType.LanguageID = "2";
             }
+
+            ItemTypeList = new ObservableCollection<ItemType>(itemList);
 
             //Link ItemType to ItemTypeOrder
             for (int i = 0; i < itemOrders.Count; i++)
@@ -544,18 +598,23 @@ namespace TreatPraktik.ViewModel
 
             foreach (PageType page in PageList)
             {
-                int index = 0;
+                int highestIdOnPage = Convert.ToInt32(page.GroupTypeOrders.Max(x => x.GroupTypeID));
+                if (highestIdOnPage > highestId)
+                    highestId = highestIdOnPage;
+                //int index = 0;
 
-                while (index < page.GroupTypeOrders.Count)
-                {
-                    if (Convert.ToInt32(page.GroupTypeOrders[index].GroupTypeID) > highestId)
-                    {
-                        highestId = Convert.ToInt32(page.GroupTypeOrders[index].GroupTypeID);
-                    }
+                //while (index < page.GroupTypeOrders.Count)
+                //{
+                //    if (Convert.ToInt32(page.GroupTypeOrders[index].GroupTypeID) > highestId)
+                //    {
+                //        highestId = Convert.ToInt32(page.GroupTypeOrders[index].GroupTypeID);
+                //    }
 
-                    index++;
-                }
+                //    index++;
+                //}
             }
+
+
 
             ObservableCollection<GroupTypeOrder> groupTypeOrderCollection = PageList.First(x => x.PageTypeID.Equals(pageTypeId)).GroupTypeOrders;
             GroupTypeOrder gtoCompare = groupTypeOrderCollection.Last();
@@ -609,7 +668,8 @@ namespace TreatPraktik.ViewModel
                     GroupTypeOrder clonedGto = new GroupTypeOrder();
                     clonedGto.DepartmentID = departmentID;
                     clonedGto.Group = groupType;
-                    clonedGto.GroupOrder = gtoCompare.GroupOrder + 1;
+                    //clonedGto.GroupOrder = gtoCompare.GroupOrder + 1;
+                    clonedGto.GroupOrder = groupTypeOrderCollection.Max(x => x.GroupOrder) + 1;
                     clonedGto.GroupTypeID = (highestId + 1).ToString();
                     clonedGto.PageTypeID = pageTypeId;
                     groupTypeOrderCollection.Add(clonedGto);

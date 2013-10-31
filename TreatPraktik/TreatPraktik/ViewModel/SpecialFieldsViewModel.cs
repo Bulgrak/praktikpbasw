@@ -4,7 +4,9 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Windows.Data;
+using DocumentFormat.OpenXml.Office.CustomUI;
 using TreatPraktik.Model;
+using TreatPraktik.Model.WorkspaceObjects;
 
 namespace TreatPraktik.ViewModel
 {
@@ -28,12 +30,16 @@ namespace TreatPraktik.ViewModel
             
 
             ToolboxItem tbiNewLine = new ToolboxItem();
-            tbiNewLine.DesignID = "198";
-            tbiNewLine.Header = "<NewLineItem>";
+            ItemType itNewLine = new ItemType();
+            itNewLine.DesignID = "198";
+            itNewLine.Header = "<NewLineItem>";
+            tbiNewLine.ItemType = itNewLine;
 
             ToolboxItem tbiEmptyField = new ToolboxItem();
-            tbiEmptyField.DesignID = "197";
-            tbiEmptyField.Header = "<EmptyField>";
+            ItemType itEmptyField = new ItemType();
+            itEmptyField.DesignID = "197";
+            itEmptyField.Header = "<EmptyField>";
+            tbiEmptyField.ItemType = itEmptyField;
 
             toolboxItemList.Add(tbiNewLine);
             toolboxItemList.Add(tbiEmptyField);

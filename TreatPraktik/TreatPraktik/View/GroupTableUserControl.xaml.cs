@@ -482,7 +482,7 @@ namespace TreatPraktik.View
                 {
                     int row = Grid.GetRow(bCell);
                     bool containsRow = CheckForNewLineItem(row);
-                    if (tbi.DesignID.Equals("198") && containsRow)
+                    if (tbi.ItemType.DesignID.Equals("198") && containsRow)
                     {
                         e.Effects = DragDropEffects.None;
                     }
@@ -622,17 +622,17 @@ namespace TreatPraktik.View
             Grid grid = (Grid)bCell.Parent;
             GroupTypeOrder gto = (GroupTypeOrder)grid.DataContext;
             GroupType gt = gto.Group;
-            if (tbi.DesignID.Equals("198") && designID != 0)
+            if (tbi.ItemType.DesignID.Equals("198") && designID != 0)
             {
                 ItemTypeOrder itemTypeOrder = new ItemTypeOrder();
-                itemTypeOrder.DesignID = tbi.DesignID;
+                itemTypeOrder.DesignID = tbi.ItemType.DesignID;
                 ItemType itemType = new ItemType();
-                itemType.DesignID = tbi.DesignID;
-                itemType.Header = tbi.Header;
+                itemType.DesignID = tbi.ItemType.DesignID;
+                itemType.Header = tbi.ItemType.Header;
                 itemTypeOrder.ItemOrder = itToBeMoved.ItemOrder;
-                itemType.DanishTranslationText = tbi.DanishTranslationText;
-                itemType.EnglishTranslationText = tbi.EnglishTranslationText;
-                itemType.LanguageID = tbi.LanguageID;
+                itemType.DanishTranslationText = tbi.ItemType.DanishTranslationText;
+                itemType.EnglishTranslationText = tbi.ItemType.EnglishTranslationText;
+                itemType.LanguageID = tbi.ItemType.LanguageID;
                 itemTypeOrder.GroupTypeID = gt.GroupTypeID;
                 itemTypeOrder.IncludedTypeID = "1";
                 itemTypeOrder.Item = itemType;
@@ -647,17 +647,17 @@ namespace TreatPraktik.View
                 DisableAllowDropByNewLineItem();
 
             }
-            if (designID != 0 && !tbi.DesignID.Equals("198") && designID != 197)
+            if (designID != 0 && !tbi.ItemType.DesignID.Equals("198") && designID != 197)
             {
                 ItemTypeOrder itemTypeOrder = new ItemTypeOrder();
-                itemTypeOrder.DesignID = tbi.DesignID;
+                itemTypeOrder.DesignID = tbi.ItemType.DesignID;
                 ItemType itemType = new ItemType();
-                itemType.DesignID = tbi.DesignID;
-                itemType.Header = tbi.Header;
+                itemType.DesignID = tbi.ItemType.DesignID;
+                itemType.Header = tbi.ItemType.Header;
                 itemTypeOrder.ItemOrder = itToBeMoved.ItemOrder;
-                itemType.DanishTranslationText = tbi.DanishTranslationText;
-                itemType.EnglishTranslationText = tbi.EnglishTranslationText;
-                itemType.LanguageID = tbi.LanguageID;
+                itemType.DanishTranslationText = tbi.ItemType.DanishTranslationText;
+                itemType.EnglishTranslationText = tbi.ItemType.EnglishTranslationText;
+                itemType.LanguageID = tbi.ItemType.LanguageID;
                 itemTypeOrder.GroupTypeID = gt.GroupTypeID;
                 itemTypeOrder.IncludedTypeID = "1";
                 itemTypeOrder.Item = itemType;
@@ -670,31 +670,31 @@ namespace TreatPraktik.View
             }
             if (designID == 0)
             {
-                itToBeMoved.DesignID = tbi.DesignID;
+                itToBeMoved.DesignID = tbi.ItemType.DesignID;
                 ItemType itemType = new ItemType();
-                itemType.DesignID = tbi.DesignID;
-                itemType.Header = tbi.Header;
-                itemType.DanishTranslationText = tbi.DanishTranslationText;
-                itemType.EnglishTranslationText = tbi.EnglishTranslationText;
-                itemType.LanguageID = tbi.LanguageID;
+                itemType.DesignID = tbi.ItemType.DesignID;
+                itemType.Header = tbi.ItemType.Header;
+                itemType.DanishTranslationText = tbi.ItemType.DanishTranslationText;
+                itemType.EnglishTranslationText = tbi.ItemType.EnglishTranslationText;
+                itemType.LanguageID = tbi.ItemType.LanguageID;
                 itToBeMoved.GroupTypeID = gt.GroupTypeID;
                 itToBeMoved.IncludedTypeID = "1";
                 itToBeMoved.Item = itemType;
                 gt.ItemOrder.Add(itToBeMoved);
                 GTViewModel.GenerateEmptyFields(gt);
                 RefreshGroupTable(gto);
-                if (tbi.DesignID.Equals("198"))
+                if (tbi.ItemType.DesignID.Equals("198"))
                 {
                     DisableAllowDropByNewLineItem();
                 }
             }
-            if (designID == 197 && !tbi.DesignID.Equals("198"))
+            if (designID == 197 && !tbi.ItemType.DesignID.Equals("198"))
             {
-                itToBeMoved.DesignID = tbi.DesignID;
-                itToBeMoved.Item.Header = tbi.Header;
-                itToBeMoved.Item.DanishTranslationText = tbi.DanishTranslationText;
-                itToBeMoved.Item.EnglishTranslationText = tbi.EnglishTranslationText;
-                itToBeMoved.Item.LanguageID = tbi.LanguageID;
+                itToBeMoved.DesignID = tbi.ItemType.DesignID;
+                itToBeMoved.Item.Header = tbi.ItemType.Header;
+                itToBeMoved.Item.DanishTranslationText = tbi.ItemType.DanishTranslationText;
+                itToBeMoved.Item.EnglishTranslationText = tbi.ItemType.EnglishTranslationText;
+                itToBeMoved.Item.LanguageID = tbi.ItemType.LanguageID;
                 itToBeMoved.GroupTypeID = gt.GroupTypeID;
                 itToBeMoved.IncludedTypeID = "1";
             }

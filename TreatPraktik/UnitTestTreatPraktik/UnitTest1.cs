@@ -88,7 +88,7 @@ namespace UnitTestTreatPraktik
             string designID1 = "12";
             string includedType1 = "1";
             ItemTypeOrder tempItemOrder1 =
-                (from a in _wvm.ItemList.Where(x => x.Item.DesignID.Equals(designID1))
+                (from a in _wvm.ItemTypeOrderList.Where(x => x.Item.DesignID.Equals(designID1))
                  select a).FirstOrDefault();
             ItemType item1 = tempItemOrder1.Item;
 
@@ -97,7 +97,7 @@ namespace UnitTestTreatPraktik
             string designID2 = "5";
             string includedType2 = "1";
             ItemTypeOrder tempItemOrder2 =
-                (from a in _wvm.ItemList.Where(x => x.Item.DesignID.Equals(designID2))
+                (from a in _wvm.ItemTypeOrderList.Where(x => x.Item.DesignID.Equals(designID2))
                  select a).FirstOrDefault();
             ItemType item2 = tempItemOrder2.Item;
 
@@ -170,7 +170,7 @@ namespace UnitTestTreatPraktik
             string designID1 = "12";
             string includedType1 = "1";
             ItemTypeOrder tempItemOrder1 =
-                (from a in _wvm.ItemList.Where(x => x.Item.DesignID.Equals(designID1))
+                (from a in _wvm.ItemTypeOrderList.Where(x => x.Item.DesignID.Equals(designID1))
                  select a).FirstOrDefault();
             ItemType item1 = tempItemOrder1.Item;
 
@@ -178,7 +178,7 @@ namespace UnitTestTreatPraktik
             string designID2 = "5";
             string includedType2 = "1";
             ItemTypeOrder tempItemOrder2 =
-                (from a in _wvm.ItemList.Where(x => x.Item.DesignID.Equals(designID2))
+                (from a in _wvm.ItemTypeOrderList.Where(x => x.Item.DesignID.Equals(designID2))
                  select a).FirstOrDefault();
             ItemType item2 = tempItemOrder2.Item;
 

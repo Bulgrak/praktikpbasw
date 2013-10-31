@@ -7,6 +7,10 @@ using TreatPraktik.Model.WorkspaceObjects;
 
 namespace TreatPraktik.Model
 {
+    /// <summary>
+    /// Wrapper class for GroupType.
+    /// Used for Toolbox
+    /// </summary>
     public class ToolboxGroup
     {
         public GroupType Group { get; set; }

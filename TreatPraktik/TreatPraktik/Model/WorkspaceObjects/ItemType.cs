@@ -1,22 +1,22 @@
 ﻿using System;
 using System.ComponentModel;
+using DocumentFormat.OpenXml.Drawing.Diagrams;
 
 namespace TreatPraktik.Model.WorkspaceObjects
 {
     public class ItemType : INotifyPropertyChanged
     {
         public string ResourceType { get; set; }
-        //public string GroupTypeID { get; set; }
         public string DesignID { get; set; }            //ID of the item
-        //public Double ItemOrder { get; set; }          //Item order in the group
         private string _header;
         private string _toolTip;
-        
         private string _languageID;
         public string DanishTranslationText { get; set; }
         public string EnglishTranslationText { get; set; }
         public string DanishTranslationToolTip { get; set; }
         public string EnglishTranslationToolTip { get; set; }
+        private string _category;
+
 
         public ItemType()
         {
@@ -64,6 +64,19 @@ namespace TreatPraktik.Model.WorkspaceObjects
             }
         }
 
+        public string Category
+        {
+            get
+            {
+                return _category;
+            }
+            set
+            {
+                _category = value;
+                OnPropertyChanged("Category");
+            }
+        }
+
         public string ToolTip
         {
             get
@@ -92,14 +105,14 @@ namespace TreatPraktik.Model.WorkspaceObjects
                     {
                         case "1": 
                             Header = EnglishTranslationText;
-                            ToolTip = EnglishTranslationToolTip;
+                            ToolTip = EnglishTranslationToolTip != "" ? EnglishTranslationText : "n/a";
                             break;
                         case "2": 
                             Header = DanishTranslationText;
-                            ToolTip = DanishTranslationToolTip;
+                            ToolTip = DanishTranslationToolTip != "" ? DanishTranslationText : "n/a";
                             break;
                         default: 
-                            Header = EnglishTranslationText; 
+                            Header = EnglishTranslationText != "" ? EnglishTranslationText : "n/a"; 
                             break;
                     }
                 }

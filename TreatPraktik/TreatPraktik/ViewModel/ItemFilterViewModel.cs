@@ -10,17 +10,16 @@ using System.Windows.Data;
 using System.Windows.Input;
 using TreatPraktik.Model;
 using TreatPraktik.Model.ExcelObjects;
+using TreatPraktik.Model.WorkspaceObjects;
 
 namespace TreatPraktik.ViewModel
 {
     public class ItemFilterViewModel : INotifyPropertyChanged
     {
-        //private ICollectionView designItemsView;
         private string filterString;
         private string textSearchDescription;
         public string languageID { get; set; }
         public string textNoToolboxItemsFound;
-        //public string TextSearchDescription { get; set; } //Beskrivelse
         public ICollectionView DesignItemsView { get; set; }
         public List<ToolboxItem> ToolboxItemList { get; set; }
         private static ItemFilterViewModel instance;
@@ -41,11 +40,8 @@ namespace TreatPraktik.ViewModel
         private ItemFilterViewModel()
         {
             ToolboxItemList = new List<ToolboxItem>();
-            //TextNoToolboxItemsFound = "No items to display";
-            //LanguageID = "2";
             LanguageID = "2";
             filterString = "";
-            //PopulateToolbox();
         }
 
         public static ItemFilterViewModel Instance
@@ -82,7 +78,7 @@ namespace TreatPraktik.ViewModel
                 }
                 foreach (ToolboxItem tbi in ToolboxItemList)
                 {
-                    tbi.LanguageID = languageID;
+                    tbi.ItemType.LanguageID = languageID;
                 }
                 if (DesignItemsView != null)
                 {
@@ -93,7 +89,7 @@ namespace TreatPraktik.ViewModel
 
         public void PopulateToolbox()
         {
-            ToolboxItemList = CreateToolboxItems();
+            CreateToolboxItems();
             SetupToolBoxItemCollectionView();
             //DesignItemsView.Refresh();
         }
@@ -102,86 +98,28 @@ namespace TreatPraktik.ViewModel
         {
             DesignItemsView = CollectionViewSource.GetDefaultView(ToolboxItemList);
 
-            DesignItemsView.GroupDescriptions.Add(new PropertyGroupDescription("Category"));
+            DesignItemsView.GroupDescriptions.Add(new PropertyGroupDescription("ItemType.Category"));
             //            DesignItemsView.SortDescriptions.Add(
             //  new SortDescription("Group", ListSortDirection.Ascending));
             DesignItemsView.SortDescriptions.Add(
-                new SortDescription("Header", ListSortDirection.Ascending));
+                new SortDescription("ItemType.Header", ListSortDirection.Ascending));
 
             DesignItemsView.Filter = ItemFilter;
         }
 
-        private List<ToolboxItem> CreateToolboxItems()
+        private void CreateToolboxItems()
         {
-            List<ToolboxItem> toolboxItemList = new List<ToolboxItem>();
-            ImportExcel ie = ImportExcel.Instance;
-            List<ktUIDesign> designList = ie._workSheetUIDesign.ktUIDesignList;
-            List<ktResources> resourceList = ie._workSheetktResources.ktResourceList;
-            List<ktResourceTranslation> resourceTranslationList = ie._workSheetktResourceTranslation.ktResourceTranslationList;
-            List<ktResourceType> resourceTypeList = ie._workSheetktResourceType.ktResourceTypeList;
-            List<QAktUIDesign> qaktuidesignList = ie._workSheetQAktUIDesign.QAktUIDesignList;
-            List<QAGroup> qagrouplist = ie._workSheetQAGroups.QAGroupsList;
-            toolboxItemList = (
-                //joiner tabeller, der vedrører header
-                from a in designList
-                join b in resourceList on a.ResxID equals b.ResourceResxID
-                join c in resourceTranslationList.Where(d => d.LanguageID.Equals("1")) on b.ResourceID equals c.ResourceID
-                join d in resourceTypeList.Where(d => d.ResourceTypeID.Equals("2")) on b.ResourceTypeID equals d.ResourceTypeID
-                join i in qaktuidesignList on a.DesignID equals i.DesignID
-                join j in qagrouplist on i.TypeID equals j.TypeID
-                //joiner tabeller, der vedrører tooltips
-                join f in resourceList on a.ResxID equals f.ResourceResxID
-                join g in resourceTranslationList.Where(d => d.LanguageID.Equals("1")) on f.ResourceID equals g.ResourceID
-                join h in resourceTypeList.Where(d => d.ResourceTypeID.Equals("3")) on f.ResourceTypeID equals h.ResourceTypeID
-                //joiner tabeller, der vedører tooltips
-                join ff in resourceList on a.ResxID equals ff.ResourceResxID
-                join gg in resourceTranslationList.Where(d => d.LanguageID.Equals("2")) on ff.ResourceID equals gg.ResourceID
-                join hh in resourceTypeList.Where(d => d.ResourceTypeID.Equals("3")) on ff.ResourceTypeID equals hh.ResourceTypeID
-
-                select new ToolboxItem
-                {
-                    DesignID = a.DesignID,
-                    ResourceID = b.ResourceID,
-                    ResxID = a.ResxID,
-                    ResourceType = b.ResourceTypeID,
-                    Header = c.TranslationText,
-                    //ToolTip = g.TranslationText,
-                    DanishTranslationToolTip = gg.TranslationText,
-                    EnglishTranslationToolTip = g.TranslationText,
-                    Category = j.Type
-                }).ToList();
-
-            var query = (from aa in ie._workSheetktResources.ktResourceList
-                         join bb in ie._workSheetktResourceTranslation.ktResourceTranslationList on aa.ResourceID equals bb.ResourceID
-                         join cc in ie._workSheetktResourceType.ktResourceTypeList.Where(d => d.ResourceTypeID.Equals("2")) on aa.ResourceTypeID equals cc.ResourceTypeID
-                         select new
-                         {
-                             bb.LanguageID,
-                             aa.ResourceResxID,
-                             bb.TranslationText
-                         }).ToList();
-
-            foreach (ToolboxItem itemType in toolboxItemList)
+            WorkspaceViewModel wvm = WorkspaceViewModel.Instance;
+            foreach (ItemType itemType in wvm.ItemTypeList)
             {
-                foreach (var item in query)
+                ToolboxItem tbi = new ToolboxItem();
+                if(itemType != null && !itemType.DesignID.Equals("197") && !itemType.DesignID.Equals("198"))
                 {
-                    if (item.ResourceResxID == itemType.ResxID)
-                    {
-                        if (item.LanguageID.Equals("2"))
-                        {
-                            itemType.DanishTranslationText = item.TranslationText;
-
-                        }
-                        else if (item.LanguageID.Equals("1"))
-                        {
-                            itemType.EnglishTranslationText = item.TranslationText;
-                        }
-                    }
+                    tbi.ItemType = itemType;
+                    ToolboxItemList.Add(tbi);
                 }
-                itemType.LanguageID = "2";
+                
             }
-
-            return toolboxItemList;
         }
 
         public string FilterString
@@ -218,9 +156,18 @@ namespace TreatPraktik.ViewModel
         private bool ItemFilter(object item)
         {
             ToolboxItem toolboxItem = item as ToolboxItem;
-            string header = toolboxItem.Header;
-            string toolTip = toolboxItem.ToolTip;
-            return header.ToLower().Contains(filterString.ToLower()) || toolTip.ToLower().Contains(filterString.ToLower()); //Case-insensitive
+            ItemType it = toolboxItem.ItemType;
+            string header = it.Header;
+            string toolTip = it.ToolTip;
+            if (toolTip != null)
+            {
+                return header.ToLower().Contains(filterString.ToLower()) ||
+                       toolTip.ToLower().Contains(filterString.ToLower()); //Case-insensitive
+            }
+            else
+            {
+                return header.ToLower().Contains(filterString.ToLower());
+            }
         }
     }
 }

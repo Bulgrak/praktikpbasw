@@ -19,8 +19,8 @@
                 </ListBox.GroupStyle>
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{Binding Path=Header}" ToolTip="{Binding Path=ToolTip}"/>
-                    </DataTemplate>
+                        <TextBlock Text="{Binding Path=ItemType.Header}" ToolTip="{Binding Path=ItemType.ToolTip}"/>
+                    </DataTemplate>                    
                 </ListBox.ItemTemplate>
                 <ListBox.Style>
                     <Style TargetType="ListBox" BasedOn="{StaticResource {x:Type ListBox}}">

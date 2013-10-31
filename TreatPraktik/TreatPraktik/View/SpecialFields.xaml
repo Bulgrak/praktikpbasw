@@ -10,7 +10,7 @@
             <ListBox x:Name="lstSpecialItems" ItemsSource="{Binding SpecialItemsView}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{Binding Path=Header}" ToolTip="{Binding Path=ToolTip}"/>
+                        <TextBlock Text="{Binding Path=ItemType.Header}" ToolTip="{Binding Path=ItemType.ToolTip}"/>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
