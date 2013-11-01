@@ -40,41 +40,53 @@ namespace UnitTestTreatPraktik
             _exExcel = TreatPraktik.ViewModel.ExportExcel.Instance;
 
             //Get original lists of worksheets
-            _oldExGroup = (from a in _impExcel._workSheetktExaminedGroup.ExaminedGroupList 
+            _oldExGroup = (from a in _impExcel._workSheetktExaminedGroup.ExaminedGroupList
                            select new ktExaminedGroup
                            {
-                               DataQualityScore = a.DataQualityScore, Expanded = a.Expanded, 
-                               GroupExpendable = a.GroupExpendable, GroupIdentifier = a.GroupIdentifier, 
-                               GroupType = a.GroupType, ID = a.ID, Name = a.Name, RequiredScore = a.RequiredScore
+                               DataQualityScore = a.DataQualityScore,
+                               Expanded = a.Expanded,
+                               GroupExpendable = a.GroupExpendable,
+                               GroupIdentifier = a.GroupIdentifier,
+                               GroupType = a.GroupType,
+                               ID = a.ID,
+                               Name = a.Name,
+                               RequiredScore = a.RequiredScore
                            }).ToList();
 
             _oldGroupOrder = (from a in _impExcel._workSheetktUIGroupOrder.ktUIGroupOrderList
-                                  select new ktUIGroupOrder
-                                  {
-                                      DepartmentID = a.DepartmentID, GroupOrder = a.GroupOrder, 
-                                      GroupTypeID = a.GroupTypeID, PageTypeID = a.PageTypeID
-                                  }).ToList();
+                              select new ktUIGroupOrder
+                              {
+                                  DepartmentID = a.DepartmentID,
+                                  GroupOrder = a.GroupOrder,
+                                  GroupTypeID = a.GroupTypeID,
+                                  PageTypeID = a.PageTypeID
+                              }).ToList();
 
             _oldOrder = (from a in _impExcel._workSheetktUIOrder.ktUIOrderList
-                             select new ktUIOrder
-                             {
-                                 DesignID = a.DesignID, GroupOrder = a.GroupOrder, GroupTypeID = a.GroupTypeID,
-                                 IncludedTypeID = a.IncludedTypeID, PageTypeID = a.PageTypeID
-                             }).ToList();
+                         select new ktUIOrder
+                         {
+                             DesignID = a.DesignID,
+                             GroupOrder = a.GroupOrder,
+                             GroupTypeID = a.GroupTypeID,
+                             IncludedTypeID = a.IncludedTypeID,
+                             PageTypeID = a.PageTypeID
+                         }).ToList();
 
             _oldResources = (from a in _impExcel._workSheetktResources.ktResourceList
-                                 select new ktResources
-                                 {
-                                     ResourceID = a.ResourceID, ResourceResxID = a.ResourceResxID,
-                                     ResourceTypeID = a.ResourceTypeID
-                                 }).ToList();
+                             select new ktResources
+                             {
+                                 ResourceID = a.ResourceID,
+                                 ResourceResxID = a.ResourceResxID,
+                                 ResourceTypeID = a.ResourceTypeID
+                             }).ToList();
 
             _oldResTranslation = (from a in _impExcel._workSheetktResourceTranslation.ktResourceTranslationList
-                                      select new ktResourceTranslation
-                                      {
-                                          LanguageID = a.LanguageID, ResourceID = a.ResourceID, 
-                                          TranslationText = a.TranslationText
-                                      }).ToList();
+                                  select new ktResourceTranslation
+                                  {
+                                      LanguageID = a.LanguageID,
+                                      ResourceID = a.ResourceID,
+                                      TranslationText = a.TranslationText
+                                  }).ToList();
         }
 
         #region Import excel
@@ -83,15 +95,8 @@ namespace UnitTestTreatPraktik
         [TestMethod]
         public void ImportCheckFileType()
         {
-            //Get items and add them to a group
-            string groupTypeID1 = "0";
-            double itemOrder1 = 35.00;
-            string designID1 = "12";
-            string includedType1 = "1";
-            ItemTypeOrder tempItemOrder1 =
-                (from a in _wvm.ItemList.Where(x => x.Item.DesignID.Equals(designID1))
-                 select a).FirstOrDefault();
-            ItemType item1 = tempItemOrder1.Item;
+            //Not implemented
+        }
 
         //The configuration tool must import a configuration of Treat at startup.
         [TestMethod]
@@ -131,17 +136,17 @@ namespace UnitTestTreatPraktik
         //The configuration tool must export to an .xlsx file for excel.
         [TestMethod]
         public void ExportCheckFileType()
-            {
+        {
             //Not implemented
-                }
+        }
 
         //The “excel configurations” component must create configuration 
         //data for each sheet, when exporting.
         [TestMethod]
         public void ExportDataOnSheets()
-                {
+        {
             //Not implemented
-                }
+        }
 
         //The “export configurations” component must create the correct 
         //sheet names when exporting.
@@ -162,7 +167,7 @@ namespace UnitTestTreatPraktik
 
         [TestMethod]
         public void EditGroupRename()
-            {
+        {
             string pageTypeID = "16";
 
             PageType page = _wvm.PageList.FirstOrDefault(x => x.PageTypeID.Equals(pageTypeID));
@@ -216,11 +221,11 @@ namespace UnitTestTreatPraktik
 
             //Check if the translation texts are right for the two "New Groups"
             foreach (ktResourceTranslation rt in resourceTranslations)
-                {
+            {
                 if (rt.LanguageID.Equals("1"))
-                    {
+                {
                     Assert.AreEqual(rt.TranslationText, engTransText);
-                    }
+                }
                 else
                 {
                     Assert.AreEqual(rt.TranslationText, danTransText);
@@ -228,27 +233,19 @@ namespace UnitTestTreatPraktik
 
                 //Does the "New Group" exist in the old list
                 CollectionAssert.DoesNotContain(_oldResTranslation, rt);
-                }
-
-            #endregion
             }
 
-            string groupTypeID = (highestId +1).ToString();
-            double itemOrder1 = 0.00;
-            string designID1 = "12";
-            string includedType1 = "1";
-            ItemTypeOrder tempItemOrder1 =
-                (from a in _wvm.ItemList.Where(x => x.Item.DesignID.Equals(designID1))
-                 select a).FirstOrDefault();
-            ItemType item1 = tempItemOrder1.Item;
+            #endregion
+        }
 
-            double itemOrder2 = 1.00;
-            string designID2 = "5";
-            string includedType2 = "1";
-            ItemTypeOrder tempItemOrder2 =
-                (from a in _wvm.ItemList.Where(x => x.Item.DesignID.Equals(designID2))
-                 select a).FirstOrDefault();
-            ItemType item2 = tempItemOrder2.Item;
+        [TestMethod]
+        public void EditGroupDepartment()
+        {
+            string pageTypeID = "16";
+
+            PageType page = _wvm.PageList.FirstOrDefault(x => x.PageTypeID.Equals(pageTypeID));
+            ObservableCollection<GroupTypeOrder> groups = page.GroupTypeOrders;
+            GroupTypeOrder renameGroup = groups[0];
 
             List<string> departments = new List<string>();
             string department1 = "2";
@@ -287,7 +284,7 @@ namespace UnitTestTreatPraktik
                     Assert.AreEqual(go.GroupTypeID, renameGroup.GroupTypeID);
                 }
                 if (go.DepartmentID.Equals(department2))
-            {
+                {
                     Assert.AreEqual(go.PageTypeID, pageTypeID);
                     Assert.AreEqual(go.GroupTypeID, renameGroup.GroupTypeID);
                 }
@@ -330,7 +327,7 @@ namespace UnitTestTreatPraktik
             #endregion
 
             #region ktUIOrder tests
-            
+
             //Get the new group in ktUIOrder
             List<ktUIOrder> orders =
                 _impExcel._workSheetktUIOrder.ktUIOrderList.Where(
@@ -458,7 +455,7 @@ namespace UnitTestTreatPraktik
             //Get the new groups in ktUIOrder
             List<ktUIOrder> orders =
                 _impExcel._workSheetktUIOrder.ktUIOrderList.Where(
-                    x => x.GroupTypeID.Equals(newGroupOne.ID) || 
+                    x => x.GroupTypeID.Equals(newGroupOne.ID) ||
                         x.GroupTypeID.Equals(newGroupTwo.ID)).ToList();
 
             //Check if there are no items of "New Group" in ktExaminedGroup
@@ -749,16 +746,16 @@ namespace UnitTestTreatPraktik
             string designID1 = "12";
             string includedType1 = "1";
             ItemTypeOrder tempItemOrder1 =
-                (from a in _wvm.ItemList.Where(x => x.Item.DesignID.Equals(designID1))
+                (from a in _wvm.ItemTypeOrderList.Where(x => x.Item.DesignID.Equals(designID1))
                  select a).FirstOrDefault();
             ItemType item1 = tempItemOrder1.Item;
-            
+
             string groupTypeID2 = "0";
             double itemOrder2 = 36.00;
             string designID2 = "5";
             string includedType2 = "1";
             ItemTypeOrder tempItemOrder2 =
-                (from a in _wvm.ItemList.Where(x => x.Item.DesignID.Equals(designID2))
+                (from a in _wvm.ItemTypeOrderList.Where(x => x.Item.DesignID.Equals(designID2))
                  select a).FirstOrDefault();
             ItemType item2 = tempItemOrder2.Item;
 
@@ -773,7 +770,7 @@ namespace UnitTestTreatPraktik
             GroupTypeOrder testGto = testPage.GroupTypeOrders.FirstOrDefault(x => x.GroupTypeID.Equals("0"));
             testGto.Group.ItemOrder.Add(itemTypeOrder1);
             testGto.Group.ItemOrder.Add(itemTypeOrder2);
-            
+
             //Export excel with the added items in it
             _exExcel.CreateNewExcel(_exportPath);
 
@@ -818,9 +815,9 @@ namespace UnitTestTreatPraktik
                 while (index < page.GroupTypeOrders.Count)
                 {
                     if (Convert.ToInt32(page.GroupTypeOrders[index].GroupTypeID) > highestId)
-                {
+                    {
                         highestId = Convert.ToInt32(page.GroupTypeOrders[index].GroupTypeID);
-                }
+                    }
 
                     index++;
                 }
@@ -831,7 +828,7 @@ namespace UnitTestTreatPraktik
             string designID1 = "12";
             string includedType1 = "1";
             ItemTypeOrder tempItemOrder1 =
-                (from a in _wvm.ItemList.Where(x => x.Item.DesignID.Equals(designID1))
+                (from a in _wvm.ItemTypeOrderList.Where(x => x.Item.DesignID.Equals(designID1))
                  select a).FirstOrDefault();
             ItemType item1 = tempItemOrder1.Item;
 
@@ -839,7 +836,7 @@ namespace UnitTestTreatPraktik
             string designID2 = "5";
             string includedType2 = "1";
             ItemTypeOrder tempItemOrder2 =
-                (from a in _wvm.ItemList.Where(x => x.Item.DesignID.Equals(designID2))
+                (from a in _wvm.ItemTypeOrderList.Where(x => x.Item.DesignID.Equals(designID2))
                  select a).FirstOrDefault();
             ItemType item2 = tempItemOrder2.Item;
 
@@ -884,7 +881,7 @@ namespace UnitTestTreatPraktik
             Assert.IsTrue(orders.Exists(x => x.GroupOrder.Equals(itemOrder2)));
 
             foreach (ktUIOrder order in orders)
-                {
+            {
                 Assert.AreEqual(order.GroupTypeID, groupTypeID);
             }
 
