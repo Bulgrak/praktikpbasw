@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Controls;
 using DocumentFormat.OpenXml.Bibliography;
+using TreatPraktik.Model;
 using TreatPraktik.Model.WorkspaceObjects;
 using TreatPraktik.View;
 
@@ -125,6 +126,93 @@ namespace TreatPraktik.ViewModel
                 GroupTypeOrderCollection.Remove(groupTypeOrder);
             }
             RefreshGroupOrder();
+        }
+
+        public void HandleToolboxItemDrop(GroupType gt, ToolboxItem tbi, ItemTypeOrder dropTargetItemTypeOrder)
+        {
+            string dropTargetDesignID = dropTargetItemTypeOrder.DesignID;
+            if (tbi.ItemType.DesignID.Equals("198") && dropTargetDesignID != null)
+            {
+                ToolboxSpecialItemDropOnAnyButNullField(dropTargetItemTypeOrder, tbi, gt);
+            }
+            if (dropTargetDesignID != null && !tbi.ItemType.DesignID.Equals("198") && !dropTargetDesignID.Equals("197"))
+            {
+                ToolboxItemDropOnStandardItem(dropTargetItemTypeOrder, tbi, gt);
+            }
+            if (dropTargetDesignID == "null") //drop on null field
+            {
+                ToolboxItemDropOnNullField(dropTargetItemTypeOrder, tbi, gt);
+            }
+            if (dropTargetDesignID != null && dropTargetDesignID.Equals("197") && !tbi.ItemType.DesignID.Equals("198"))
+            {
+                ToolboxItemDropOnEmptyField(dropTargetItemTypeOrder, tbi, gt);
+            }
+        }
+
+        public void ToolboxSpecialItemDropOnAnyButNullField(ItemTypeOrder dropTargetItemTypeOrder, ToolboxItem tbi, GroupType gt)
+        {
+            ItemTypeOrder itemTypeOrder = new ItemTypeOrder();
+            itemTypeOrder.DesignID = tbi.ItemType.DesignID;
+            ItemType itemType = new ItemType();
+            itemType.DesignID = tbi.ItemType.DesignID;
+            itemType.Header = tbi.ItemType.Header;
+            itemTypeOrder.ItemOrder = dropTargetItemTypeOrder.ItemOrder;
+            itemType.DanishTranslationText = tbi.ItemType.DanishTranslationText;
+            itemType.EnglishTranslationText = tbi.ItemType.EnglishTranslationText;
+            itemType.LanguageID = tbi.ItemType.LanguageID;
+            itemTypeOrder.GroupTypeID = gt.GroupTypeID;
+            itemTypeOrder.IncludedTypeID = "1";
+            itemTypeOrder.Item = itemType;
+
+            int index = gt.ItemOrder.IndexOf(dropTargetItemTypeOrder);
+
+            gt.ItemOrder.Insert(index, itemTypeOrder);
+            int draggedIndex = gt.ItemOrder.IndexOf(itemTypeOrder);
+
+            AdjustItemOrderNewLineItem(gt, draggedIndex);
+        }
+
+        public void ToolboxItemDropOnStandardItem(ItemTypeOrder dropTargetItemTypeOrder, ToolboxItem tbi, GroupType gt)
+        {
+            ItemTypeOrder itemTypeOrder = new ItemTypeOrder();
+            itemTypeOrder.DesignID = tbi.ItemType.DesignID;
+            ItemType itemType = new ItemType {DesignID = tbi.ItemType.DesignID, Header = tbi.ItemType.Header};
+            itemTypeOrder.ItemOrder = dropTargetItemTypeOrder.ItemOrder;
+            itemType.DanishTranslationText = tbi.ItemType.DanishTranslationText;
+            itemType.EnglishTranslationText = tbi.ItemType.EnglishTranslationText;
+            itemType.LanguageID = tbi.ItemType.LanguageID;
+            itemTypeOrder.GroupTypeID = gt.GroupTypeID;
+            itemTypeOrder.IncludedTypeID = "1";
+            itemTypeOrder.Item = itemType;
+            int startPosition = gt.ItemOrder.IndexOf(dropTargetItemTypeOrder);
+            MoveItemsForward(startPosition, itemTypeOrder, gt);
+        }
+
+        public void ToolboxItemDropOnNullField(ItemTypeOrder dropTargetItemTypeOrder, ToolboxItem tbi, GroupType gt)
+        {
+            dropTargetItemTypeOrder.DesignID = tbi.ItemType.DesignID;
+            ItemType itemType = new ItemType();
+            itemType.DesignID = tbi.ItemType.DesignID;
+            itemType.Header = tbi.ItemType.Header;
+            itemType.DanishTranslationText = tbi.ItemType.DanishTranslationText;
+            itemType.EnglishTranslationText = tbi.ItemType.EnglishTranslationText;
+            itemType.LanguageID = tbi.ItemType.LanguageID;
+            dropTargetItemTypeOrder.GroupTypeID = gt.GroupTypeID;
+            dropTargetItemTypeOrder.IncludedTypeID = "1";
+            dropTargetItemTypeOrder.Item = itemType;
+            gt.ItemOrder.Add(dropTargetItemTypeOrder);
+            GenerateEmptyFields(gt);
+        }
+
+        public void ToolboxItemDropOnEmptyField(ItemTypeOrder dropTargetItemTypeOrder, ToolboxItem tbi, GroupType gt)
+        {
+            dropTargetItemTypeOrder.DesignID = tbi.ItemType.DesignID;
+            dropTargetItemTypeOrder.Item.Header = tbi.ItemType.Header;
+            dropTargetItemTypeOrder.Item.DanishTranslationText = tbi.ItemType.DanishTranslationText;
+            dropTargetItemTypeOrder.Item.EnglishTranslationText = tbi.ItemType.EnglishTranslationText;
+            dropTargetItemTypeOrder.Item.LanguageID = tbi.ItemType.LanguageID;
+            dropTargetItemTypeOrder.GroupTypeID = gt.GroupTypeID;
+            dropTargetItemTypeOrder.IncludedTypeID = "1";
         }
 
         public void AdjustItemOrder(GroupType gt, int targetPosition, int draggedPosition)
@@ -390,17 +478,8 @@ namespace TreatPraktik.ViewModel
             return i;
         }
 
-        public double FindHighestGroupOrder()
-        {
-            return (double)GroupTypeOrderCollection.Max(x => x.GroupOrder);
-        }
-
         public void HandleGroupTableDrop(GroupTypeOrder targetGroupTypeOrder, GroupTypeOrder draggedGroupTypeOrder)
         {
-            //int draggedPosition = GroupTypeOrderCollection.IndexOf(draggedGroupTypeOrder);
-            //int draggedPosition = (int)draggedGroupTypeOrder.GroupOrder - 1; // not 0 indexed hence - 1
-            
-            //int targetPosition = (int)targetGroupTypeOrder.GroupOrder - 1;
             List<GroupTypeOrder> draggedMultipleGTOList = FindDuplicatesOfGroups(draggedGroupTypeOrder);
             int draggedPosition = FindLastOccurrence(draggedGroupTypeOrder);
             List<GroupTypeOrder> targetMultipleGTOList = FindDuplicatesOfGroups(targetGroupTypeOrder);
@@ -418,35 +497,19 @@ namespace TreatPraktik.ViewModel
                     {
                         GroupTypeOrderCollection.Insert(targetPosition, gto);
                     }
-                //draggedGroupTypeOrder.GroupOrder = targetGroupTypeOrder.GroupOrder;
             }
             else
             {
-                //if (GroupTypeOrderCollection.Count != targetPosition)
                 if (GroupTypeOrderCollection.Max(x => x.GroupOrder) != targetGroupOrder)
                 {
-                    //draggedGroupTypeOrder.GroupOrder = targetGroupTypeOrder.GroupOrder;
                     foreach (GroupTypeOrder gto in draggedMultipleGTOList)
                     {
-                        //if (draggedMultipleGTOList.Count > 1)
-                        //{
-                        //    targetPosition = FindLastOccurrence(targetGroupTypeOrder);
-                        //    GroupTypeOrderCollection.Insert(targetPosition, gto);
-                        //}
-                        //else if (targetMultipleGTOList.Count > 1)
-                        //{
-                            targetPosition = FindLastOccurrence(targetGroupTypeOrder);
+                                     targetPosition = FindLastOccurrence(targetGroupTypeOrder);
                             GroupTypeOrderCollection.Insert(targetPosition, gto);
-                        //}
-                        //else
-                        //{
-                        //    GroupTypeOrderCollection.Insert(targetPosition, gto);
-                        //}
                     }
                 }
                 else
                 {
-                    //draggedGroupTypeOrder.GroupOrder = targetGroupTypeOrder.GroupOrder;
                     foreach (GroupTypeOrder gto in draggedMultipleGTOList)
                     {
                         GroupTypeOrderCollection.Add(gto);
@@ -471,18 +534,6 @@ namespace TreatPraktik.ViewModel
             }
             return gtoList;
         }
-
-        //public void AdjustGroupOrder(int targetPosition, int draggedPosition)
-        //{
-        //    if (targetPosition < draggedPosition)
-        //    {
-        //        IncrementGroupOrderType(targetPosition, draggedPosition);
-        //    }
-        //    else
-        //    {
-        //        DecrementGroupOrderType(targetPosition, draggedPosition);
-        //    }
-        //}
 
         public void AdjustGroupOrder()
         {
@@ -515,35 +566,6 @@ namespace TreatPraktik.ViewModel
             _wvm._changedFlag = true;
         }
 
-        //public void DecrementGroupOrderType(int targetPosition, int draggedPosition)
-        //{
-        //    GroupTypeOrder previousGto = null;
-        //    int i = targetPosition - 1;
-        //    while (i >= draggedPosition)
-        //    {
-        //        GroupTypeOrder currentGto = GroupTypeOrderCollection[i];
-        //        if (i < GroupTypeOrderCollection.Count - 1)
-        //        {
-        //            previousGto = GroupTypeOrderCollection[i + 1];
-        //            if (currentGto.GroupTypeID.Equals(previousGto.GroupTypeID))
-        //            {
-        //                currentGto.GroupOrder = previousGto.GroupOrder;
-        //            }
-        //            else
-        //            {
-        //                GroupTypeOrderCollection[i].GroupOrder--;
-        //            }
-        //        }
-        //        else
-        //        {
-        //            GroupTypeOrderCollection[i].GroupOrder--;
-        //        }
-        //        i--;
-        //    }
-
-        //    _wvm._changedFlag = true;
-        //}
-
         public void DecrementGroupOrderType(int targetPosition, int draggedPosition)
         {
             GroupTypeOrder previousGto = null;
@@ -572,23 +594,12 @@ namespace TreatPraktik.ViewModel
                 }
                 i--;
             }
-
             _wvm._changedFlag = true;
         }
 
         public int FindNoOfDuplicates()
         {
             int noOfDuplicates = 0;
-            //foreach (GroupTypeOrder gto in GroupTypeOrderCollection)
-            //    foreach (GroupTypeOrder gtoCompare in GroupTypeOrderCollection)
-            //        if (gtoCompare.GroupTypeID.Equals(gto.GroupTypeID))
-            //            noOfIdenticalGroups++;
-            //if (noOfIdenticalGroups != 0)
-            //{
-            //    noOfIdenticalGroups--;
-            //}
-            //return noOfIdenticalGroups;
-
 
             var duplicateList = from gto in GroupTypeOrderCollection
                                 group gto.GroupTypeID by gto.GroupTypeID into g

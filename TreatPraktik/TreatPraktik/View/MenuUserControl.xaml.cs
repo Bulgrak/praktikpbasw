@@ -69,6 +69,7 @@ namespace TreatPraktik.View
             {
                 _workspaceVM.LoadNewConfigurations(openFile.FileName);
             }
+            GroupTableUserControl gtuc = new GroupTableUserControl();
 
             //_workspaceVM.PageList[14].Groups.RemoveAt(2);
             //MessageBox.Show("Ikke implementeret");

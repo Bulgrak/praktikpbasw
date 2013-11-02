@@ -31,7 +31,7 @@ namespace TreatPraktik.View
         public GroupTableContainerUserControl ParentGroupTableContainerUserControl { get; set; }
         public GroupTableViewModel GTViewModel { get; set; }
         public TextBlock GroupHeader { get; set; }
-        private static GroupTypeOrder PreviousGroupTypeOrder { get; set; }
+        public static GroupTypeOrder PreviousGroupTypeOrder { get; set; }
 
         public GroupTableUserControl()
         {
@@ -225,26 +225,18 @@ namespace TreatPraktik.View
             bCell.DataContext = groupTypeOrder;
             Grid gridGroupCell = (Grid)bCell.Child;
             TextBlock tb = (TextBlock)gridGroupCell.Children[1];
-            //tb.SetBinding(TextBlock.TextProperty, "Group.GroupHeader");
 
             WorkspaceViewModel wvm = WorkspaceViewModel.Instance;
             List<GroupTypeOrder> gtoList = wvm.PageList.First(x => x.PageTypeID.Equals(wvm.SelectedPage)).GroupTypeOrders.Where(x => x.GroupTypeID.Equals(MyGroupTypeOrder.GroupTypeID)).ToList();
-            //List<GroupTypeOrder> gtoList = GroupTypeOrderCollection.Where(x => x.GroupTypeID.Equals(MyGroupTypeOrder.GroupTypeID)).ToList();
             List<string> departmentList = new List<string>();
             foreach (GroupTypeOrder gto in gtoList)
                 departmentList.Add(gto.DepartmentID);
             departmentList.Sort();
-            //tb.Text = tb.Text + " (" + string.Join(",", departmentList.ToArray()) + ")";
             MultiBinding multiBinding = new MultiBinding();
             multiBinding.StringFormat = "{0} ({1})";
             multiBinding.Bindings.Add(new Binding("Group.GroupHeader"));
             multiBinding.Bindings.Add(new Binding() { Source = string.Join(",", departmentList.ToArray()) });
             tb.SetBinding(TextBlock.TextProperty, multiBinding);
-            //multiBinding.Bindings.Add(new Binding
-            //{
-            //    ElementName = "SecondSlider",
-            //    Path = new PropertyPath("Value")
-            //});
         }
 
         public Border GetCellItem(int row, int column)
@@ -287,7 +279,7 @@ namespace TreatPraktik.View
             ItemTypeOrder itToBeDeleted = (ItemTypeOrder)border.DataContext;
             gt.ItemOrder.Remove(itToBeDeleted);
             GTViewModel.AdjustItemOrder(gt);
-            RefreshGroupTable(gto);
+            RefreshGroupTable();
             DisableAllowDropByNewLineItem();
         }
 
@@ -303,7 +295,7 @@ namespace TreatPraktik.View
                 GroupTypeOrder gto = (GroupTypeOrder)border.DataContext;
 
                 GTViewModel.RemoveGroup(gto);
-                RefreshGroupTable(gto);
+                RefreshGroupTable();
                 DisableAllowDropByNewLineItem();
             }
         }
@@ -317,9 +309,6 @@ namespace TreatPraktik.View
                 if (uie is Border)
                 {
                     Border bCell = (Border)uie;
-                    //Grid gridCell = (Grid)b.Child;
-                    //TextBlock tb = (TextBlock)gridCell.Children[1];
-                    //Item it = (Item)b.DataContext;
                     ItemTypeOrder it = (ItemTypeOrder)bCell.DataContext;
                     itemTypeListCheck.Add(it);
                 }
@@ -343,8 +332,6 @@ namespace TreatPraktik.View
             }
             return newLineItemFound;
         }
-
-
 
         private void AddNewGroupRow()
         {
@@ -389,11 +376,8 @@ namespace TreatPraktik.View
             spBtn.VerticalAlignment = VerticalAlignment.Top;
             spBtn.Children.Add(editGroupBtn);
             spBtn.Children.Add(clearGroupBtn);
-            //Grid.SetColumn(clearGroupBtn, 1);
             Grid.SetColumn(spBtn, 1);
             Grid.SetColumn(tb, 0);
-            //Grid.SetColumn(editGroupBtn, 1);
-            //gridCell.Children.Add(clearGroupBtn);
             gridCell.Children.Add(spBtn);
             gridCell.Children.Add(tb);
             bGroupCell.Child = gridCell;
@@ -416,8 +400,6 @@ namespace TreatPraktik.View
                 FontSize = 14.0,
                 HorizontalAlignment = HorizontalAlignment.Stretch,
                 VerticalAlignment = VerticalAlignment.Stretch
-
-                //DataContext = itemType
             };
             tb.SetBinding(TextBlock.TextProperty, "Item.Header");
             //bCell.SetBinding(Border.ToolTipProperty, "Item.ToolTip");
@@ -615,89 +597,11 @@ namespace TreatPraktik.View
 
             ListBoxItem lbi = e.Data.GetData("System.Windows.Controls.ListBoxItem") as ListBoxItem;
             ToolboxItem tbi = (ToolboxItem)lbi.Content;
-
             ItemTypeOrder itToBeMoved = (ItemTypeOrder)bCell.DataContext;
-            int designID = Convert.ToInt32(itToBeMoved.DesignID);
-            int row = Grid.GetRow(bCell);
-            Grid grid = (Grid)bCell.Parent;
-            GroupTypeOrder gto = (GroupTypeOrder)grid.DataContext;
-            GroupType gt = gto.Group;
-            if (tbi.ItemType.DesignID.Equals("198") && designID != 0)
-            {
-                ItemTypeOrder itemTypeOrder = new ItemTypeOrder();
-                itemTypeOrder.DesignID = tbi.ItemType.DesignID;
-                ItemType itemType = new ItemType();
-                itemType.DesignID = tbi.ItemType.DesignID;
-                itemType.Header = tbi.ItemType.Header;
-                itemTypeOrder.ItemOrder = itToBeMoved.ItemOrder;
-                itemType.DanishTranslationText = tbi.ItemType.DanishTranslationText;
-                itemType.EnglishTranslationText = tbi.ItemType.EnglishTranslationText;
-                itemType.LanguageID = tbi.ItemType.LanguageID;
-                itemTypeOrder.GroupTypeID = gt.GroupTypeID;
-                itemTypeOrder.IncludedTypeID = "1";
-                itemTypeOrder.Item = itemType;
-
-                int index = gt.ItemOrder.IndexOf(itToBeMoved);
-
-                gt.ItemOrder.Insert(index, itemTypeOrder);
-                int draggedIndex = gt.ItemOrder.IndexOf(itemTypeOrder);
-
-                GTViewModel.AdjustItemOrderNewLineItem(gt, draggedIndex);
-                RefreshGroupTable(gto);
-                DisableAllowDropByNewLineItem();
-
-            }
-            if (designID != 0 && !tbi.ItemType.DesignID.Equals("198") && designID != 197)
-            {
-                ItemTypeOrder itemTypeOrder = new ItemTypeOrder();
-                itemTypeOrder.DesignID = tbi.ItemType.DesignID;
-                ItemType itemType = new ItemType();
-                itemType.DesignID = tbi.ItemType.DesignID;
-                itemType.Header = tbi.ItemType.Header;
-                itemTypeOrder.ItemOrder = itToBeMoved.ItemOrder;
-                itemType.DanishTranslationText = tbi.ItemType.DanishTranslationText;
-                itemType.EnglishTranslationText = tbi.ItemType.EnglishTranslationText;
-                itemType.LanguageID = tbi.ItemType.LanguageID;
-                itemTypeOrder.GroupTypeID = gt.GroupTypeID;
-                itemTypeOrder.IncludedTypeID = "1";
-                itemTypeOrder.Item = itemType;
-
-                //List<ItemTypeOrder> itemTypeList = GetItemTypes();
-                int startPosition = gt.ItemOrder.IndexOf(itToBeMoved);
-                GTViewModel.MoveItemsForward(startPosition, itemTypeOrder, gt);
-                RefreshGroupTable(gto);
-                DisableAllowDropByNewLineItem();
-            }
-            if (designID == 0)
-            {
-                itToBeMoved.DesignID = tbi.ItemType.DesignID;
-                ItemType itemType = new ItemType();
-                itemType.DesignID = tbi.ItemType.DesignID;
-                itemType.Header = tbi.ItemType.Header;
-                itemType.DanishTranslationText = tbi.ItemType.DanishTranslationText;
-                itemType.EnglishTranslationText = tbi.ItemType.EnglishTranslationText;
-                itemType.LanguageID = tbi.ItemType.LanguageID;
-                itToBeMoved.GroupTypeID = gt.GroupTypeID;
-                itToBeMoved.IncludedTypeID = "1";
-                itToBeMoved.Item = itemType;
-                gt.ItemOrder.Add(itToBeMoved);
-                GTViewModel.GenerateEmptyFields(gt);
-                RefreshGroupTable(gto);
-                if (tbi.ItemType.DesignID.Equals("198"))
-                {
-                    DisableAllowDropByNewLineItem();
-                }
-            }
-            if (designID == 197 && !tbi.ItemType.DesignID.Equals("198"))
-            {
-                itToBeMoved.DesignID = tbi.ItemType.DesignID;
-                itToBeMoved.Item.Header = tbi.ItemType.Header;
-                itToBeMoved.Item.DanishTranslationText = tbi.ItemType.DanishTranslationText;
-                itToBeMoved.Item.EnglishTranslationText = tbi.ItemType.EnglishTranslationText;
-                itToBeMoved.Item.LanguageID = tbi.ItemType.LanguageID;
-                itToBeMoved.GroupTypeID = gt.GroupTypeID;
-                itToBeMoved.IncludedTypeID = "1";
-            }
+            GroupType gt = MyGroupTypeOrder.Group;
+            GTViewModel.HandleToolboxItemDrop(gt, tbi, itToBeMoved);
+            RefreshGroupTable();
+            DisableAllowDropByNewLineItem();
         }
 
         void HandleItemTypeDrop(object sender, DragEventArgs e)
@@ -726,7 +630,7 @@ namespace TreatPraktik.View
                     gt.ItemOrder.Add(draggedItemType);
                     gt.ItemOrder.Sort(i => i.ItemOrder);
                     GTViewModel.GenerateEmptyFields(gt);
-                    RefreshGroupTable(gto);
+                    RefreshGroupTable();
                 }
                 else if (targetItemType.DesignID == null && draggedItemType.DesignID.Equals("198"))
                 {
@@ -736,7 +640,7 @@ namespace TreatPraktik.View
                     gt.ItemOrder.Sort(i => i.ItemOrder);
                     GTViewModel.GenerateEmptyFields(gt);
                     GTViewModel.AdjustItemOrder(gt);
-                    RefreshGroupTable(gto);
+                    RefreshGroupTable();
                 }
 
                 else if (draggedItemType.DesignID.Equals("198"))
@@ -755,7 +659,7 @@ namespace TreatPraktik.View
                     }
                     GTViewModel.GenerateEmptyFields(gt);
                     gt.ItemOrder.Sort(i => i.ItemOrder);
-                    RefreshGroupTable(gto);
+                    RefreshGroupTable();
                 }
 
                 else if (targetItemType.DesignID != null && draggedItemType.DesignID != null /*&& !draggedItemType.DesignID.Equals("198")*/)
@@ -782,16 +686,16 @@ namespace TreatPraktik.View
 
                     GTViewModel.GenerateEmptyFields(gt);
                     gt.ItemOrder.Sort(i => i.ItemOrder);
-                    RefreshGroupTable(gto);
+                    RefreshGroupTable();
                 }
             }
         }
 
-        void RefreshGroupTable(GroupTypeOrder gto)
+        void RefreshGroupTable()
         {
             PreviousGroupTypeOrder = null;
             GroupTable.ClearGrid();
-            PopulateGroupTable(gto);
+            PopulateGroupTable(MyGroupTypeOrder);
             DisableAllowDropByNewLineItem();
         }
 
@@ -806,8 +710,6 @@ namespace TreatPraktik.View
             {
                 GTViewModel.HandleGroupTableDrop(targetGroupTypeOrder, draggedGroupTypeOrder);
             }
-            //ParentGroupTableContainerUserControl.AdjustGroupOrder(draggedGroupTypeOrder, targetGroupTypeOrder);
-            //ParentGroupTableContainerUserControl.MoveGroup((GroupTableUserControl)draggedGroupTable.Parent, (GroupTableUserControl)targetGroupTable.Parent);
         }
 
         void HandleToolboxGroupDrop(ToolboxGroup tbg)
@@ -849,6 +751,7 @@ namespace TreatPraktik.View
             {
                 HandleGroupTableDrop(sender, e);
             }
+            PreviousGroupTypeOrder = null;
         }
 
         void EnableAllowDropNewLine(int startColumnPosition, int row)
@@ -909,22 +812,16 @@ namespace TreatPraktik.View
             }
             if (bCell.DataContext is GroupTypeOrder)
             {
-                //Button btnClearCell = (Button)cellItem.Children[0];
                 StackPanel spBtn = (StackPanel)cellItem.Children[0];
                 Button btnEditGroup = (Button)spBtn.Children[0];
                 Button btnRemoveGroup = (Button)spBtn.Children[1];
                 btnEditGroup.Visibility = Visibility.Visible;
                 btnRemoveGroup.Visibility = Visibility.Visible;
-                //btnClearCell.Visibility = Visibility.Visible;
             }
         }
 
         void border_MouseLeave(object sender, MouseEventArgs e)
         {
-            //Border bCell = sender as Border;
-            //Grid cellItem = (Grid)bCell.Child;
-            //Button btnClearCell = (Button)cellItem.Children[0];
-            //btnClearCell.Visibility = Visibility.Hidden;
             Border bCell = sender as Border;
             if (bCell.DataContext is ItemTypeOrder)
             {
@@ -941,7 +838,6 @@ namespace TreatPraktik.View
                 btnEditGroup.Visibility = Visibility.Hidden;
                 btnRemoveGroup.Visibility = Visibility.Hidden;
             }
-
         }
 
         public Border CreateBorderContainer(Color borderBrush, Color background)
