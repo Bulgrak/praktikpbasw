@@ -139,7 +139,7 @@ namespace TreatPraktik.ViewModel
             {
                 ToolboxItemDropOnStandardItem(dropTargetItemTypeOrder, tbi, gt);
             }
-            if (dropTargetDesignID == "null") //drop on null field
+            if (dropTargetDesignID == null) //drop on null field
             {
                 ToolboxItemDropOnNullField(dropTargetItemTypeOrder, tbi, gt);
             }
