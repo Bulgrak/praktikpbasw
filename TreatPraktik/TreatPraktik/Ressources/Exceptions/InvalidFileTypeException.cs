@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace TreatPraktik.Ressources
+namespace TreatPraktik.Ressources.Exceptions
 {
-    class Exceptions
+    class InvalidFileTypeException : System.Exception
     {
-        //public void 
+
     }
 }
