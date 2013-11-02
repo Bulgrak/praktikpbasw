@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Windows;
 using System.Windows.Data;
 using TreatPraktik.Model;
 using TreatPraktik.Model.WorkSheets;
@@ -75,30 +76,32 @@ namespace TreatPraktik.ViewModel
 
             _excel.ImportExcelConfiguration(path);
 
-            ObservableCollection<PageType> tempList = GetAllPages();
-            GroupList = GetAllGroups();
-            ItemTypeOrderList = GetAllItems();
-
-            LinkCollections(tempList, GroupList, ItemTypeOrderList);
-
-            foreach (PageType page in tempList)
+            if (_excel.ImportFileOK)
             {
-                PageList.Add(page);
-            }
+                ObservableCollection<PageType> tempList = GetAllPages();
+                GroupList = GetAllGroups();
+                ItemTypeOrderList = GetAllItems();
 
-            _groupCounter = 0;
-            int index = 0;
+                LinkCollections(tempList, GroupList, ItemTypeOrderList);
 
-            while (index < WorkSheetktResources.Instance.ktResourceList.Count)
-            {
-                if (Convert.ToInt32(WorkSheetktResources.Instance.ktResourceList[index].ResourceID) > _groupCounter)
+                foreach (PageType page in tempList)
                 {
-                    _groupCounter = Convert.ToInt32(WorkSheetktResources.Instance.ktResourceList[index].ResourceID);
+                    PageList.Add(page);
                 }
 
-                index++;
-            }
+                _groupCounter = 0;
+                int index = 0;
 
+                while (index < WorkSheetktResources.Instance.ktResourceList.Count)
+                {
+                    if (Convert.ToInt32(WorkSheetktResources.Instance.ktResourceList[index].ResourceID) > _groupCounter)
+                    {
+                        _groupCounter = Convert.ToInt32(WorkSheetktResources.Instance.ktResourceList[index].ResourceID);
+                    }
+
+                    index++;
+                }
+            }
         }
 
         public void LoadWorkspace(string path)
@@ -109,23 +112,30 @@ namespace TreatPraktik.ViewModel
 
             _excel.ImportExcelFromFile(path);
 
-            PageList = GetAllPages();
-            GroupList = GetAllGroups();
-            ItemTypeOrderList = GetAllItems();
-
-            LinkCollections(PageList, GroupList, ItemTypeOrderList);
-
-            _groupCounter = 0;
-            int index = 0;
-
-            while (index < WorkSheetktResources.Instance.ktResourceList.Count)
+            if (_excel.ImportFileOK)
             {
-                if (Convert.ToInt32(WorkSheetktResources.Instance.ktResourceList[index].ResourceID) > _groupCounter)
-                {
-                    _groupCounter = Convert.ToInt32(WorkSheetktResources.Instance.ktResourceList[index].ResourceID);
-                }
+                PageList = GetAllPages();
+                GroupList = GetAllGroups();
+                ItemTypeOrderList = GetAllItems();
 
-                index++;
+                LinkCollections(PageList, GroupList, ItemTypeOrderList);
+
+                _groupCounter = 0;
+                int index = 0;
+
+                while (index < WorkSheetktResources.Instance.ktResourceList.Count)
+                {
+                    if (Convert.ToInt32(WorkSheetktResources.Instance.ktResourceList[index].ResourceID) > _groupCounter)
+                    {
+                        _groupCounter = Convert.ToInt32(WorkSheetktResources.Instance.ktResourceList[index].ResourceID);
+                    }
+
+                    index++;
+                }
+            }
+            else
+            {
+                MessageBox.Show("Fil ikke importeret");
             }
         }
 
