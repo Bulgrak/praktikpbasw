@@ -99,6 +99,7 @@ namespace TreatPraktik.View
             {
                 SetValue(MyGroupTypeProperty, value);
                 OnPropertyChanged("MyGroupTypeOrder");
+                GTViewModel.Group = MyGroupTypeOrder.Group;
                 PopulateGroupTable(MyGroupTypeOrder);
             }
         }

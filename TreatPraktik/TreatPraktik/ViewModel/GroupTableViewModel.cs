@@ -133,7 +133,7 @@ namespace TreatPraktik.ViewModel
             string dropTargetDesignID = dropTargetItemTypeOrder.DesignID;
             if (tbi.ItemType.DesignID.Equals("198") && dropTargetDesignID != null)
             {
-                ToolboxSpecialItemDropOnAnyButNullField(dropTargetItemTypeOrder, tbi, gt);
+                ToolboxSpecialNewLineItemDrop(dropTargetItemTypeOrder, tbi, gt);
             }
             if (dropTargetDesignID != null && !tbi.ItemType.DesignID.Equals("198") && !dropTargetDesignID.Equals("197"))
             {
@@ -149,8 +149,14 @@ namespace TreatPraktik.ViewModel
             }
         }
 
-        public void ToolboxSpecialItemDropOnAnyButNullField(ItemTypeOrder dropTargetItemTypeOrder, ToolboxItem tbi, GroupType gt)
+        public void HandleDropAndDropBetweenItems()
         {
+            
+        }
+
+        public void ToolboxSpecialNewLineItemDrop(ItemTypeOrder dropTargetItemTypeOrder, ToolboxItem tbi, GroupType gt)
+        {
+            CheckForNewLineItem(dropTargetItemTypeOrder);
             ItemTypeOrder itemTypeOrder = new ItemTypeOrder();
             itemTypeOrder.DesignID = tbi.ItemType.DesignID;
             ItemType itemType = new ItemType();
@@ -170,6 +176,21 @@ namespace TreatPraktik.ViewModel
             int draggedIndex = gt.ItemOrder.IndexOf(itemTypeOrder);
 
             AdjustItemOrderNewLineItem(gt, draggedIndex);
+        }
+
+        public void CheckForNewLineItem(ItemTypeOrder dropTargetItemTypeOrder)
+        {
+            int itemOrder = (int)dropTargetItemTypeOrder.ItemOrder;
+            int i = itemOrder - (itemOrder%4);
+            int j = itemOrder + (4 - (itemOrder%4));
+            while (i < j && i < Group.ItemOrder.Count - 1)
+            {
+                if (Group.ItemOrder[i].DesignID.Equals("198"))
+                {
+                   throw new Exception("The row already contains a <NewLineItem>"); 
+                }
+                i++;
+            }
         }
 
         public void ToolboxItemDropOnStandardItem(ItemTypeOrder dropTargetItemTypeOrder, ToolboxItem tbi, GroupType gt)
