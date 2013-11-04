@@ -605,6 +605,93 @@ namespace TreatPraktik.View
             DisableAllowDropByNewLineItem();
         }
 
+        //void HandleItemTypeDrop(object sender, DragEventArgs e)
+        //{
+        //    Border target = GetBorderByDropEvent(e);
+        //    ItemTypeOrder targetItemType = (ItemTypeOrder)target.DataContext;
+
+        //    Border target2 = e.Data.GetData("System.Windows.Controls.Border") as Border;
+        //    ItemTypeOrder draggedItemType = (ItemTypeOrder)target2.DataContext;
+        //    //Grid groupTable2 = (Grid)target2.Parent;
+        //    Grid groupTable = (Grid)target.Parent;
+        //    GroupTypeOrder gto = GetGroupType(groupTable);
+        //    GroupType gt = gto.Group;
+        //    int draggedPosition = gt.ItemOrder.IndexOf(draggedItemType);
+        //    double targetItemTypeNo = targetItemType.ItemOrder; //affected item
+        //    int targetPosition = gt.ItemOrder.IndexOf(targetItemType);
+
+
+        //    if (targetItemType != draggedItemType)
+        //    {
+        //        gt.ItemOrder.Remove(draggedItemType);
+        //        if (targetItemType.DesignID == null && !draggedItemType.DesignID.Equals("198"))
+        //        {
+        //            GTViewModel.AdjustItemOrder(gt);
+        //            draggedItemType.ItemOrder = targetItemType.ItemOrder;
+        //            gt.ItemOrder.Add(draggedItemType);
+        //            gt.ItemOrder.Sort(i => i.ItemOrder);
+        //            GTViewModel.GenerateEmptyFields(gt);
+        //            RefreshGroupTable();
+        //        }
+        //        else if (targetItemType.DesignID == null && draggedItemType.DesignID.Equals("198"))
+        //        {
+                    
+        //            draggedItemType.ItemOrder = targetItemType.ItemOrder;
+        //            gt.ItemOrder.Add(draggedItemType);
+        //            gt.ItemOrder.Sort(i => i.ItemOrder);
+        //            GTViewModel.GenerateEmptyFields(gt);
+        //            GTViewModel.AdjustItemOrder(gt);
+        //            RefreshGroupTable();
+        //        }
+
+        //        else if (draggedItemType.DesignID.Equals("198"))
+        //        {
+        //            if (draggedItemType.ItemOrder > targetItemType.ItemOrder)
+        //            {
+        //                gt.ItemOrder.Insert(targetPosition, draggedItemType);
+        //                draggedItemType.ItemOrder = targetItemTypeNo;
+        //                GTViewModel.AdjustItemOrder(gt);
+        //            }
+        //            else
+        //            {
+        //                draggedItemType.ItemOrder = targetItemTypeNo;
+        //                gt.ItemOrder.Insert(targetPosition - 1, draggedItemType);
+        //                GTViewModel.AdjustItemOrder(gt);
+        //            }
+        //            GTViewModel.GenerateEmptyFields(gt);
+        //            gt.ItemOrder.Sort(i => i.ItemOrder);
+        //            RefreshGroupTable();
+        //        }
+
+        //        else if (targetItemType.DesignID != null && draggedItemType.DesignID != null /*&& !draggedItemType.DesignID.Equals("198")*/)
+        //        {
+        //            if (draggedItemType.ItemOrder > targetItemType.ItemOrder)
+        //            {
+        //                gt.ItemOrder.Insert(targetPosition, draggedItemType);
+        //                draggedItemType.ItemOrder = targetItemTypeNo;
+        //            }
+        //            else
+        //            {
+        //                if (gt.ItemOrder.Count != targetPosition)
+        //                {
+        //                    draggedItemType.ItemOrder = targetItemTypeNo;
+        //                    gt.ItemOrder.Insert(targetPosition, draggedItemType);
+        //                }
+        //                else
+        //                {
+        //                    draggedItemType.ItemOrder = targetItemTypeNo;
+        //                    gt.ItemOrder.Add(draggedItemType);
+        //                }
+        //            }
+        //            GTViewModel.AdjustItemOrder(gt, targetPosition, draggedPosition);
+
+        //            GTViewModel.GenerateEmptyFields(gt);
+        //            gt.ItemOrder.Sort(i => i.ItemOrder);
+        //            RefreshGroupTable();
+        //        }
+        //    }
+        //}
+
         void HandleItemTypeDrop(object sender, DragEventArgs e)
         {
             Border target = GetBorderByDropEvent(e);
@@ -612,84 +699,12 @@ namespace TreatPraktik.View
 
             Border target2 = e.Data.GetData("System.Windows.Controls.Border") as Border;
             ItemTypeOrder draggedItemType = (ItemTypeOrder)target2.DataContext;
-            //Grid groupTable2 = (Grid)target2.Parent;
             Grid groupTable = (Grid)target.Parent;
             GroupTypeOrder gto = GetGroupType(groupTable);
             GroupType gt = gto.Group;
-            int draggedPosition = gt.ItemOrder.IndexOf(draggedItemType);
-            double targetItemTypeNo = targetItemType.ItemOrder; //affected item
-            int targetPosition = gt.ItemOrder.IndexOf(targetItemType);
-
-
-            if (targetItemType != draggedItemType)
-            {
-                gt.ItemOrder.Remove(draggedItemType);
-                if (targetItemType.DesignID == null && !draggedItemType.DesignID.Equals("198"))
-                {
-                    GTViewModel.AdjustItemOrder(gt);
-                    draggedItemType.ItemOrder = targetItemType.ItemOrder;
-                    gt.ItemOrder.Add(draggedItemType);
-                    gt.ItemOrder.Sort(i => i.ItemOrder);
-                    GTViewModel.GenerateEmptyFields(gt);
-                    RefreshGroupTable();
-                }
-                else if (targetItemType.DesignID == null && draggedItemType.DesignID.Equals("198"))
-                {
-                    
-                    draggedItemType.ItemOrder = targetItemType.ItemOrder;
-                    gt.ItemOrder.Add(draggedItemType);
-                    gt.ItemOrder.Sort(i => i.ItemOrder);
-                    GTViewModel.GenerateEmptyFields(gt);
-                    GTViewModel.AdjustItemOrder(gt);
-                    RefreshGroupTable();
-                }
-
-                else if (draggedItemType.DesignID.Equals("198"))
-                {
-                    if (draggedItemType.ItemOrder > targetItemType.ItemOrder)
-                    {
-                        gt.ItemOrder.Insert(targetPosition, draggedItemType);
-                        draggedItemType.ItemOrder = targetItemTypeNo;
-                        GTViewModel.AdjustItemOrder(gt);
-                    }
-                    else
-                    {
-                        draggedItemType.ItemOrder = targetItemTypeNo;
-                        gt.ItemOrder.Insert(targetPosition - 1, draggedItemType);
-                        GTViewModel.AdjustItemOrder(gt);
-                    }
-                    GTViewModel.GenerateEmptyFields(gt);
-                    gt.ItemOrder.Sort(i => i.ItemOrder);
-                    RefreshGroupTable();
-                }
-
-                else if (targetItemType.DesignID != null && draggedItemType.DesignID != null /*&& !draggedItemType.DesignID.Equals("198")*/)
-                {
-                    if (draggedItemType.ItemOrder > targetItemType.ItemOrder)
-                    {
-                        gt.ItemOrder.Insert(targetPosition, draggedItemType);
-                        draggedItemType.ItemOrder = targetItemTypeNo;
-                    }
-                    else
-                    {
-                        if (gt.ItemOrder.Count != targetPosition)
-                        {
-                            draggedItemType.ItemOrder = targetItemTypeNo;
-                            gt.ItemOrder.Insert(targetPosition, draggedItemType);
-                        }
-                        else
-                        {
-                            draggedItemType.ItemOrder = targetItemTypeNo;
-                            gt.ItemOrder.Add(draggedItemType);
-                        }
-                    }
-                    GTViewModel.AdjustItemOrder(gt, targetPosition, draggedPosition);
-
-                    GTViewModel.GenerateEmptyFields(gt);
-                    gt.ItemOrder.Sort(i => i.ItemOrder);
-                    RefreshGroupTable();
-                }
-            }
+            GTViewModel.HandleDropAndDropBetweenItems(gt, targetItemType, draggedItemType);
+            gt.ItemOrder.Sort(i => i.ItemOrder);
+            RefreshGroupTable();
         }
 
         void RefreshGroupTable()
