@@ -13,6 +13,8 @@ namespace TreatPraktik.Model.WorkSheets
         public string SheetName { get; set; }
         public List<ktResources> ktResourceList { get; set; }
 
+        public List<ktResources> Result { get; set; }
+
         public WorkSheetktResources()
         {
             SheetName = "ktResources";

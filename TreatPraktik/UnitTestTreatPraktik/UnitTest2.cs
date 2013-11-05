@@ -29,9 +29,8 @@ namespace UnitTestTreatPraktik
             wvm = WorkspaceViewModel.Instance;
             sfvm = new SpecialFieldsViewModel();
             gtvm = new GroupTableViewModel();
-            
-        }
 
+        }
 
         /// <summary>
         /// Checks if the filter takes header and tooltip into account
@@ -39,7 +38,6 @@ namespace UnitTestTreatPraktik
         /// English LanguageID = 1
         /// </summary>
         [TestMethod]
-        //[UNTP-00x]
         public void ToolboxItemsFilterList()
         {
             ToolboxItem tbi = new ToolboxItem();
@@ -77,7 +75,6 @@ namespace UnitTestTreatPraktik
         /// English LanguageID = 1
         /// </summary>
         [TestMethod]
-        //[SRS-001]
         public void ToolboxGroupsFilterList()
         {
             GroupType gt = new GroupType();
@@ -92,7 +89,7 @@ namespace UnitTestTreatPraktik
             ToolboxGroup tbGroup = new ToolboxGroup();
             tbGroup.Group = gt;
 
-            
+
             GroupType gt2 = new GroupType();
             gt2.DanishTranslationText = "Risikofaktorer for infektion";
             gt2.EnglishTranslationText = "Risk Factors for infection";
@@ -115,8 +112,11 @@ namespace UnitTestTreatPraktik
             Assert.IsFalse(glvm.DesignItemsView.Contains(tbGroup));
         }
 
+        /// <summary>
+        /// Test dropping a standard item on each item in a group.
+        /// </summary>
         [TestMethod]
-        public void DragAndDropToolboxItemToWorkspace()
+        public void DropToolboxStandardItemOnItem()
         {
             ifvm.PopulateToolbox();
             GroupType gt = wvm.PageList[14].GroupTypeOrders[1].Group;
@@ -150,12 +150,13 @@ namespace UnitTestTreatPraktik
                 Assert.AreEqual(modifiedItemTypeOrderList[l].Item.DesignID, tbi.ItemType.DesignID); //Check if dropped ItemType is inserted at the right location
                 l++;
             }
-            //måske tjekke hvad der ikke ændrede state
-
         }
 
+        /// <summary>
+        /// Test dropping emptyfield from toolbox on each item in a group
+        /// </summary>
         [TestMethod]
-        public void DragAndDropToolboxSpecialItemEmptyFieldToWorkspace()
+        public void DropToolboxSpecialEmptyFieldOnItem()
         {
             ifvm.PopulateToolbox();
             GroupType gt = wvm.PageList[14].GroupTypeOrders[1].Group;
@@ -189,8 +190,6 @@ namespace UnitTestTreatPraktik
                 Assert.AreEqual(modifiedItemTypeOrderList[l].Item.DesignID, tbsi.ItemType.DesignID); //Check if dropped ItemType is inserted at the right location
                 l++;
             }
-            //måske tjekke hvad der ikke ændrede state
-
         }
 
         /// <summary>
@@ -210,7 +209,7 @@ namespace UnitTestTreatPraktik
             deepCopyGroupType.ResourceID = gt.ResourceID;
             deepCopyGroupType.ResourceType = gt.ResourceType;
             deepCopyGroupType.ResourceTypeID = gt.ResourceTypeID;
-            ObservableCollection<ItemTypeOrder> deepCopyItemTypeOrders = new ObservableCollection<ItemTypeOrder>(); 
+            ObservableCollection<ItemTypeOrder> deepCopyItemTypeOrders = new ObservableCollection<ItemTypeOrder>();
             foreach (ItemTypeOrder ito in gt.ItemOrder)
             {
                 ItemTypeOrder clonedito = new ItemTypeOrder();
@@ -232,7 +231,7 @@ namespace UnitTestTreatPraktik
         /// The original list is then compared with the modified list regarding itemorder and item reference 
         /// </summary>
         [TestMethod]
-        public void DragAndDropToolboxSpecialEmptyFieldItemToWorkspace()
+        public void DropToolboxSpecialEmptyFieldItemOnItem()
         {
             ifvm.PopulateToolbox();
             GroupType gt = wvm.PageList[14].GroupTypeOrders[1].Group;
@@ -268,10 +267,13 @@ namespace UnitTestTreatPraktik
             }
         }
 
+        /// <summary>
+        /// Test behaviour for dropping a NewLineItem on a item in a group
+        /// </summary>
         [TestMethod]
-        public void DragAndDropToolboxSpecialNewLineItemToWorkspace()
+        public void DropToolboxSpecialNewLineItemOnItem()
         {
-            GroupType gt = wvm.PageList[14].GroupTypeOrders[1].Group;
+            GroupType gt = wvm.PageList[14].GroupTypeOrders[1].Group; // Second group on Page 15
             List<ToolboxItem> tbiList = sfvm.SpecialItemsView.Cast<ToolboxItem>().ToList();
             ToolboxItem tbi = tbiList.Find(x => x.ItemType.DesignID.Equals("198")); //ItemType-Name: NewLineItem
 
@@ -301,31 +303,11 @@ namespace UnitTestTreatPraktik
             }
         }
 
-        [TestMethod]
-        public void DragAndDropToolboxToNullField()
-        {
-            
-        }
-
-        [TestMethod]
-        public void DragAndDropToolboxGroupToWorkspace()
-        {
-            
-        }
-
-        [TestMethod]
-        public void DragAndDropBetweenItemsInAGroupInWorkSpace()
-        {
-            
-        }
-
-
-
         /// <summary>
-        /// Case 20
+        /// Test behaviour for dropping a group from toolbox on a page by dropzone (the area below the groups on a page)
         /// </summary>
         [TestMethod]
-        public void DragAndDropInsertGroupInWorkSpaceByDropZone()
+        public void DropToolBoxGroupOnPageByDropZone()
         {
             glvm.PopulateGTList();
             List<ToolboxGroup> tbgList = glvm.DesignItemsView.Cast<ToolboxGroup>().ToList();
@@ -341,10 +323,10 @@ namespace UnitTestTreatPraktik
         }
 
         /// <summary>
-        /// Case 19 - A.GroupOrder < B.GroupOrder
+        /// Test behaviour for dropping a A:group on a B:group, where A.GroupOrder < B.GroupOrder
         /// </summary>
         [TestMethod]
-        public void DragAndDropBetweenGroupsInWorkSpaceBA()
+        public void DropBetweenGroupsOnPageTestOne()
         {
             ObservableCollection<GroupTypeOrder> gtoList = wvm.PageList[14].GroupTypeOrders; // page 15
             GroupTypeOrder targetGroupTypeOrder = wvm.PageList[14].GroupTypeOrders[0]; //drop target = first group
@@ -352,8 +334,8 @@ namespace UnitTestTreatPraktik
             gtvm.GroupTypeOrderCollection = gtoList;
             gtvm.AdjustGroupOrder();
             ObservableCollection<GroupTypeOrder> unmodifiedgtoList = DeepCopyGroupTypeOrderList(gtoList);
-            
-            
+
+
             gtvm.HandleGroupTableDrop(targetGroupTypeOrder, draggedGroupTypeOrder);
             Assert.AreEqual(gtoList[0], draggedGroupTypeOrder);
             int i = gtoList.IndexOf(targetGroupTypeOrder);
@@ -367,10 +349,10 @@ namespace UnitTestTreatPraktik
         }
 
         /// <summary>
-        /// Case 19 - A.GroupOrder > B.GroupOrder
+        /// Test behaviour for dropping a A:group on a B:group, where A.GroupOrder > B.GroupOrder
         /// </summary>
         [TestMethod]
-        public void DragAndDropBetweenGroupsInWorkSpaceAB()
+        public void DropBetweenGroupsOnPageTestTwo()
         {
             ObservableCollection<GroupTypeOrder> gtoList = wvm.PageList[14].GroupTypeOrders; // page 15
             GroupTypeOrder draggedGroupTypeOrder = wvm.PageList[14].GroupTypeOrders[0]; //drop target = first group
@@ -415,7 +397,7 @@ namespace UnitTestTreatPraktik
         }
 
         /// <summary>
-        /// Case 4
+        /// Test behaviour for dropping a NewLineItem on a row that already contains a NewLineItem
         /// </summary>
         [TestMethod]
         public void DropOnRowContainingNewLineItem()
@@ -424,7 +406,7 @@ namespace UnitTestTreatPraktik
             {
                 List<ToolboxItem> tbsiList = sfvm.SpecialItemsView.Cast<ToolboxItem>().ToList();
                 ToolboxItem tbsi = tbsiList.Find(x => x.ItemType.DesignID.Equals("198"));
-                ObservableCollection<GroupTypeOrder> gtoList = wvm.PageList[14].GroupTypeOrders;
+                ObservableCollection<GroupTypeOrder> gtoList = wvm.PageList[14].GroupTypeOrders; // Page 15
                 GroupType gt = gtoList[1].Group;
                 ItemTypeOrder dropTargetItemTypeOrder = gt.ItemOrder[4];
                 gtvm.GroupTypeOrderCollection = gtoList;
@@ -439,16 +421,16 @@ namespace UnitTestTreatPraktik
         }
 
         /// <summary>
-        /// Case 19
+        /// Test behaviour for dropping a group from toolbox on a group
         /// </summary>
         [TestMethod]
-        public void DragAndDropInsertNewExistingGroupInWorkSpace()
+        public void DropToolboxGroupOnGroup()
         {
             glvm.PopulateGTList();
             List<ToolboxGroup> tbgList = glvm.DesignItemsView.Cast<ToolboxGroup>().ToList();
             ToolboxGroup tbg = tbgList.Find(x => x.Group.GroupTypeID.Equals("16"));
             ObservableCollection<GroupTypeOrder> gtoList = wvm.PageList[14].GroupTypeOrders; // page 15
-            ObservableCollection<GroupTypeOrder> unmodifiedgtoList = DeepCopyGroupTypeOrderList(gtoList); 
+            ObservableCollection<GroupTypeOrder> unmodifiedgtoList = DeepCopyGroupTypeOrderList(gtoList);
             GroupTypeOrder targetGroupTypeOrder = gtoList[2];
             gtvm.GroupTypeOrderCollection = gtoList;
             gtvm.AdjustGroupOrder();
@@ -465,13 +447,13 @@ namespace UnitTestTreatPraktik
         }
 
         /// <summary>
-        /// Case 2
+        /// Test behaviour for dropping a standard item from toolbox on a EmptyField
         /// </summary>
         [TestMethod]
         public void DropToolboxItemOnEmptyField()
         {
             ifvm.PopulateToolbox();
-            GroupType gt = wvm.PageList[14].GroupTypeOrders[0].Group;
+            GroupType gt = wvm.PageList[14].GroupTypeOrders[0].Group; // Page 15
             List<ToolboxItem> tbiList = ifvm.DesignItemsView.Cast<ToolboxItem>().ToList();
             ToolboxItem tbi = tbiList.Find(x => x.ItemType.DesignID.Equals("38")); //ItemType-Name: Temperatur
             List<ToolboxItem> tbsiList = sfvm.SpecialItemsView.Cast<ToolboxItem>().ToList();
@@ -489,13 +471,13 @@ namespace UnitTestTreatPraktik
         }
 
         /// <summary>
-        /// Case 17
+        /// Test behaviour for dropping a standard item from toolbox on a null field
         /// </summary>
         [TestMethod]
         public void DropToolboxItemOnNullField()
         {
             ifvm.PopulateToolbox();
-            GroupType gt = wvm.PageList[14].GroupTypeOrders[0].Group;
+            GroupType gt = wvm.PageList[14].GroupTypeOrders[0].Group; // Page 15
             List<ToolboxItem> tbiList = ifvm.DesignItemsView.Cast<ToolboxItem>().ToList();
             ToolboxItem tbi = tbiList.Find(x => x.ItemType.DesignID.Equals("38")); //ItemType-Name: Temperatur
             ItemTypeOrder dropTargetItemTypeOrder = new ItemTypeOrder()
@@ -518,13 +500,13 @@ namespace UnitTestTreatPraktik
         }
 
         /// <summary>
-        /// Case 17
+        /// Test behaviour for dropping a special item (in this case, EmptyField) on a null field
         /// </summary>
         [TestMethod]
         public void DropToolboxSpecialItemOnNullField()
         {
             ifvm.PopulateToolbox();
-            GroupType gt = wvm.PageList[14].GroupTypeOrders[0].Group;
+            GroupType gt = wvm.PageList[14].GroupTypeOrders[0].Group; // Page 15
             List<ToolboxItem> tbsiList = sfvm.SpecialItemsView.Cast<ToolboxItem>().ToList();
             ToolboxItem tbsi = tbsiList.Find(x => x.ItemType.DesignID.Equals("197"));
             ItemTypeOrder dropTargetItemTypeOrder = new ItemTypeOrder()
@@ -546,21 +528,136 @@ namespace UnitTestTreatPraktik
             }
         }
 
+        /// <summary>
+        /// Test behaviour for dropping an standard item on a standard item in a group
+        /// </summary>
         [TestMethod]
-        public void DragAndDropBetweenStandardItems()
+        public void DropBetweenStandardItemsLessThan()
         {
             ObservableCollection<GroupTypeOrder> gtoList = wvm.PageList[14].GroupTypeOrders;
-            GroupType gt = wvm.PageList[14].GroupTypeOrders[0].Group;
+            GroupType gt = wvm.PageList[14].GroupTypeOrders[0].Group; // Page 15
             gtvm.GroupTypeOrderCollection = gtoList;
             ItemTypeOrder draggedItemTypeOrder = gt.ItemOrder[1];
             ItemTypeOrder targetItemTypeOrder = gt.ItemOrder[3];
-            // Need more code
+            gtvm.HandleDropAndDropBetweenItems(gt, targetItemTypeOrder, draggedItemTypeOrder);
+            Assert.AreEqual(gt.ItemOrder.IndexOf(draggedItemTypeOrder), 3);
+            Assert.AreEqual(gt.ItemOrder.IndexOf(targetItemTypeOrder), 2);
         }
 
-        [TestMethod]
-        public void DragAndDropBetweenGroupsWithMultipleDepartmentsInWorkSpace()
-        {
 
+        /// <summary>
+        /// Test behaviour for dropping an standard item on a standard item in a group
+        /// </summary>
+        [TestMethod]
+        public void DropBetweenStandardItemsGT()
+        {
+            ObservableCollection<GroupTypeOrder> gtoList = wvm.PageList[14].GroupTypeOrders; // Page 15
+            GroupType gt = wvm.PageList[14].GroupTypeOrders[0].Group; // First on page 15
+            gtvm.GroupTypeOrderCollection = gtoList;
+            ItemTypeOrder targetItemTypeOrder = gt.ItemOrder[1];
+            ItemTypeOrder draggedItemTypeOrder = gt.ItemOrder[3];
+            gtvm.HandleDropAndDropBetweenItems(gt, targetItemTypeOrder, draggedItemTypeOrder);
+            Assert.AreEqual(2, gt.ItemOrder.IndexOf(targetItemTypeOrder));
+            Assert.AreEqual(1, gt.ItemOrder.IndexOf(draggedItemTypeOrder));
+        }
+
+        /// <summary>
+        /// Test behaviour for dropping an standard item on a NewLineItem in a group
+        /// </summary>
+        [TestMethod]
+        public void DropStandardItemOnNewLineItem()
+        {
+            ObservableCollection<GroupTypeOrder> gtoList = wvm.PageList[14].GroupTypeOrders; // Page 15
+            GroupType gt = wvm.PageList[14].GroupTypeOrders[1].Group; // Second group on page 15
+            gtvm.GroupTypeOrderCollection = gtoList;
+            ItemTypeOrder targetItemTypeOrder = gt.ItemOrder[4];
+            ItemTypeOrder draggedItemTypeOrder = gt.ItemOrder[7];
+            gtvm.HandleDropAndDropBetweenItems(gt, targetItemTypeOrder, draggedItemTypeOrder);
+            Assert.AreEqual(5, gt.ItemOrder.IndexOf(targetItemTypeOrder));
+            Assert.AreEqual(4, gt.ItemOrder.IndexOf(draggedItemTypeOrder));
+            Assert.AreEqual(8, gt.ItemOrder[5].ItemOrder);
+            Assert.AreEqual(4, gt.ItemOrder[4].ItemOrder);
+        }
+
+        /// <summary>
+        /// Test behaviour for dropping an EmptyField on a standard item in a group
+        /// </summary>
+        [TestMethod]
+        public void DropEmptyFieldOnStandardItem()
+        {
+            ifvm.PopulateToolbox();
+            GroupType gt = wvm.PageList[14].GroupTypeOrders[0].Group; // First group on page 15
+            List<ToolboxItem> tbsiList = sfvm.SpecialItemsView.Cast<ToolboxItem>().ToList();
+            ToolboxItem tbsi = tbsiList.Find(x => x.ItemType.DesignID.Equals("197"));
+            ItemTypeOrder dropTargetItemTypeOrder = new ItemTypeOrder()
+            {
+                DesignID = null,
+                GroupTypeID = null,
+                IncludedTypeID = null,
+                Item = null,
+                ItemOrder = 7
+            };
+            gtvm.HandleToolboxItemDrop(gt, tbsi, dropTargetItemTypeOrder);
+            Assert.AreEqual(gt.ItemOrder[7].DesignID, tbsi.ItemType.DesignID);
+            ItemTypeOrder targetItemTypeOrder = gt.ItemOrder[7];
+            ItemTypeOrder draggedItemTypeOrder = gt.ItemOrder[2];
+            gtvm.HandleDropAndDropBetweenItems(gt, targetItemTypeOrder, draggedItemTypeOrder);
+            Assert.AreEqual(6, gt.ItemOrder.IndexOf(targetItemTypeOrder));
+            Assert.AreEqual(7, gt.ItemOrder.IndexOf(draggedItemTypeOrder));
+            Assert.AreEqual(7, gt.ItemOrder[7].ItemOrder);
+            Assert.AreEqual(6, gt.ItemOrder[6].ItemOrder);
+        }
+
+        /// <summary>
+        /// Test behaviour for dropping an EmptyField on a NewLineItem in a group
+        /// </summary>
+        [TestMethod]
+        public void DropEmptyFieldOnNewLineItem()
+        {
+            ifvm.PopulateToolbox();
+            GroupType gt = wvm.PageList[14].GroupTypeOrders[0].Group; // First group on Page 15
+            List<ToolboxItem> tbsiList = sfvm.SpecialItemsView.Cast<ToolboxItem>().ToList();
+            ToolboxItem tbsi = tbsiList.Find(x => x.ItemType.DesignID.Equals("197"));
+            ItemTypeOrder dropTargetItemTypeOrder = new ItemTypeOrder()
+            {
+                DesignID = null,
+                GroupTypeID = null,
+                IncludedTypeID = null,
+                Item = null,
+                ItemOrder = 7
+            };
+            gtvm.HandleToolboxItemDrop(gt, tbsi, dropTargetItemTypeOrder);
+            Assert.AreEqual(gt.ItemOrder[7].DesignID, tbsi.ItemType.DesignID);
+            ItemTypeOrder targetItemTypeOrder = gt.ItemOrder[7];
+            ItemTypeOrder draggedItemTypeOrder = gt.ItemOrder[2];
+            gtvm.HandleDropAndDropBetweenItems(gt, targetItemTypeOrder, draggedItemTypeOrder);
+            Assert.AreEqual(6, gt.ItemOrder.IndexOf(targetItemTypeOrder));
+            Assert.AreEqual(7, gt.ItemOrder.IndexOf(draggedItemTypeOrder));
+            Assert.AreEqual(7, gt.ItemOrder[7].ItemOrder);
+            Assert.AreEqual(6, gt.ItemOrder[6].ItemOrder);
+        }
+
+        /// <summary>
+        /// Test behaviour for dropping an empty field on a null field in a group.
+        /// </summary>
+        [TestMethod]
+        public void DropStandardItemOnNullField()
+        {
+            ObservableCollection<GroupTypeOrder> gtoList = wvm.PageList[14].GroupTypeOrders; // Page 15
+            GroupType gt = wvm.PageList[14].GroupTypeOrders[0].Group;
+            gtvm.GroupTypeOrderCollection = gtoList;
+            ItemTypeOrder draggedItemTypeOrder = gt.ItemOrder[3];
+            ItemTypeOrder targetItemTypeOrder = new ItemTypeOrder()
+            {
+                DesignID = null,
+                GroupTypeID = null,
+                IncludedTypeID = null,
+                Item = null,
+                ItemOrder = 7
+            };
+            gtvm.HandleDropAndDropBetweenItems(gt, targetItemTypeOrder, draggedItemTypeOrder);
+            Assert.AreEqual(7, gt.ItemOrder.IndexOf(draggedItemTypeOrder));
+            Assert.AreEqual(7, gt.ItemOrder[7].ItemOrder);
         }
     }
 }
