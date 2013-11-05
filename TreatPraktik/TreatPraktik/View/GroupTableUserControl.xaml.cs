@@ -282,6 +282,7 @@ namespace TreatPraktik.View
             GTViewModel.AdjustItemOrder(gt);
             RefreshGroupTable();
             DisableAllowDropByNewLineItem();
+            PreviousGroupTypeOrder = null;
         }
 
         private void btnRemoveGroup_Click(object sender, RoutedEventArgs e)

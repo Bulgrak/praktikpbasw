@@ -18,8 +18,8 @@ namespace TreatPraktik.Model.WorkSheets
         //Initialize the ktExaminedGroup list.
         public List<ktExaminedGroup> Result { get; set; }
 
-        public bool DataOnSheetOk;
-        public bool ColumnHeadersOk;
+        public bool DataOnSheetOk { get; set; }
+        public bool ColumnHeadersOk { get; set; }
 
         private WorkSheetktExaminedGroup()
         {
@@ -171,7 +171,8 @@ namespace TreatPraktik.Model.WorkSheets
         /// <returns></returns>
         public bool CheckDataInSheets(IEnumerable<Row> dataRows)
         {
-            if (dataRows.FirstOrDefault() != null)
+            if (dataRows.ElementAt(0).ElementAt(0).Elements().Count() != 0)
+            //if (dataRows.FirstOrDefault() != null)
             {
                 return true;
             }

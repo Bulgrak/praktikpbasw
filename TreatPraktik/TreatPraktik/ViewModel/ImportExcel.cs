@@ -134,14 +134,14 @@ namespace TreatPraktik.ViewModel
                         _ktUiOrderSheet = (WorksheetPart)document.WorkbookPart.GetPartById(_ktUiOrderID);
 
                         //Load ktUIFieldIncludedType data to business object.
-                        this._workSheetktUIOrder.LoadUIOrder(_ktUiOrderSheet.Worksheet, _sharedStrings);
+                        //this._workSheetktUIOrder.LoadUIOrder(_ktUiOrderSheet.Worksheet, _sharedStrings);
 
                         //Reference to Excel Worksheet with ktResource data.
                         _ktResourcesID = _workSheets.First(s => s.Name == this._workSheetktResources.SheetName).Id;
                         _ktResourcesSheet = (WorksheetPart)document.WorkbookPart.GetPartById(_ktResourcesID);
 
                         ////Load ktResource data to business object.
-                        this._workSheetktResources.LoadktResources(_ktResourcesSheet.Worksheet, _sharedStrings);
+                        //this._workSheetktResources.LoadktResources(_ktResourcesSheet.Worksheet, _sharedStrings);
 
                         ////Reference to Excel Worksheet with ktResourceTranslation data.
                         _ktResourceTranslationID =
@@ -150,15 +150,21 @@ namespace TreatPraktik.ViewModel
                             (WorksheetPart)document.WorkbookPart.GetPartById(_ktResourceTranslationID);
 
                         ////Load ktResouceTranslation data to business object.
-                        this._workSheetktResourceTranslation.LoadktResourceTranslation(_ktResourceTranslationSheet.Worksheet,
-                            _sharedStrings);
+                        //this._workSheetktResourceTranslation.LoadktResourceTranslation(_ktResourceTranslationSheet.Worksheet,
+                            //_sharedStrings);
 
                         if (this._workSheetktExaminedGroup.LoadExaminedGroup(_ktExaminedGroupSheet.Worksheet, _sharedStrings) &&
-                            this._workSheetktUIGroupOrder.LoadUIGroupOrder(_ktUiGroupOrderSheet.Worksheet, _sharedStrings)
+                            this._workSheetktUIGroupOrder.LoadUIGroupOrder(_ktUiGroupOrderSheet.Worksheet, _sharedStrings) &&
+                            this._workSheetktResources.LoadktResources(_ktResourcesSheet.Worksheet, _sharedStrings) &&
+                            this._workSheetktResourceTranslation.LoadktResourceTranslation(_ktResourceTranslationSheet.Worksheet, _sharedStrings) &&
+                            this._workSheetktUIOrder.LoadUIOrder(_ktUiOrderSheet.Worksheet, _sharedStrings)
                             )
                         {
                             _workSheetktExaminedGroup.AcceptChanges();
                             _workSheetktUIGroupOrder.AcceptChanges();
+                            _workSheetktResources.AcceptChanges();
+                            _workSheetktResourceTranslation.AcceptChanges();
+                            _workSheetktUIOrder.AcceptChanges();
                         }
                     }
                 }
@@ -178,8 +184,11 @@ namespace TreatPraktik.ViewModel
                     "Wrong excel file", MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
-            if (!_workSheetktExaminedGroup.ColumnHeadersOk &&
-                !_workSheetktUIGroupOrder.ColumnHeadersOk
+            if (!_workSheetktExaminedGroup.ColumnHeadersOk ||
+                !_workSheetktUIGroupOrder.ColumnHeadersOk ||
+                !_workSheetktResources.ColumnHeadersOk ||
+                !_workSheetktResourceTranslation.ColumnHeadersOk ||
+                !_workSheetktUIOrder.ColumnHeadersOk
                 )
             {
                 ImportFileOK = false;
@@ -187,8 +196,11 @@ namespace TreatPraktik.ViewModel
                     "Wrong column names", MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
-            if (!_workSheetktExaminedGroup.DataOnSheetOk &&
-                !_workSheetktUIGroupOrder.DataOnSheetOk
+            if (!_workSheetktExaminedGroup.DataOnSheetOk ||
+                !_workSheetktUIGroupOrder.DataOnSheetOk ||
+                !_workSheetktResources.DataOnSheetOk ||
+                !_workSheetktResourceTranslation.DataOnSheetOk ||
+                !_workSheetktUIOrder.ColumnHeadersOk
                 )
             {
                 ImportFileOK = false;
@@ -260,7 +272,7 @@ namespace TreatPraktik.ViewModel
                         _ktUiOrderSheet = (WorksheetPart)document.WorkbookPart.GetPartById(_ktUiOrderID);
 
                         //Load ktUIFieldIncludedType data to business object.
-                        this._workSheetktUIOrder.LoadUIOrder(_ktUiOrderSheet.Worksheet, _sharedStrings);
+                        //this._workSheetktUIOrder.LoadUIOrder(_ktUiOrderSheet.Worksheet, _sharedStrings);
 
                         //Reference to Excel Worksheet with ktResource data.
                         _ktResourcesID = _workSheets.First(s => s.Name == this._workSheetktResources.SheetName).Id;
@@ -307,13 +319,19 @@ namespace TreatPraktik.ViewModel
 
                         if (this._workSheetktExaminedGroup.LoadExaminedGroup(_ktExaminedGroupSheet.Worksheet, _sharedStrings) &&
                             this._workSheetktUIGroupOrder.LoadUIGroupOrder(_ktUiGroupOrderSheet.Worksheet, _sharedStrings) &&
-                            this._workSheetUIDesign.LoadUIDesign(_ktUiDesignSheet.Worksheet, _sharedStrings)
+                            this._workSheetUIDesign.LoadUIDesign(_ktUiDesignSheet.Worksheet, _sharedStrings) &&
+                            this._workSheetktResources.LoadktResources(_ktResourcesSheet.Worksheet, _sharedStrings) &&
+                            this._workSheetktResourceTranslation.LoadktResourceTranslation(_ktResourceTranslationSheet.Worksheet, _sharedStrings) &&
+                            this._workSheetktUIOrder.LoadUIOrder(_ktUiOrderSheet.Worksheet, _sharedStrings)
                             // +++
                             )
                         {
                             _workSheetktExaminedGroup.AcceptChanges();
                             _workSheetUIDesign.AcceptChanges();
                             _workSheetktUIGroupOrder.AcceptChanges();
+                            _workSheetktResources.AcceptChanges();
+                            _workSheetktResourceTranslation.AcceptChanges();
+                            _workSheetktUIOrder.AcceptChanges();
                         }
                     }
                 }
@@ -333,9 +351,12 @@ namespace TreatPraktik.ViewModel
                     "Wrong excel file", MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
-            if (!_workSheetktExaminedGroup.ColumnHeadersOk &&
-                !_workSheetktUIGroupOrder.ColumnHeadersOk &&
-                !_workSheetUIDesign.ColumnHeadersOk
+            if (!_workSheetktExaminedGroup.ColumnHeadersOk ||
+                !_workSheetktUIGroupOrder.ColumnHeadersOk ||
+                !_workSheetUIDesign.ColumnHeadersOk ||
+                !_workSheetktResources.ColumnHeadersOk ||
+                !_workSheetktResourceTranslation.ColumnHeadersOk ||
+                !_workSheetktUIOrder.ColumnHeadersOk
                 // +++
                 )
             {
@@ -344,9 +365,12 @@ namespace TreatPraktik.ViewModel
                     "Wrong column names", MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
-            if (!_workSheetktExaminedGroup.DataOnSheetOk &&
-                !_workSheetktUIGroupOrder.DataOnSheetOk &&
-                !_workSheetUIDesign.DataOnSheetOk
+            if (!_workSheetktExaminedGroup.DataOnSheetOk ||
+                !_workSheetktUIGroupOrder.DataOnSheetOk ||
+                !_workSheetUIDesign.DataOnSheetOk ||
+                !_workSheetktResources.ColumnHeadersOk ||
+                !_workSheetktResourceTranslation.ColumnHeadersOk ||
+                !_workSheetktUIOrder.ColumnHeadersOk
                 // +++
                 )
             {
