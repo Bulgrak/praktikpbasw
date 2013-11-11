@@ -86,6 +86,7 @@ namespace TreatPraktik.ViewModel
         public void RemoveItemTypeOrder(GroupType gt, ItemTypeOrder ito)
         {
             gt.ItemOrder.Remove(ito);
+            AdjustItemOrder(gt);
         }
 
         public void RefreshLanguage(GroupTypeOrder gto)
