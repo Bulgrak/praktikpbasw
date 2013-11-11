@@ -32,13 +32,15 @@ namespace TreatPraktik.View
         public GroupTableViewModel GTViewModel { get; set; }
         public TextBlock GroupHeader { get; set; }
         public static GroupTypeOrder PreviousGroupTypeOrder { get; set; }
+        private readonly List<string> _specialGroups = new List<string>{"1", "11", "14", "59"}; //Groups that shouldn't show their items
 
         //GroupTable - Color theme
-        private Color CellColor = Color.FromRgb(228, 241, 255);
-        private Color CellBorderColor = Color.FromRgb(151, 203, 255);
-        private Color CellBorderHighlightColor = Colors.Red;
-        private Color CellTextColor = Colors.Black;
-        private Color GroupHeaderColor = Color.FromRgb(151, 203, 255);
+        private readonly Color _cellColor = Color.FromRgb(228, 241, 255);
+        private readonly Color _cellBorderColor = Color.FromRgb(151, 203, 255);
+        private readonly Color _cellBorderHighlightColor = Colors.Red;
+        private readonly Color _cellTextColor = Colors.Black;
+        private readonly Color _groupHeaderColor = Color.FromRgb(151, 203, 255);
+        //GroupTable - Color theme
 
         public GroupTableUserControl()
         {
@@ -126,8 +128,7 @@ namespace TreatPraktik.View
                 int counterColumn = 0;
                 AddNewGroupRow();
                 InsertGroupItem(gto, 0, 0);
-                if (!gt.GroupTypeID.Equals("1") && !gt.GroupTypeID.Equals("11"))
-                    //Special groups, which shouldn't show any items
+                if(!_specialGroups.Any(x => x.Equals(gt.GroupTypeID)))
                 {
                     int skipped = 0;
                     for (int j = 0; j < gt.ItemOrder.Count - skipped; j++)
@@ -211,7 +212,7 @@ namespace TreatPraktik.View
             bCell.DataContext = item;
             //tb.DataContext = itemType;
             //tb.SetBinding(TextBlock.TextProperty, "Header");
-            tb.Foreground = new SolidColorBrush(CellTextColor);
+            tb.Foreground = new SolidColorBrush(_cellTextColor);
         }
 
         private void InsertGroupItem(GroupTypeOrder groupTypeOrder, int row, int column)
@@ -353,7 +354,7 @@ namespace TreatPraktik.View
 
         private Border CreateGroupCell()
         {
-            Border bGroupCell = CreateBorderContainer(CellBorderColor, GroupHeaderColor);
+            Border bGroupCell = CreateBorderContainer(_cellBorderColor, _groupHeaderColor);
             bGroupCell.MouseEnter += border_MouseEnter;
             bGroupCell.MouseLeave += border_MouseLeave;
             bGroupCell.AllowDrop = true;
@@ -382,7 +383,7 @@ namespace TreatPraktik.View
 
         private Border CreateItemCell(ItemTypeOrder itemType)
         {
-            Border bCell = CreateBorderContainer(CellBorderColor, CellColor);
+            Border bCell = CreateBorderContainer(_cellBorderColor, _cellColor);
             bCell.DataContext = itemType;
             bCell.MouseEnter += border_MouseEnter;
             bCell.MouseLeave += border_MouseLeave;
@@ -810,7 +811,7 @@ namespace TreatPraktik.View
                 Border draggedItem = sender as Border;
                 if (draggedItem.DataContext is ItemTypeOrder) //Prevent dragging if GroupType
                 {
-                    draggedItem.BorderBrush = new SolidColorBrush(CellBorderHighlightColor);
+                    draggedItem.BorderBrush = new SolidColorBrush(_cellBorderHighlightColor);
                     ItemTypeOrder ito = (ItemTypeOrder)draggedItem.DataContext;
                     ItemType it = ito.Item;
                     if (it != null)

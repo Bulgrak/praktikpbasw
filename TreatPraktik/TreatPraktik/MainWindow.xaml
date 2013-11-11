@@ -1,7 +1,8 @@
 ﻿<Window
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:local="clr-namespace:TreatPraktik" xmlns:View="clr-namespace:TreatPraktik.View" x:Class="TreatPraktik.MainWindow"
+        xmlns:view="clr-namespace:TreatPraktik.View" 
+        x:Class="TreatPraktik.MainWindow"
         Title="MainWindow" Height="622.103" Width="1040.845">
     <Grid>
         <Grid.ColumnDefinitions>
@@ -14,10 +15,10 @@
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
-        <View:WorkspaceUserControl Grid.Row="1" Grid.Column="1" Grid.RowSpan="3" Margin="5, 0, 2, 0" />
-        <View:ToolboxStandardItemsUserControl Grid.Row="2" Grid.Column="0" Margin="2, 0, 0, 0" />
-        <View:ToolboxSpecialItemsUserControl Grid.Row="1" Grid.Column="0" Margin="2, 0, 0, 0" />
-        <View:MenuUserControl Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Top" Width="Auto"/>
-        <View:ToolboxGroupsUserControl Grid.Row="3" Grid.Column="0" Margin="2, 0, 0, 5"/>
+        <view:WorkspaceUserControl Grid.Row="1" Grid.Column="1" Grid.RowSpan="3" Margin="5, 0, 2, 0" />
+        <view:ToolboxStandardItemsUserControl Grid.Row="2" Grid.Column="0" Margin="2, 0, 0, 0" />
+        <view:ToolboxSpecialItemsUserControl Grid.Row="1" Grid.Column="0" Margin="2, 0, 0, 0" />
+        <view:MenuUserControl Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Top" Width="Auto"/>
+        <view:ToolboxGroupsUserControl Grid.Row="3" Grid.Column="0" Margin="2, 0, 0, 5"/>
     </Grid>
 </Window>
