@@ -108,9 +108,6 @@ namespace TreatPraktik.View
             DependencyProperty.Register("MyGroupTypeOrder", typeof(GroupTypeOrder), typeof(GroupTableUserControl), new PropertyMetadata(OnGroupTableChangedCallBack));
         #endregion
 
-
-
-
         public void PopulateGroupTable(GroupTypeOrder gto)
         {
             if (PreviousGroupTypeOrder == null || PreviousGroupTypeOrder.GroupTypeID != gto.GroupTypeID)
@@ -201,12 +198,6 @@ namespace TreatPraktik.View
             return gto;
         }
 
-        //public GroupTypeOrder GetGroupTypeOrder(Grid grid)
-        //{
-        //    GroupTableUserControl gtUC = (GroupTableUserControl) grid.Parent;
-
-        //}
-
         private void InsertItem(ItemTypeOrder item, int row, int column, SolidColorBrush textColor)
         {
             Border bCell = GetCellItem(row, column);
@@ -278,7 +269,8 @@ namespace TreatPraktik.View
             GroupType gt = gto.Group;
 
             ItemTypeOrder itToBeDeleted = (ItemTypeOrder)border.DataContext;
-            gt.ItemOrder.Remove(itToBeDeleted);
+            //gt.ItemOrder.Remove(itToBeDeleted);
+            GTViewModel.RemoveItemTypeOrder(gt, itToBeDeleted);
             GTViewModel.AdjustItemOrder(gt);
             RefreshGroupTable();
             DisableAllowDropByNewLineItem();
@@ -516,12 +508,12 @@ namespace TreatPraktik.View
             ItemType it = ito.Item;
             if (borderCell.DataContext is ItemTypeOrder)
             {
-                if (!draggedGt.GroupTypeID.Equals(gt.GroupTypeID))
-                {
-                    e.Effects = DragDropEffects.None;
-                }
-                else
-                {
+                //if (!draggedGt.GroupTypeID.Equals(gt.GroupTypeID))
+                //{
+                //    e.Effects = DragDropEffects.None;
+                //}
+                //else
+                //{
                     bool containsRow = CheckForNewLineItem(row);
                     if (it.DesignID.Equals("198") && containsRow && draggedItemRow != row)
                     {
@@ -531,7 +523,7 @@ namespace TreatPraktik.View
                     {
                         e.Effects = DragDropEffects.Move;
                     }
-                }
+                //}
             }
             if (borderCell.DataContext is GroupTypeOrder)
             {
@@ -572,8 +564,17 @@ namespace TreatPraktik.View
             {
                 Image img = e.Source as Image;
                 Button btn = (Button)img.Parent;
-                Grid gridCell = (Grid)btn.Parent;
-                bCell = (Border)gridCell.Parent;
+                if (btn.Parent is Grid)
+                {
+                    Grid gridCell = (Grid)btn.Parent;
+                    bCell = (Border)gridCell.Parent;
+                }
+                else if (btn.Parent is StackPanel)
+                {
+                    StackPanel spGroupBtns = (StackPanel)btn.Parent;
+                    Grid gridCell = (Grid)spGroupBtns.Parent;
+                    bCell = (Border)gridCell.Parent;
+                }
             }
             else if (e.Source is Button)
             {
@@ -606,101 +607,15 @@ namespace TreatPraktik.View
             DisableAllowDropByNewLineItem();
         }
 
-        //void HandleItemTypeDrop(object sender, DragEventArgs e)
-        //{
-        //    Border target = GetBorderByDropEvent(e);
-        //    ItemTypeOrder targetItemType = (ItemTypeOrder)target.DataContext;
-
-        //    Border target2 = e.Data.GetData("System.Windows.Controls.Border") as Border;
-        //    ItemTypeOrder draggedItemType = (ItemTypeOrder)target2.DataContext;
-        //    //Grid groupTable2 = (Grid)target2.Parent;
-        //    Grid groupTable = (Grid)target.Parent;
-        //    GroupTypeOrder gto = GetGroupType(groupTable);
-        //    GroupType gt = gto.Group;
-        //    int draggedPosition = gt.ItemOrder.IndexOf(draggedItemType);
-        //    double targetItemTypeNo = targetItemType.ItemOrder; //affected item
-        //    int targetPosition = gt.ItemOrder.IndexOf(targetItemType);
-
-
-        //    if (targetItemType != draggedItemType)
-        //    {
-        //        gt.ItemOrder.Remove(draggedItemType);
-        //        if (targetItemType.DesignID == null && !draggedItemType.DesignID.Equals("198"))
-        //        {
-        //            GTViewModel.AdjustItemOrder(gt);
-        //            draggedItemType.ItemOrder = targetItemType.ItemOrder;
-        //            gt.ItemOrder.Add(draggedItemType);
-        //            gt.ItemOrder.Sort(i => i.ItemOrder);
-        //            GTViewModel.GenerateEmptyFields(gt);
-        //            RefreshGroupTable();
-        //        }
-        //        else if (targetItemType.DesignID == null && draggedItemType.DesignID.Equals("198"))
-        //        {
-                    
-        //            draggedItemType.ItemOrder = targetItemType.ItemOrder;
-        //            gt.ItemOrder.Add(draggedItemType);
-        //            gt.ItemOrder.Sort(i => i.ItemOrder);
-        //            GTViewModel.GenerateEmptyFields(gt);
-        //            GTViewModel.AdjustItemOrder(gt);
-        //            RefreshGroupTable();
-        //        }
-
-        //        else if (draggedItemType.DesignID.Equals("198"))
-        //        {
-        //            if (draggedItemType.ItemOrder > targetItemType.ItemOrder)
-        //            {
-        //                gt.ItemOrder.Insert(targetPosition, draggedItemType);
-        //                draggedItemType.ItemOrder = targetItemTypeNo;
-        //                GTViewModel.AdjustItemOrder(gt);
-        //            }
-        //            else
-        //            {
-        //                draggedItemType.ItemOrder = targetItemTypeNo;
-        //                gt.ItemOrder.Insert(targetPosition - 1, draggedItemType);
-        //                GTViewModel.AdjustItemOrder(gt);
-        //            }
-        //            GTViewModel.GenerateEmptyFields(gt);
-        //            gt.ItemOrder.Sort(i => i.ItemOrder);
-        //            RefreshGroupTable();
-        //        }
-
-        //        else if (targetItemType.DesignID != null && draggedItemType.DesignID != null /*&& !draggedItemType.DesignID.Equals("198")*/)
-        //        {
-        //            if (draggedItemType.ItemOrder > targetItemType.ItemOrder)
-        //            {
-        //                gt.ItemOrder.Insert(targetPosition, draggedItemType);
-        //                draggedItemType.ItemOrder = targetItemTypeNo;
-        //            }
-        //            else
-        //            {
-        //                if (gt.ItemOrder.Count != targetPosition)
-        //                {
-        //                    draggedItemType.ItemOrder = targetItemTypeNo;
-        //                    gt.ItemOrder.Insert(targetPosition, draggedItemType);
-        //                }
-        //                else
-        //                {
-        //                    draggedItemType.ItemOrder = targetItemTypeNo;
-        //                    gt.ItemOrder.Add(draggedItemType);
-        //                }
-        //            }
-        //            GTViewModel.AdjustItemOrder(gt, targetPosition, draggedPosition);
-
-        //            GTViewModel.GenerateEmptyFields(gt);
-        //            gt.ItemOrder.Sort(i => i.ItemOrder);
-        //            RefreshGroupTable();
-        //        }
-        //    }
-        //}
-
         void HandleItemTypeDrop(object sender, DragEventArgs e)
         {
             Border target = GetBorderByDropEvent(e);
             ItemTypeOrder targetItemType = (ItemTypeOrder)target.DataContext;
 
+
             Border target2 = e.Data.GetData("System.Windows.Controls.Border") as Border;
             ItemTypeOrder draggedItemType = (ItemTypeOrder)target2.DataContext;
-            Grid groupTable = (Grid)target.Parent;
+            Grid groupTable = (Grid)target2.Parent;
             GroupTypeOrder gto = GetGroupType(groupTable);
             GroupType gt = gto.Group;
             GTViewModel.HandleDropAndDropBetweenItems(gt, targetItemType, draggedItemType);
@@ -870,18 +785,30 @@ namespace TreatPraktik.View
             };
             bCell.MouseMove += border_MouseMove;
             bCell.GiveFeedback += border_GiveFeedback;
+            bCell.QueryContinueDrag += bCell_QueryContinueDrag;
             return bCell;
+        }
+
+        void bCell_QueryContinueDrag(object sender, QueryContinueDragEventArgs e)
+        {
+            Border bCell = sender as Border;
+            if (e.Action == DragAction.Drop)
+            {
+                bCell.BorderBrush = new SolidColorBrush(Colors.Black);
+            }
         }
 
         void border_GiveFeedback(object sender, GiveFeedbackEventArgs e)
         {
+            Border bCell = sender as Border;
+
             if (adorner != null)
             {
-                Border bCell = sender as Border;
                 var pos = bCell.PointFromScreen(GetMousePosition());
                 adorner.UpdatePosition(pos);
                 //e.Handled = true;
             }
+
         }
 
         void border_MouseMove(object sender, MouseEventArgs e)
@@ -891,19 +818,25 @@ namespace TreatPraktik.View
                 Border draggedItem = sender as Border;
                 if (draggedItem.DataContext is ItemTypeOrder) //Prevent dragging if GroupType
                 {
+                    draggedItem.BorderBrush = new SolidColorBrush(Colors.Red);
                     ItemTypeOrder ito = (ItemTypeOrder)draggedItem.DataContext;
                     ItemType it = ito.Item;
                     if (it != null)
                     {
                         adorner = new DragAdornerItem(draggedItem, e.GetPosition(draggedItem));
                         AdornerLayer.GetAdornerLayer(this).Add(adorner);
+                        
                         if (it.DesignID.Equals("198"))
                         {
                             int row = Grid.GetRow(draggedItem);
                             EnableAllowDropNewLine(0, row);
                         }
                         DragDrop.DoDragDrop(draggedItem, draggedItem, DragDropEffects.None | DragDropEffects.Move);
-                        AdornerLayer.GetAdornerLayer(this).Remove(adorner);
+                        if (AdornerLayer.GetAdornerLayer(this) != null)
+                        {
+                            AdornerLayer.GetAdornerLayer(this).Remove(adorner);
+                        }
+                        draggedItem.BorderBrush = new SolidColorBrush(Color.FromRgb(151, 203, 255));
                     }
                 }
                 if (draggedItem.DataContext is GroupTypeOrder)
@@ -1009,10 +942,8 @@ namespace TreatPraktik.View
                 foreach (string s in dlg.departmentUserControl.departmentsListBox.Items)
                     departmentList.Add(s);
                 GTViewModel.EditGroup(MyGroupTypeOrder, dlg.englishTextBox.Text, dlg.danishTextBox.Text, departmentList);
-
             }
         }
-
 
         #region MousePositionLogic
         [DllImport("user32.dll")]

@@ -83,6 +83,11 @@ namespace TreatPraktik.ViewModel
             GroupTypeOrderCollection.Sort(gtoItem => gtoItem.GroupOrder);
         }
 
+        public void RemoveItemTypeOrder(GroupType gt, ItemTypeOrder ito)
+        {
+            gt.ItemOrder.Remove(ito);
+        }
+
         public void RefreshLanguage(GroupTypeOrder gto)
         {
             string languageID = gto.Group.LanguageID;
@@ -151,73 +156,84 @@ namespace TreatPraktik.ViewModel
 
         public void HandleDropAndDropBetweenItems(GroupType gt, ItemTypeOrder targetItemType, ItemTypeOrder draggedItemType)
         {
-            int draggedPosition = gt.ItemOrder.IndexOf(draggedItemType);
-            double targetItemTypeNo = targetItemType.ItemOrder; //affected item
-            int targetPosition = gt.ItemOrder.IndexOf(targetItemType);
-
-            if (targetItemType != draggedItemType)
+            if (!gt.Equals(Group))
             {
-                gt.ItemOrder.Remove(draggedItemType);
-                if (targetItemType.DesignID == null && !draggedItemType.DesignID.Equals("198"))
-                {
-                    AdjustItemOrder(gt);
-                    draggedItemType.ItemOrder = targetItemType.ItemOrder;
-                    gt.ItemOrder.Add(draggedItemType);
-                    gt.ItemOrder.Sort(i => i.ItemOrder);
-                    GenerateEmptyFields(gt);
-                }
-                else if (targetItemType.DesignID == null && draggedItemType.DesignID.Equals("198"))
-                {
+                ToolboxItem tbi = new ToolboxItem();
+                RemoveItemTypeOrder(gt, draggedItemType);
+                tbi.ItemType = draggedItemType.Item;
+                HandleToolboxItemDrop(Group, tbi, targetItemType);
+                GroupTypeOrderCollection.Sort(x => x.GroupOrder);
+            }
+            else
+            {
+                int draggedPosition = gt.ItemOrder.IndexOf(draggedItemType);
+                double targetItemTypeNo = targetItemType.ItemOrder; //affected item
+                int targetPosition = gt.ItemOrder.IndexOf(targetItemType);
 
-                    draggedItemType.ItemOrder = targetItemType.ItemOrder;
-                    gt.ItemOrder.Add(draggedItemType);
-                    gt.ItemOrder.Sort(i => i.ItemOrder);
-                    GenerateEmptyFields(gt);
-                    AdjustItemOrder(gt);
-                }
-
-                else if (draggedItemType.DesignID.Equals("198"))
+                if (targetItemType != draggedItemType)
                 {
-                    if (draggedItemType.ItemOrder > targetItemType.ItemOrder)
+                    gt.ItemOrder.Remove(draggedItemType);
+                    if (targetItemType.DesignID == null && !draggedItemType.DesignID.Equals("198"))
                     {
-                        gt.ItemOrder.Insert(targetPosition, draggedItemType);
-                        draggedItemType.ItemOrder = targetItemTypeNo;
+                        AdjustItemOrder(gt);
+                        draggedItemType.ItemOrder = targetItemType.ItemOrder;
+                        gt.ItemOrder.Add(draggedItemType);
+                        gt.ItemOrder.Sort(i => i.ItemOrder);
+                        GenerateEmptyFields(gt);
+                    }
+                    else if (targetItemType.DesignID == null && draggedItemType.DesignID.Equals("198"))
+                    {
+
+                        draggedItemType.ItemOrder = targetItemType.ItemOrder;
+                        gt.ItemOrder.Add(draggedItemType);
+                        gt.ItemOrder.Sort(i => i.ItemOrder);
+                        GenerateEmptyFields(gt);
                         AdjustItemOrder(gt);
                     }
-                    else
-                    {
-                        draggedItemType.ItemOrder = targetItemTypeNo;
-                        gt.ItemOrder.Insert(targetPosition - 1, draggedItemType);
-                        AdjustItemOrder(gt);
-                    }
-                    GenerateEmptyFields(gt);
-                    gt.ItemOrder.Sort(i => i.ItemOrder);
-                }
 
-                else if (targetItemType.DesignID != null && draggedItemType.DesignID != null /*&& !draggedItemType.DesignID.Equals("198")*/)
-                {
-                    if (draggedItemType.ItemOrder > targetItemType.ItemOrder)
+                    else if (draggedItemType.DesignID.Equals("198"))
                     {
-                        gt.ItemOrder.Insert(targetPosition, draggedItemType);
-                        draggedItemType.ItemOrder = targetItemTypeNo;
-                    }
-                    else
-                    {
-                        if (gt.ItemOrder.Count != targetPosition)
+                        if (draggedItemType.ItemOrder > targetItemType.ItemOrder)
                         {
-                            draggedItemType.ItemOrder = targetItemTypeNo;
                             gt.ItemOrder.Insert(targetPosition, draggedItemType);
+                            draggedItemType.ItemOrder = targetItemTypeNo;
+                            AdjustItemOrder(gt);
                         }
                         else
                         {
                             draggedItemType.ItemOrder = targetItemTypeNo;
-                            gt.ItemOrder.Add(draggedItemType);
+                            gt.ItemOrder.Insert(targetPosition - 1, draggedItemType);
+                            AdjustItemOrder(gt);
                         }
+                        GenerateEmptyFields(gt);
+                        gt.ItemOrder.Sort(i => i.ItemOrder);
                     }
-                    AdjustItemOrder(gt, targetPosition, draggedPosition);
 
-                    GenerateEmptyFields(gt);
-                    gt.ItemOrder.Sort(i => i.ItemOrder);
+                    else if (targetItemType.DesignID != null && draggedItemType.DesignID != null /*&& !draggedItemType.DesignID.Equals("198")*/)
+                    {
+                        if (draggedItemType.ItemOrder > targetItemType.ItemOrder)
+                        {
+                            gt.ItemOrder.Insert(targetPosition, draggedItemType);
+                            draggedItemType.ItemOrder = targetItemTypeNo;
+                        }
+                        else
+                        {
+                            if (gt.ItemOrder.Count != targetPosition)
+                            {
+                                draggedItemType.ItemOrder = targetItemTypeNo;
+                                gt.ItemOrder.Insert(targetPosition, draggedItemType);
+                            }
+                            else
+                            {
+                                draggedItemType.ItemOrder = targetItemTypeNo;
+                                gt.ItemOrder.Add(draggedItemType);
+                            }
+                        }
+                        AdjustItemOrder(gt, targetPosition, draggedPosition);
+
+                        GenerateEmptyFields(gt);
+                        gt.ItemOrder.Sort(i => i.ItemOrder);
+                    }
                 }
             }
         }
