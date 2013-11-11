@@ -157,13 +157,13 @@ namespace TreatPraktik.ViewModel
 
         public void HandleDropAndDropBetweenItems(GroupType gt, ItemTypeOrder targetItemType, ItemTypeOrder draggedItemType)
         {
-            if (!gt.Equals(Group))
+            if (!gt.Equals(Group)) //dropping an item from one group to another
             {
                 ToolboxItem tbi = new ToolboxItem();
                 RemoveItemTypeOrder(gt, draggedItemType);
                 tbi.ItemType = draggedItemType.Item;
                 HandleToolboxItemDrop(Group, tbi, targetItemType);
-                GroupTypeOrderCollection.Sort(x => x.GroupOrder);
+                GroupTypeOrderCollection.Sort(x => x.GroupOrder); //refresh all groups to show the changes
             }
             else
             {
@@ -260,7 +260,7 @@ namespace TreatPraktik.ViewModel
             gt.ItemOrder.Insert(index, itemTypeOrder);
             int draggedIndex = gt.ItemOrder.IndexOf(itemTypeOrder);
 
-            AdjustItemOrderNewLineItem(gt, draggedIndex);
+            AdjustItemOrderNewLineItemDrop(gt, draggedIndex);
         }
 
         public void CheckForNewLineItem(ItemTypeOrder dropTargetItemTypeOrder)
@@ -334,7 +334,7 @@ namespace TreatPraktik.ViewModel
             _wvm._changedFlag = true;
         }
 
-        public void AdjustItemOrderNewLineItem(GroupType gt, int draggedPosition)
+        public void AdjustItemOrderNewLineItemDrop(GroupType gt, int draggedPosition)
         {
             int j = 0;
             bool stop = false;

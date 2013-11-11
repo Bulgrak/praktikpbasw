@@ -16,7 +16,7 @@ using TreatPraktik.Model.WorkspaceObjects;
 
 namespace TreatPraktik.ViewModel
 {
-    public class GroupListViewModel : INotifyPropertyChanged
+    public class ToolboxGroupsViewModel : INotifyPropertyChanged
     {
         private string filterString;
         private string textSearchDescription;
@@ -24,7 +24,7 @@ namespace TreatPraktik.ViewModel
         public string textNoGroupsFound;
         public ICollectionView DesignItemsView { get; set; }
         public ObservableCollection<ToolboxGroup> GTList { get; set; }
-        private static GroupListViewModel instance;
+        private static ToolboxGroupsViewModel instance;
 
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
@@ -39,7 +39,7 @@ namespace TreatPraktik.ViewModel
         }
         #endregion
 
-        private GroupListViewModel()
+        private ToolboxGroupsViewModel()
         {
             GTList = new ObservableCollection<ToolboxGroup>();
             LanguageID = "2";
@@ -129,13 +129,13 @@ namespace TreatPraktik.ViewModel
         }
 
 
-        public static GroupListViewModel Instance
+        public static ToolboxGroupsViewModel Instance
         {
             get
             {
                 if (instance == null)
                 {
-                    instance = new GroupListViewModel();
+                    instance = new ToolboxGroupsViewModel();
                 }
                 return instance;
             }

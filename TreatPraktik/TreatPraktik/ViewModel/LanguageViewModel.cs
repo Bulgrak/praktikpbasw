@@ -10,12 +10,12 @@ namespace TreatPraktik.ViewModel
     class LanguageViewModel
     {
         private WorkspaceViewModel WorkspaceVM;
-        private ItemFilterViewModel itemFilterVM;
+        private ToolboxStandardItemsViewModel itemFilterVM;
 
         public LanguageViewModel()
         {
             WorkspaceVM = WorkspaceViewModel.Instance;
-            itemFilterVM = ItemFilterViewModel.Instance;
+            itemFilterVM = ToolboxStandardItemsViewModel.Instance;
         }
 
         public void ChangeLanguage(string languageID)

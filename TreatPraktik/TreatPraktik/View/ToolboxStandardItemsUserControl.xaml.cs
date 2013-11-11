@@ -22,13 +22,13 @@ namespace TreatPraktik.View
     /// <summary>
     /// Interaction logic for ucListOfItemsFilter.xaml
     /// </summary>
-    public partial class ItemFilter : UserControl
+    public partial class ToolboxStandardItemsUserControl : UserControl
     {
         public UIElement TopGrid { get; set; }
-        public ItemFilter()
+        public ToolboxStandardItemsUserControl()
         {
             InitializeComponent();
-            ItemFilterViewModel ifvm = ItemFilterViewModel.Instance;
+            ToolboxStandardItemsViewModel ifvm = ToolboxStandardItemsViewModel.Instance;
             ifvm.PopulateToolbox();
             DataContext = ifvm;
             Style itemContainerStyle = new Style(typeof(ListBoxItem));

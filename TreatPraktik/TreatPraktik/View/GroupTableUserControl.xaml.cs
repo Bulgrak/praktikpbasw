@@ -33,6 +33,13 @@ namespace TreatPraktik.View
         public TextBlock GroupHeader { get; set; }
         public static GroupTypeOrder PreviousGroupTypeOrder { get; set; }
 
+        //GroupTable - Color theme
+        private Color CellColor = Color.FromRgb(228, 241, 255);
+        private Color CellBorderColor = Color.FromRgb(151, 203, 255);
+        private Color CellBorderHighlightColor = Colors.Red;
+        private Color CellTextColor = Colors.Black;
+        private Color GroupHeaderColor = Color.FromRgb(151, 203, 255);
+
         public GroupTableUserControl()
         {
             InitializeComponent();
@@ -133,8 +140,7 @@ namespace TreatPraktik.View
                                 counterRow++;
                                 gt.ItemOrder[j + skipped].Item.Header = "<NewLineItem>";
                                 //gt.ItemOrder[j + skipped].ItemOrder = j + skipped;
-                                SolidColorBrush textColor2 = Brushes.Black;
-                                InsertItem(gt.ItemOrder[j + skipped], counterRow, j%4, textColor2);
+                                InsertItem(gt.ItemOrder[j + skipped], counterRow, j%4);
                                 j--;
                                 skipped++;
 
@@ -142,8 +148,7 @@ namespace TreatPraktik.View
                             }
                             gt.ItemOrder[j + skipped].Item.Header = "<NewLineItem>";
                             //gt.ItemOrder[j + skipped].ItemOrder = j + skipped;
-                            SolidColorBrush textColor = Brushes.Black;
-                            InsertItem(gt.ItemOrder[j + skipped], counterRow, j%4, textColor);
+                            InsertItem(gt.ItemOrder[j + skipped], counterRow, j%4);
                             skipped = skipped + j;
                             j = 0;
                         }
@@ -160,9 +165,8 @@ namespace TreatPraktik.View
                         }
                         if (gt.ItemOrder[j + skipped].DesignID.Equals("197"))
                         {
-                            SolidColorBrush textColor = Brushes.Black;
                             gt.ItemOrder[j + skipped].Item.Header = "<EmptyField>";
-                            InsertItem(gt.ItemOrder[j + skipped], counterRow, j%4, textColor);
+                            InsertItem(gt.ItemOrder[j + skipped], counterRow, j%4);
                             //gt.ItemOrder[j + skipped].ItemOrder = j + skipped;
                         }
                         else
@@ -171,8 +175,7 @@ namespace TreatPraktik.View
                             {
                                 counterColumn = 0;
                             }
-                            SolidColorBrush textColor = Brushes.Black;
-                            InsertItem(gt.ItemOrder[j + skipped], counterRow, j%4, textColor);
+                            InsertItem(gt.ItemOrder[j + skipped], counterRow, j%4);
                             //gt.ItemOrder[j + skipped].ItemOrder = j + skipped;
                         }
                         counterColumn++;
@@ -198,7 +201,7 @@ namespace TreatPraktik.View
             return gto;
         }
 
-        private void InsertItem(ItemTypeOrder item, int row, int column, SolidColorBrush textColor)
+        private void InsertItem(ItemTypeOrder item, int row, int column)
         {
             Border bCell = GetCellItem(row, column);
             Grid cellItem = (Grid)bCell.Child;
@@ -208,7 +211,7 @@ namespace TreatPraktik.View
             bCell.DataContext = item;
             //tb.DataContext = itemType;
             //tb.SetBinding(TextBlock.TextProperty, "Header");
-            tb.Foreground = textColor;
+            tb.Foreground = new SolidColorBrush(CellTextColor);
         }
 
         private void InsertGroupItem(GroupTypeOrder groupTypeOrder, int row, int column)
@@ -249,7 +252,7 @@ namespace TreatPraktik.View
             {
                 ItemTypeOrder item = new ItemTypeOrder();
                 item.ItemOrder = ((row - 1) * 4) + i;
-                Border border = CreateItemCell(Color.FromRgb(151, 203, 255), Color.FromRgb(228, 241, 255), item);
+                Border border = CreateItemCell(item);
                 Grid.SetRow(border, row);
                 Grid.SetColumn(border, i);
                 GroupTable.Children.Add(border);
@@ -336,8 +339,7 @@ namespace TreatPraktik.View
             int i = 0;
             while (i < 4)
             {
-                Color cellColorGroup = (Color)ColorConverter.ConvertFromString("#97CBFF");
-                Border cellItem = CreateGroupCell(cellColorGroup, cellColorGroup);
+                Border cellItem = CreateGroupCell();
                 if (i == 0)
                 {
                     Grid.SetRow(cellItem, rowNo);
@@ -349,9 +351,9 @@ namespace TreatPraktik.View
             }
         }
 
-        private Border CreateGroupCell(Color borderBrush, Color background)
+        private Border CreateGroupCell()
         {
-            Border bGroupCell = CreateBorderContainer(borderBrush, background);
+            Border bGroupCell = CreateBorderContainer(CellBorderColor, GroupHeaderColor);
             bGroupCell.MouseEnter += border_MouseEnter;
             bGroupCell.MouseLeave += border_MouseLeave;
             bGroupCell.AllowDrop = true;
@@ -378,9 +380,9 @@ namespace TreatPraktik.View
             return bGroupCell;
         }
 
-        private Border CreateItemCell(Color borderBrush, Color background, ItemTypeOrder itemType)
+        private Border CreateItemCell(ItemTypeOrder itemType)
         {
-            Border bCell = CreateBorderContainer(borderBrush, background);
+            Border bCell = CreateBorderContainer(CellBorderColor, CellColor);
             bCell.DataContext = itemType;
             bCell.MouseEnter += border_MouseEnter;
             bCell.MouseLeave += border_MouseLeave;
@@ -785,17 +787,7 @@ namespace TreatPraktik.View
             };
             bCell.MouseMove += border_MouseMove;
             bCell.GiveFeedback += border_GiveFeedback;
-            bCell.QueryContinueDrag += bCell_QueryContinueDrag;
             return bCell;
-        }
-
-        void bCell_QueryContinueDrag(object sender, QueryContinueDragEventArgs e)
-        {
-            Border bCell = sender as Border;
-            if (e.Action == DragAction.Drop)
-            {
-                bCell.BorderBrush = new SolidColorBrush(Colors.Black);
-            }
         }
 
         void border_GiveFeedback(object sender, GiveFeedbackEventArgs e)
@@ -818,7 +810,7 @@ namespace TreatPraktik.View
                 Border draggedItem = sender as Border;
                 if (draggedItem.DataContext is ItemTypeOrder) //Prevent dragging if GroupType
                 {
-                    draggedItem.BorderBrush = new SolidColorBrush(Colors.Red);
+                    draggedItem.BorderBrush = new SolidColorBrush(CellBorderHighlightColor);
                     ItemTypeOrder ito = (ItemTypeOrder)draggedItem.DataContext;
                     ItemType it = ito.Item;
                     if (it != null)

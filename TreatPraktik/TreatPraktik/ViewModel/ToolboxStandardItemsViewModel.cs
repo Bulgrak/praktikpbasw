@@ -14,7 +14,7 @@ using TreatPraktik.Model.WorkspaceObjects;
 
 namespace TreatPraktik.ViewModel
 {
-    public class ItemFilterViewModel : INotifyPropertyChanged
+    public class ToolboxStandardItemsViewModel : INotifyPropertyChanged
     {
         private string filterString;
         private string textSearchDescription;
@@ -22,7 +22,7 @@ namespace TreatPraktik.ViewModel
         public string textNoToolboxItemsFound;
         public ICollectionView DesignItemsView { get; set; }
         public List<ToolboxItem> ToolboxItemList { get; set; }
-        private static ItemFilterViewModel instance;
+        private static ToolboxStandardItemsViewModel instance;
 
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
@@ -37,20 +37,20 @@ namespace TreatPraktik.ViewModel
         }
         #endregion
 
-        private ItemFilterViewModel()
+        private ToolboxStandardItemsViewModel()
         {
             ToolboxItemList = new List<ToolboxItem>();
             LanguageID = "2";
             filterString = "";
         }
 
-        public static ItemFilterViewModel Instance
+        public static ToolboxStandardItemsViewModel Instance
         {
             get
             {
                 if (instance == null)
                 {
-                    instance = new ItemFilterViewModel();
+                    instance = new ToolboxStandardItemsViewModel();
                 }
                 return instance;
             }

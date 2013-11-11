@@ -76,10 +76,10 @@
     <Compile Include="Model\WorkspaceObjects\ItemTypeOrder.cs" />
     <Compile Include="Ressources\ExcelClasses\ResourceTranslation.cs" />
     <Compile Include="Ressources\Exceptions\InvalidFileTypeException.cs" />
-    <Compile Include="ViewModel\GroupListViewModel.cs" />
+    <Compile Include="ViewModel\ToolboxGroupsViewModel.cs" />
     <Compile Include="ViewModel\GroupTableContainerViewModel.cs" />
     <Compile Include="ViewModel\LanguageViewModel.cs" />
-    <Compile Include="ViewModel\SpecialFieldsViewModel.cs" />
+    <Compile Include="ViewModel\ToolboxSpecialItemsViewModel.cs" />
     <Compile Include="Ressources\ExcelClasses\Order.cs" />
     <Compile Include="View\CreateGroupDialogBox.xaml.cs">
       <DependentUpon>CreateGroupDialogBox.xaml</DependentUpon>
@@ -95,15 +95,15 @@
     </Compile>
     <Compile Include="View\EditGroupValidationRule.cs" />
     <Compile Include="View\GridHelpers.cs" />
-    <Compile Include="View\GroupListUserControl.xaml.cs">
-      <DependentUpon>GroupListUserControl.xaml</DependentUpon>
+    <Compile Include="View\ToolboxGroupsUserControl.xaml.cs">
+      <DependentUpon>ToolboxGroupsUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\GroupOrderToRow.cs" />
     <Compile Include="View\GroupTableUserControl.xaml.cs">
       <DependentUpon>GroupTableUserControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\ItemFilter.xaml.cs">
-      <DependentUpon>ItemFilter.xaml</DependentUpon>
+    <Compile Include="View\ToolboxStandardItemsUserControl.xaml.cs">
+      <DependentUpon>ToolboxStandardItemsUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Model\ExcelObjects\ktResources.cs" />
     <Compile Include="Model\ExcelObjects\ktResourceTranslation.cs" />
@@ -132,7 +132,7 @@
     <Compile Include="ViewModel\ExportExcel.cs" />
     <Compile Include="ViewModel\GroupTableViewModel.cs" />
     <Compile Include="ViewModel\ImportExcel.cs" />
-    <Compile Include="ViewModel\ItemFilterViewModel.cs" />
+    <Compile Include="ViewModel\ToolboxStandardItemsViewModel.cs" />
     <Compile Include="ViewModel\WorkspaceViewModel.cs" />
     <Compile Include="View\GridExtensions.cs" />
     <Compile Include="View\GroupTableContainerUserControl.xaml.cs">
@@ -142,8 +142,8 @@
       <DependentUpon>MenuUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\ObservableCollectionExtensions.cs" />
-    <Compile Include="View\SpecialFields.xaml.cs">
-      <DependentUpon>SpecialFields.xaml</DependentUpon>
+    <Compile Include="View\ToolboxSpecialItemsUserControl.xaml.cs">
+      <DependentUpon>ToolboxSpecialItemsUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\WorkspaceUserControl.xaml.cs">
       <DependentUpon>WorkspaceUserControl.xaml</DependentUpon>
@@ -160,7 +160,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\GroupListUserControl.xaml">
+    <Page Include="View\ToolboxGroupsUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -168,7 +168,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\ItemFilter.xaml">
+    <Page Include="View\ToolboxStandardItemsUserControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -192,7 +192,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\SpecialFields.xaml">
+    <Page Include="View\ToolboxSpecialItemsUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

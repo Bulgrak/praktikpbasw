@@ -10,7 +10,7 @@ using TreatPraktik.Model.WorkspaceObjects;
 
 namespace TreatPraktik.ViewModel
 {
-    public class SpecialFieldsViewModel
+    public class ToolboxSpecialItemsViewModel
     {
         private string filterString;
         private string textSearchDescription;
@@ -19,7 +19,7 @@ namespace TreatPraktik.ViewModel
         //public string TextSearchDescription { get; set; } //Beskrivelse
         public ICollectionView SpecialItemsView { get; set; }
 
-        public SpecialFieldsViewModel()
+        public ToolboxSpecialItemsViewModel()
         {
             CreateSpecialItems();
         }

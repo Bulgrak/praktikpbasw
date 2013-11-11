@@ -17,21 +17,27 @@ using TreatPraktik.ViewModel;
 namespace TreatPraktik.View
 {
     /// <summary>
-    /// Interaction logic for SpecialFields.xaml
+    /// Interaction logic for ToolboxGroupsUserControl.xaml
     /// </summary>
-    public partial class SpecialFields : UserControl
+    public partial class ToolboxGroupsUserControl : UserControl
     {
-        public SpecialFields()
+        public UIElement TopGrid { get; set; }
+        public ToolboxGroupsUserControl()
         {
             InitializeComponent();
-            DataContext = new SpecialFieldsViewModel();
+            ToolboxGroupsViewModel glvm = ToolboxGroupsViewModel.Instance;
+            DataContext = glvm;
+            glvm.PopulateGTList();
             Style itemContainerStyle = new Style(typeof(ListBoxItem));
             //itemContainerStyle.Setters.Add(new Setter(ListBoxItem.AllowDropProperty, true));
+            //itemContainerStyle.Setters.Add(new EventSetter(ListBoxItem.PreviewMouseLeftButtonDownEvent, new MouseButtonEventHandler(List_PreviewMouseLeftButtonDown)));
             itemContainerStyle.Setters.Add(new EventSetter(ListBoxItem.PreviewMouseMoveEvent, new MouseEventHandler(List_MouseMove)));
             itemContainerStyle.Setters.Add(new EventSetter(ListBoxItem.PreviewGiveFeedbackEvent, new GiveFeedbackEventHandler(List_GiveFeedback)));
             //itemContainerStyle.Setters.Add(new EventSetter(ListBoxItem.DropEvent, new DragEventHandler(listbox1_Drop)));
-            lstSpecialItems.ItemContainerStyle = itemContainerStyle;
+            lstItems.ItemContainerStyle = itemContainerStyle;
+            TopGrid = (UIElement)this.Parent;
         }
+
 
         void List_MouseMove(object sender, MouseEventArgs e)
         {
@@ -56,20 +62,9 @@ namespace TreatPraktik.View
                 ListBoxItem lbl = sender as ListBoxItem;
                 var pos = lbl.PointFromScreen(GetMousePosition());
                 adorner.UpdatePosition(pos);
-                //e.Handled = true;
+              //e.Handled = true;
             }
         }
-
-        //public void ToolboxItem_PreviewMouseMove(object sender, MouseEventArgs e)
-        //{
-        //    if (sender is ListBoxItem && e.LeftButton == MouseButtonState.Pressed)
-        //    {
-
-        //        ListBoxItem draggedItem = sender as ListBoxItem;
-        //        draggedItem.IsSelected = true;
-        //        DragDrop.DoDragDrop(draggedItem, draggedItem, DragDropEffects.Copy);
-        //    }
-        //}
 
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]

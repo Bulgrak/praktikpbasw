@@ -15,19 +15,19 @@ namespace UnitTestTreatPraktik
     [TestClass]
     public class UnitTest2
     {
-        private ItemFilterViewModel ifvm;
-        private GroupListViewModel glvm;
+        private ToolboxStandardItemsViewModel ifvm;
+        private ToolboxGroupsViewModel glvm;
         private WorkspaceViewModel wvm;
         private GroupTableViewModel gtvm;
-        private SpecialFieldsViewModel sfvm;
+        private ToolboxSpecialItemsViewModel sfvm;
 
         [TestInitialize()]
         public void Initialize()
         {
-            ifvm = ItemFilterViewModel.Instance;
-            glvm = GroupListViewModel.Instance;
+            ifvm = ToolboxStandardItemsViewModel.Instance;
+            glvm = ToolboxGroupsViewModel.Instance;
             wvm = WorkspaceViewModel.Instance;
-            sfvm = new SpecialFieldsViewModel();
+            sfvm = new ToolboxSpecialItemsViewModel();
             gtvm = new GroupTableViewModel();
 
         }

@@ -654,7 +654,7 @@ namespace TreatPraktik.ViewModel
 
             //Reference GroupTypeOrder with GroupType
 
-            GroupListViewModel glvm = GroupListViewModel.Instance;
+            ToolboxGroupsViewModel glvm = ToolboxGroupsViewModel.Instance;
             ToolboxGroup tbg = new ToolboxGroup();
             tbg.Group = groupType;
             glvm.GTList.Add(tbg);
