@@ -24,11 +24,12 @@ namespace TreatPraktik.ViewModel
         }
 
         /// <summary>
-        /// Rename an existing group
+        /// Edits group in terms of translation text and departments
         /// </summary>
-        /// <param name="gto">The group to be renamed</param>
-        /// <param name="engTransText">The english group name</param>
-        /// <param name="danTransText">The danish group name</param>
+        /// <param name="gto">the group to be edit</param>
+        /// <param name="engTransText">english text</param>
+        /// <param name="danTransText">danish text</param>
+        /// <param name="departmentList">departments to be shown at</param>
         public void EditGroup(GroupTypeOrder gto, string engTransText, string danTransText, List<string> departmentList)
         {
             //PageType page = (from a in PageList where a.PageTypeID.Equals(pageTypeID) select a).FirstOrDefault();
@@ -83,11 +84,17 @@ namespace TreatPraktik.ViewModel
             GroupTypeOrderCollection.Sort(gtoItem => gtoItem.GroupOrder);
         }
 
+        /// <summary>
+        /// Removes an ItemTypeOrder from a group
+        /// </summary>
+        /// <param name="gt"></param>
+        /// <param name="ito">The ItemTypeOrder to be removed</param>
         public void RemoveItemTypeOrder(GroupType gt, ItemTypeOrder ito)
         {
             gt.ItemOrder.Remove(ito);
             AdjustItemOrder(gt);
         }
+
 
         public void RefreshLanguage(GroupTypeOrder gto)
         {
@@ -95,7 +102,11 @@ namespace TreatPraktik.ViewModel
             gto.Group.LanguageID = languageID;
         }
 
-
+        /// <summary>
+        /// Removes departments which do no exist in the list of departments for a group
+        /// </summary>
+        /// <param name="gto"></param>
+        /// <param name="departmentList"></param>
         public void CleanUpRemovedDepartments(GroupTypeOrder gto, List<string> departmentList)
         {
             int j = 0;
@@ -131,9 +142,16 @@ namespace TreatPraktik.ViewModel
             {
                 GroupTypeOrderCollection.Remove(groupTypeOrder);
             }
-            RefreshGroupOrder();
+            //RefreshGroupOrder();
+            AdjustGroupOrder();
         }
 
+        /// <summary>
+        /// Handles drop logic for items from toolbox. Drop logic depends on the type of the dropped item 
+        /// </summary>
+        /// <param name="gt"></param>
+        /// <param name="tbi"></param>
+        /// <param name="dropTargetItemTypeOrder"></param>
         public void HandleToolboxItemDrop(GroupType gt, ToolboxItem tbi, ItemTypeOrder dropTargetItemTypeOrder)
         {
             string dropTargetDesignID = dropTargetItemTypeOrder.DesignID;
@@ -155,6 +173,12 @@ namespace TreatPraktik.ViewModel
             }
         }
 
+        /// <summary>
+        /// Handles drop logic for items from a group. Drop logic depends on both drop target and dragged item
+        /// </summary>
+        /// <param name="gt"></param>
+        /// <param name="targetItemType"></param>
+        /// <param name="draggedItemType"></param>
         public void HandleDropAndDropBetweenItems(GroupType gt, ItemTypeOrder targetItemType, ItemTypeOrder draggedItemType)
         {
             if (!gt.Equals(Group)) //dropping an item from one group to another
@@ -190,6 +214,8 @@ namespace TreatPraktik.ViewModel
                         gt.ItemOrder.Sort(i => i.ItemOrder);
                         GenerateEmptyFields(gt);
                         AdjustItemOrder(gt);
+
+
                     }
 
                     else if (draggedItemType.DesignID.Equals("198"))
@@ -198,15 +224,20 @@ namespace TreatPraktik.ViewModel
                         {
                             gt.ItemOrder.Insert(targetPosition, draggedItemType);
                             draggedItemType.ItemOrder = targetItemTypeNo;
+                            gt.ItemOrder.Sort(i => i.ItemOrder);
                             AdjustItemOrder(gt);
                         }
                         else
                         {
                             draggedItemType.ItemOrder = targetItemTypeNo;
+
+                            //gt.ItemOrder.Insert(targetPosition - 1, draggedItemType);
                             gt.ItemOrder.Insert(targetPosition - 1, draggedItemType);
+                            gt.ItemOrder.Sort(i => i.ItemOrder);
+                            GenerateEmptyFields(gt);
                             AdjustItemOrder(gt);
                         }
-                        GenerateEmptyFields(gt);
+                        //GenerateEmptyFields(gt);
                         gt.ItemOrder.Sort(i => i.ItemOrder);
                     }
 
@@ -239,6 +270,12 @@ namespace TreatPraktik.ViewModel
             }
         }
 
+        /// <summary>
+        /// Handles drop logic for NewLineItem from toolbox
+        /// </summary>
+        /// <param name="dropTargetItemTypeOrder"></param>
+        /// <param name="tbi"></param>
+        /// <param name="gt"></param>
         public void ToolboxSpecialNewLineItemDrop(ItemTypeOrder dropTargetItemTypeOrder, ToolboxItem tbi, GroupType gt)
         {
             CheckForNewLineItem(dropTargetItemTypeOrder);
@@ -261,28 +298,39 @@ namespace TreatPraktik.ViewModel
             int draggedIndex = gt.ItemOrder.IndexOf(itemTypeOrder);
 
             AdjustItemOrderNewLineItemDrop(gt, draggedIndex);
+            //AdjustItemOrder(gt);
         }
 
+        /// <summary>
+        /// Makes sure that a NewLineItem cannot be dropped on a row in a group that already contains a NewLineItem
+        /// </summary>
+        /// <param name="dropTargetItemTypeOrder"></param>
         public void CheckForNewLineItem(ItemTypeOrder dropTargetItemTypeOrder)
         {
             int itemOrder = (int)dropTargetItemTypeOrder.ItemOrder;
-            int i = itemOrder - (itemOrder%4);
-            int j = itemOrder + (4 - (itemOrder%4));
+            int i = itemOrder - (itemOrder % 4);
+            int j = itemOrder + (4 - (itemOrder % 4));
             while (i < j && i < Group.ItemOrder.Count - 1)
             {
                 if (Group.ItemOrder[i].DesignID.Equals("198"))
                 {
-                   throw new Exception("The row already contains a <NewLineItem>"); 
+                    throw new Exception("The row already contains a <NewLineItem>");
                 }
                 i++;
             }
         }
 
+        /// <summary>
+        /// Handles drop logic for standard item from toolbox
+        /// </summary>
+        /// <param name="dropTargetItemTypeOrder"></param>
+        /// <param name="tbi"></param>
+        /// <param name="gt"></param>
         public void ToolboxItemDropOnStandardItem(ItemTypeOrder dropTargetItemTypeOrder, ToolboxItem tbi, GroupType gt)
         {
             ItemTypeOrder itemTypeOrder = new ItemTypeOrder();
             itemTypeOrder.DesignID = tbi.ItemType.DesignID;
-            ItemType itemType = new ItemType {DesignID = tbi.ItemType.DesignID, Header = tbi.ItemType.Header};
+            ItemType itemType = new ItemType { DesignID = tbi.ItemType.DesignID, Header = tbi.ItemType.Header };
             itemTypeOrder.ItemOrder = dropTargetItemTypeOrder.ItemOrder;
             itemType.DanishTranslationText = tbi.ItemType.DanishTranslationText;
             itemType.EnglishTranslationText = tbi.ItemType.EnglishTranslationText;
@@ -294,6 +342,12 @@ namespace TreatPraktik.ViewModel
             MoveItemsForward(startPosition, itemTypeOrder, gt);
         }
 
+        /// <summary>
+        /// Handles drop logic on null field
+        /// </summary>
+        /// <param name="dropTargetItemTypeOrder"></param>
+        /// <param name="tbi"></param>
+        /// <param name="gt"></param>
         public void ToolboxItemDropOnNullField(ItemTypeOrder dropTargetItemTypeOrder, ToolboxItem tbi, GroupType gt)
         {
             dropTargetItemTypeOrder.DesignID = tbi.ItemType.DesignID;
@@ -310,6 +364,12 @@ namespace TreatPraktik.ViewModel
             GenerateEmptyFields(gt);
         }
 
+        /// <summary>
+        /// Handles drop logic on emptyfield
+        /// </summary>
+        /// <param name="dropTargetItemTypeOrder"></param>
+        /// <param name="tbi"></param>
+        /// <param name="gt"></param>
         public void ToolboxItemDropOnEmptyField(ItemTypeOrder dropTargetItemTypeOrder, ToolboxItem tbi, GroupType gt)
         {
             dropTargetItemTypeOrder.DesignID = tbi.ItemType.DesignID;
@@ -321,6 +381,12 @@ namespace TreatPraktik.ViewModel
             dropTargetItemTypeOrder.IncludedTypeID = "1";
         }
 
+        /// <summary>
+        /// Determines how the order of the items in a group should be adjusted
+        /// </summary>
+        /// <param name="gt"></param>
+        /// <param name="targetPosition"></param>
+        /// <param name="draggedPosition"></param>
         public void AdjustItemOrder(GroupType gt, int targetPosition, int draggedPosition)
         {
             if (targetPosition < draggedPosition)
@@ -334,6 +400,11 @@ namespace TreatPraktik.ViewModel
             _wvm._changedFlag = true;
         }
 
+        /// <summary>
+        /// Adjust the order of the items in a group in relation to drop of a NewLineItem
+        /// </summary>
+        /// <param name="gt"></param>
+        /// <param name="draggedPosition"></param>
         public void AdjustItemOrderNewLineItemDrop(GroupType gt, int draggedPosition)
         {
             int j = 0;
@@ -352,6 +423,8 @@ namespace TreatPraktik.ViewModel
             {
                 if (gt.ItemOrder[i].DesignID.Equals("198"))
                 {
+                    if (i != 0)
+                        gt.ItemOrder[i].ItemOrder = gt.ItemOrder[i - 1].ItemOrder + 1;
                     i++;
                     gt.ItemOrder[i].ItemOrder = gt.ItemOrder[i - 1].ItemOrder + (4 - (gt.ItemOrder[i - 1].ItemOrder % 4));
                     i++;
@@ -365,6 +438,10 @@ namespace TreatPraktik.ViewModel
             _wvm._changedFlag = true;
         }
 
+        /// <summary>
+        /// Adjust the order of the items in a group
+        /// </summary>
+        /// <param name="gt"></param>
         public void AdjustItemOrder(GroupType gt)
         {
             int j = 0;
@@ -383,7 +460,7 @@ namespace TreatPraktik.ViewModel
             {
                 while (i < gt.ItemOrder.Count)
                 {
-                    if (gt.ItemOrder[i].DesignID.Equals("198") && i+1 != gt.ItemOrder.Count)
+                    if (gt.ItemOrder[i].DesignID.Equals("198") && i + 1 != gt.ItemOrder.Count)
                     {
                         i++;
                         gt.ItemOrder[i].ItemOrder = gt.ItemOrder[i - 1].ItemOrder +
@@ -437,6 +514,10 @@ namespace TreatPraktik.ViewModel
             _wvm._changedFlag = true;
         }
 
+        /// <summary>
+        /// Generates emptyfields for gaps between items of any time. Takes NewLineItem into account when generating
+        /// </summary>
+        /// <param name="gt"></param>
         public void GenerateEmptyFields(GroupType gt)
         {
             int i = 0;
@@ -465,16 +546,36 @@ namespace TreatPraktik.ViewModel
                         }
                         else
                         {
-                            totalNumberOfEmptyFields = (int)gt.ItemOrder[i].ItemOrder - ((int)gt.ItemOrder[i - 1].ItemOrder + (4 - (((int)gt.ItemOrder[i - 1].ItemOrder) % 4)));
+                            if (i != 0)
+                            {
+                                totalNumberOfEmptyFields = (int)gt.ItemOrder[i].ItemOrder -
+                                                           ((int)gt.ItemOrder[i - 1].ItemOrder +
+                                                            (4 - (((int)gt.ItemOrder[i - 1].ItemOrder) % 4)));
+                            }
+                            else
+                            {
+                                totalNumberOfEmptyFields = (int)gt.ItemOrder[i].ItemOrder;
+
+                            }
+
+
+                            ItemTypeOrder firstEmptyFieldGenerated = null;
                             noOfEmptyFieldsCounter = totalNumberOfEmptyFields;
                             while (noOfEmptyFieldsCounter > 0)
                             {
-                                gt.ItemOrder.Insert(i, CreateEmptyField(gt, (int)gt.ItemOrder[i].ItemOrder - noOfEmptyFieldsCounter));
+
+                                //gt.ItemOrder.Insert(i, CreateEmptyField(gt, (int)gt.ItemOrder[i].ItemOrder - noOfEmptyFieldsCounter));
+                                ItemTypeOrder emptyField = CreateEmptyField(gt,
+                                    (int)gt.ItemOrder[i].ItemOrder - noOfEmptyFieldsCounter);
+                                if (noOfEmptyFieldsCounter == totalNumberOfEmptyFields)
+                                    firstEmptyFieldGenerated = emptyField;
+                                gt.ItemOrder.Insert(i, emptyField);
                                 noOfEmptyFieldsCounter--;
                             }
-                            if (totalNumberOfEmptyFields != 0)
+                            if (totalNumberOfEmptyFields > 0)
                             {
-                                i = gt.ItemOrder.Count - 1;
+                                //i = gt.ItemOrder.Count - 1;
+                                i = gt.ItemOrder.IndexOf(firstEmptyFieldGenerated) + 1;
                             }
                         }
                     }
@@ -559,6 +660,11 @@ namespace TreatPraktik.ViewModel
             GroupTypeOrderCollection.Insert(targetPosition, gto);
         }
 
+        /// <summary>
+        /// Inserts a group at the end of a list. Used when dropping a new group from toolbox on a page
+        /// </summary>
+        /// <param name="gt"></param>
+        /// <param name="pageTypeID"></param>
         public void InsertGroupLast(GroupType gt, string pageTypeID)
         {
             GroupTypeOrder gtoCompare = GroupTypeOrderCollection.Last();
@@ -571,6 +677,11 @@ namespace TreatPraktik.ViewModel
             GroupTypeOrderCollection.Add(gto);
         }
 
+        /// <summary>
+        /// Finds the index of the last occurrence of a group. Used for group with multiple departments
+        /// </summary>
+        /// <param name="gto"></param>
+        /// <returns></returns>
         public int FindLastOccurrence(GroupTypeOrder gto)
         {
             int i = GroupTypeOrderCollection.IndexOf(GroupTypeOrderCollection.First(x => x.GroupTypeID.Equals(gto.GroupTypeID)));
@@ -586,23 +697,23 @@ namespace TreatPraktik.ViewModel
 
         public void HandleGroupTableDrop(GroupTypeOrder targetGroupTypeOrder, GroupTypeOrder draggedGroupTypeOrder)
         {
-            List<GroupTypeOrder> draggedMultipleGTOList = FindDuplicatesOfGroups(draggedGroupTypeOrder);
-            int draggedPosition = FindLastOccurrence(draggedGroupTypeOrder);
-            List<GroupTypeOrder> targetMultipleGTOList = FindDuplicatesOfGroups(targetGroupTypeOrder);
+            List<GroupTypeOrder> draggedMultipleGTOList = FindDuplicatesOfGroups(draggedGroupTypeOrder); // For a particular group, there is an instance for each department
+            //int draggedPosition = FindLastOccurrence(draggedGroupTypeOrder);
+            //List<GroupTypeOrder> targetMultipleGTOList = FindDuplicatesOfGroups(targetGroupTypeOrder);
             int targetPosition = GroupTypeOrderCollection.IndexOf(targetGroupTypeOrder);
             double targetGroupOrder = targetGroupTypeOrder.GroupOrder;
 
             foreach (GroupTypeOrder gto in draggedMultipleGTOList)
             {
-                GroupTypeOrderCollection.Remove(gto);
+                GroupTypeOrderCollection.Remove(gto); // prepare for moving the group(s)
             }
 
             if (draggedGroupTypeOrder.GroupOrder > targetGroupTypeOrder.GroupOrder)
             {
-                    foreach (GroupTypeOrder gto in draggedMultipleGTOList)
-                    {
-                        GroupTypeOrderCollection.Insert(targetPosition, gto);
-                    }
+                foreach (GroupTypeOrder gto in draggedMultipleGTOList)
+                {
+                    GroupTypeOrderCollection.Insert(targetPosition, gto);
+                }
             }
             else
             {
@@ -610,8 +721,8 @@ namespace TreatPraktik.ViewModel
                 {
                     foreach (GroupTypeOrder gto in draggedMultipleGTOList)
                     {
-                                     targetPosition = FindLastOccurrence(targetGroupTypeOrder);
-                            GroupTypeOrderCollection.Insert(targetPosition, gto);
+                        targetPosition = FindLastOccurrence(targetGroupTypeOrder); // make sure that the group(s) are inserted at the end of a sequence of duplicated gropus
+                        GroupTypeOrderCollection.Insert(targetPosition, gto);
                     }
                 }
                 else
@@ -627,7 +738,12 @@ namespace TreatPraktik.ViewModel
 
             _wvm._changedFlag = true;
         }
-
+        
+        /// <summary>
+        /// Finds duplications of a group. Duplications are caused by having multiple departments
+        /// </summary>
+        /// <param name="draggedGto"></param>
+        /// <returns></returns>
         public List<GroupTypeOrder> FindDuplicatesOfGroups(GroupTypeOrder draggedGto)
         {
             List<GroupTypeOrder> gtoList = new List<GroupTypeOrder>();
@@ -641,6 +757,9 @@ namespace TreatPraktik.ViewModel
             return gtoList;
         }
 
+        /// <summary>
+        /// Adjust the order of the groups. Takes duplications of a group into account
+        /// </summary>
         public void AdjustGroupOrder()
         {
             GroupTypeOrder previousGto = null;
@@ -755,6 +874,9 @@ namespace TreatPraktik.ViewModel
             _wvm._changedFlag = true;
         }
 
+        /// <summary>
+        /// Adjust the order of the group
+        /// </summary>
         public void RefreshGroupOrder()
         {
             int i = 0;

@@ -27,7 +27,7 @@ namespace TreatPraktik.View
             InitializeComponent();
             ToolboxGroupsViewModel glvm = ToolboxGroupsViewModel.Instance;
             DataContext = glvm;
-            glvm.PopulateGTList();
+            //glvm.PopulateGTList();
             Style itemContainerStyle = new Style(typeof(ListBoxItem));
             //itemContainerStyle.Setters.Add(new Setter(ListBoxItem.AllowDropProperty, true));
             //itemContainerStyle.Setters.Add(new EventSetter(ListBoxItem.PreviewMouseLeftButtonDownEvent, new MouseButtonEventHandler(List_PreviewMouseLeftButtonDown)));

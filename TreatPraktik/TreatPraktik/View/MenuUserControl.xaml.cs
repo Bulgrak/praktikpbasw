@@ -68,6 +68,7 @@ namespace TreatPraktik.View
             if (openFile.ShowDialog() == true)
             {
                 _workspaceVM.LoadNewConfigurations(openFile.FileName);
+                //_workspaceVM.LoadWorkspace(openFile.FileName);
             }
         }
 

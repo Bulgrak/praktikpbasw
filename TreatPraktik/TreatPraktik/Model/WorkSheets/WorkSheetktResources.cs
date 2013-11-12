@@ -24,7 +24,7 @@ namespace TreatPraktik.Model.WorkSheets
             SheetName = "ktResources";
             ColumnNames = new List<string>();
             ktResourceList = new List<ktResources>();
-            Result = new List<ktResources>();
+            
 
             DataOnSheetOk = true;
             ColumnHeadersOk = true;
@@ -37,6 +37,7 @@ namespace TreatPraktik.Model.WorkSheets
         public bool LoadktResources(Worksheet worksheet,
           SharedStringTable sharedString)
         {
+            Result = new List<ktResources>();
             //Linq query to get the column headers on the sheet
             Row columnRow =
                (from row in worksheet.Descendants<Row>()

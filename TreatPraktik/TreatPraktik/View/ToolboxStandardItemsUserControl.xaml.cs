@@ -29,7 +29,7 @@ namespace TreatPraktik.View
         {
             InitializeComponent();
             ToolboxStandardItemsViewModel ifvm = ToolboxStandardItemsViewModel.Instance;
-            ifvm.PopulateToolbox();
+            //ifvm.PopulateToolbox();
             DataContext = ifvm;
             Style itemContainerStyle = new Style(typeof(ListBoxItem));
             //itemContainerStyle.Setters.Add(new Setter(ListBoxItem.AllowDropProperty, true));

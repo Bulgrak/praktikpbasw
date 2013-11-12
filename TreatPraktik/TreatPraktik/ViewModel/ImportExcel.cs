@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using DocumentFormat.OpenXml.Spreadsheet;
@@ -60,6 +61,7 @@ namespace TreatPraktik.ViewModel
 
         private ImportExcel()
         {
+            //ResetImportConfiguraion();
             ImportFileOK = true;
             FileTypeOk = true;
             SheetNameOk = true;
@@ -182,6 +184,7 @@ namespace TreatPraktik.ViewModel
                 ImportFileOK = false;
                 MessageBox.Show("The configuration excel file does not contain the correct excel sheets",
                     "Wrong excel file", MessageBoxButton.OK, MessageBoxImage.Error);
+                throw new Exception("lol");
             }
 
             if (!_workSheetktExaminedGroup.ColumnHeadersOk ||
@@ -394,6 +397,10 @@ namespace TreatPraktik.ViewModel
                     _instance = new ImportExcel();
                 }
                 return _instance;
+            }
+            set
+            {
+                _instance = value;
             }
         }
 

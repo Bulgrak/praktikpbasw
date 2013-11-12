@@ -549,6 +549,11 @@ namespace TreatPraktik.View
             }
         }
 
+        /// <summary>
+        /// Gets dragged border which contain either an item or a whole group
+        /// </summary>
+        /// <param name="e"></param>
+        /// <returns></returns>
         Border GetBorderByDropEvent(DragEventArgs e)
         {
             Border bCell = null;
@@ -811,11 +816,12 @@ namespace TreatPraktik.View
                 Border draggedItem = sender as Border;
                 if (draggedItem.DataContext is ItemTypeOrder) //Prevent dragging if GroupType
                 {
-                    draggedItem.BorderBrush = new SolidColorBrush(_cellBorderHighlightColor);
+                    
                     ItemTypeOrder ito = (ItemTypeOrder)draggedItem.DataContext;
                     ItemType it = ito.Item;
                     if (it != null)
                     {
+                        draggedItem.BorderBrush = new SolidColorBrush(_cellBorderHighlightColor);
                         adorner = new DragAdornerItem(draggedItem, e.GetPosition(draggedItem));
                         AdornerLayer.GetAdornerLayer(this).Add(adorner);
                         

@@ -26,7 +26,7 @@ namespace TreatPraktik.Model.WorkSheets
             SheetName = "ktResourceTranslation";
             ColumnNames = new List<string>();
             ktResourceTranslationList = new List<ktResourceTranslation>();
-            Result = new List<ktResourceTranslation>();
+            
 
             DataOnSheetOk = true;
             ColumnHeadersOk = true;
@@ -39,6 +39,7 @@ namespace TreatPraktik.Model.WorkSheets
         public bool LoadktResourceTranslation(Worksheet worksheet,
           SharedStringTable sharedString)
         {
+            Result = new List<ktResourceTranslation>();
             //LINQ query to skip first row with column names.
             Row columnRow =
    (from row in worksheet.Descendants<Row>()

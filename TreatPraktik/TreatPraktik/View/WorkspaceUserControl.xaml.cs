@@ -29,11 +29,11 @@ namespace TreatPraktik.View
             InitializeComponent();
             DataContext = WorkspaceViewModel.Instance;
             ScrollPositions = new Dictionary<string, double>();
-            SetupInitialScrollPositions();
+            //SetupInitialScrollPositions();
             myTabControl.SelectedIndex = 0;
         }
 
-        private void SetupInitialScrollPositions()
+        public void SetupInitialScrollPositions()
         {
             WorkspaceViewModel wvm = WorkspaceViewModel.Instance;
             foreach (PageType pt in wvm.PageList)

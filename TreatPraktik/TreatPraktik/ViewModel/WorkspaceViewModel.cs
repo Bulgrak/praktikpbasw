@@ -31,13 +31,12 @@ namespace TreatPraktik.ViewModel
         public WorkspaceViewModel()
         {
             PageList = new ObservableCollection<PageType>();
-            string path = System.IO.Path.Combine(Environment.CurrentDirectory, @"Ressources\Configuration.xlsx");
-            LoadWorkspace(path);
+            //string path = System.IO.Path.Combine(Environment.CurrentDirectory, @"Ressources\Configuration.xlsx");
+            //LoadWorkspace(path);
 
             //PageList = wvm.PageList;
-            PageTypeItemsView = CollectionViewSource.GetDefaultView(PageList);
-            PageTypeItemsView.Filter = ItemFilter;
-            PageTypeItemsView.Refresh();
+            
+            
             
         }
 
@@ -108,6 +107,7 @@ namespace TreatPraktik.ViewModel
         {
             _changedFlag = false;
 
+            ImportExcel.Instance = null;
             _excel = ImportExcel.Instance;
 
             _excel.ImportExcelFromFile(path);
@@ -137,6 +137,10 @@ namespace TreatPraktik.ViewModel
             {
                 MessageBox.Show("Fil ikke importeret");
             }
+
+            PageTypeItemsView = CollectionViewSource.GetDefaultView(PageList);
+            PageTypeItemsView.Filter = ItemFilter;
+            PageTypeItemsView.Refresh();
         }
 
         #region INotifyPropertyChanged

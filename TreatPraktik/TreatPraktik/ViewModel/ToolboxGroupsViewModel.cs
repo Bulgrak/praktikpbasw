@@ -89,7 +89,7 @@ namespace TreatPraktik.ViewModel
 
             foreach (PageType pt in wvm.PageList)
             {
-                //3, 18, 19, 255, 100
+                // Blacklisted pages: 3, 18, 19, 255, 100 
                 if (
                     !pt.PageTypeID.Equals("3") &&
                     !pt.PageTypeID.Equals("18") &&

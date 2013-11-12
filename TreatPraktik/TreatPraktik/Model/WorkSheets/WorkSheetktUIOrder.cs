@@ -26,7 +26,7 @@ namespace TreatPraktik.Model.WorkSheets
             SheetName = "ktUIOrder";
             ColumnNames = new List<string>();
             ktUIOrderList = new List<ktUIOrder>();
-            Result = new List<ktUIOrder>();
+            
 
             DataOnSheetOk = true;
             ColumnHeadersOk = true;
@@ -39,6 +39,7 @@ namespace TreatPraktik.Model.WorkSheets
         public bool LoadUIOrder(Worksheet worksheet,
           SharedStringTable sharedString)
         {
+            Result = new List<ktUIOrder>();
             //Linq query to get the column headers on the sheet
             Row columnRow =
                (from row in worksheet.Descendants<Row>()

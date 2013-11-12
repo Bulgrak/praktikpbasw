@@ -54,9 +54,11 @@ namespace TreatPraktik.ViewModel
                 //Add sheets to the Workbook
                 _examinedGroup.CreateSheet(sheets, spreadsheetDocument, workbookpart);
                 _order.CreateSheet(sheets, spreadsheetDocument, workbookpart);
+                
                 _groupOrder.CreateSheet(sheets, spreadsheetDocument, workbookpart);
                 _resources.CreateSheet(sheets, spreadsheetDocument, workbookpart);
                 _rTranslation.CreateSheet(sheets, spreadsheetDocument, workbookpart);
+                
 
                 workbookpart.Workbook.Save();
 

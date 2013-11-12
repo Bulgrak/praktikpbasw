@@ -26,7 +26,7 @@ namespace TreatPraktik.Model.WorkSheets
             ColumnNames = new List<string>();
             ktUIDesignList = new List<ktUIDesign>();
 
-            Result = new List<ktUIDesign>();
+            
 
             DataOnSheetOk = true;
             ColumnHeadersOk = true;
@@ -38,6 +38,7 @@ namespace TreatPraktik.Model.WorkSheets
         /// </summary>
         public bool LoadUIDesign(Worksheet worksheet, SharedStringTable sharedString)
         {
+            Result = new List<ktUIDesign>();
             //Linq query to get the column headers on the sheet
             Row columnRow =
                (from row in worksheet.Descendants<Row>()

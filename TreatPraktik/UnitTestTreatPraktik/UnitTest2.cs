@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using System.Windows.Controls;
 using System.Windows.Data;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -24,13 +25,28 @@ namespace UnitTestTreatPraktik
         [TestInitialize()]
         public void Initialize()
         {
+            string importPath = System.IO.Path.Combine(Environment.CurrentDirectory, @"Ressources\Configuration.xlsx");
             ifvm = ToolboxStandardItemsViewModel.Instance;
             glvm = ToolboxGroupsViewModel.Instance;
+            WorkspaceViewModel.Instance = null;
             wvm = WorkspaceViewModel.Instance;
+            wvm.LoadWorkspace(importPath);
+            ifvm.PopulateToolbox();
+            glvm.PopulateGTList();
             sfvm = new ToolboxSpecialItemsViewModel();
             gtvm = new GroupTableViewModel();
 
         }
+
+        //[TestCleanup()]
+        //public void Cleanup()
+        //{
+        //    WorkspaceViewModel.Instance = null;
+        //    wvm = WorkspaceViewModel.Instance;
+        //    string importPath = System.IO.Path.Combine(Environment.CurrentDirectory, @"Ressources\Configuration.xlsx");
+        //    wvm.LoadWorkspace(importPath);
+        //}
+
 
         /// <summary>
         /// Checks if the filter takes header and tooltip into account
@@ -104,7 +120,7 @@ namespace UnitTestTreatPraktik
 
             glvm.GTList.Add(tbGroup);
             glvm.GTList.Add(tbGroup2);
-            glvm.LanguageID = "2";
+            glvm.LanguageID = "1";
             glvm.SetupToolBoxItemCollectionView();
             glvm.FilterString = "Risk Factors";
             //ifvm.DesignItemsView = CollectionViewSource.GetDefaultView(ifvm.ToolboxItemList);
@@ -120,6 +136,7 @@ namespace UnitTestTreatPraktik
         {
             ifvm.PopulateToolbox();
             GroupType gt = wvm.PageList[14].GroupTypeOrders[1].Group;
+            gtvm.Group = gt;
             List<ToolboxItem> tbiList = ifvm.DesignItemsView.Cast<ToolboxItem>().ToList();
             ToolboxItem tbi = tbiList.Find(x => x.ItemType.DesignID.Equals("38")); //ItemType-Name: Temperatur
             int l = 0;
@@ -160,6 +177,7 @@ namespace UnitTestTreatPraktik
         {
             ifvm.PopulateToolbox();
             GroupType gt = wvm.PageList[14].GroupTypeOrders[1].Group;
+            gtvm.Group = gt;
             List<ToolboxItem> tbsiList = sfvm.SpecialItemsView.Cast<ToolboxItem>().ToList();
             ToolboxItem tbsi = tbsiList.Find(x => x.ItemType.DesignID.Equals("197"));
             int l = 0;
@@ -235,6 +253,7 @@ namespace UnitTestTreatPraktik
         {
             ifvm.PopulateToolbox();
             GroupType gt = wvm.PageList[14].GroupTypeOrders[1].Group;
+            gtvm.Group = gt;
             List<ToolboxItem> tbiList = sfvm.SpecialItemsView.Cast<ToolboxItem>().ToList();
             ToolboxItem tbi = tbiList.Find(x => x.ItemType.DesignID.Equals("197")); //ItemType-Name: EmptyField
             int l = 0;
@@ -277,30 +296,27 @@ namespace UnitTestTreatPraktik
             List<ToolboxItem> tbiList = sfvm.SpecialItemsView.Cast<ToolboxItem>().ToList();
             ToolboxItem tbi = tbiList.Find(x => x.ItemType.DesignID.Equals("198")); //ItemType-Name: NewLineItem
 
-            int l = 0;
-            while (l < gt.ItemOrder.Count)
+
+            GroupType deepCopyGroupType = DeepCopyGroupType(gt);
+            ObservableCollection<ItemTypeOrder> modifiedItemTypeOrderList = deepCopyGroupType.ItemOrder;
+            gtvm.Group = deepCopyGroupType;
+            gtvm.AdjustItemOrder(gtvm.Group);
+            ItemTypeOrder dropTargetItemTypeOrder = deepCopyGroupType.ItemOrder[3];
+            List<ItemTypeOrder> unmodifiedItemTypeList = gt.ItemOrder.ToList();
+            int i = 0;
+            gtvm.HandleToolboxItemDrop(deepCopyGroupType, tbi, dropTargetItemTypeOrder);
+            int skipped = 0;
+            //gt.ItemOrder[i - 1].ItemOrder + (4 - (gt.ItemOrder[i - 1].ItemOrder % 4));
+            //while (i < unmodifiedItemTypeList.Count - skipped)
+            
+            while (i < modifiedItemTypeOrderList.Count)
             {
-                GroupType deepCopyGroupType = DeepCopyGroupType(gt);
-                ObservableCollection<ItemTypeOrder> modifiedItemTypeOrderList = deepCopyGroupType.ItemOrder;
-                gtvm.Group = deepCopyGroupType;
-                gtvm.AdjustItemOrder(gtvm.Group);
-                ItemTypeOrder dropTargetItemTypeOrder = deepCopyGroupType.ItemOrder[l];
-                List<ItemTypeOrder> unmodifiedItemTypeList = gt.ItemOrder.ToList();
-                int i = 0;
-                gtvm.HandleToolboxItemDrop(deepCopyGroupType, tbi, dropTargetItemTypeOrder);
-                int skipped = 0;
-                //gt.ItemOrder[i - 1].ItemOrder + (4 - (gt.ItemOrder[i - 1].ItemOrder % 4));
-                //while (i < unmodifiedItemTypeList.Count - skipped)
-                while (i < 4)
-                {
-                    Assert.AreEqual(l + skipped, modifiedItemTypeOrderList[i].ItemOrder);
-                    if (modifiedItemTypeOrderList[i].DesignID.Equals("198"))
-                        skipped = skipped + (int)(4 - (modifiedItemTypeOrderList[i].ItemOrder % 4));
+                Assert.AreEqual(i + skipped, modifiedItemTypeOrderList[i].ItemOrder);
+                if (modifiedItemTypeOrderList[i].DesignID.Equals("198"))
+                    skipped = skipped + (int)(4 - (modifiedItemTypeOrderList[i].ItemOrder % 4)) - 1;
                     i++;
-                }
-                //Assert.AreEqual(modifiedItemTypeOrderList[l].Item.DesignID, tbi.ItemType.DesignID); //Check if dropped ItemType is inserted at the right location
-                l++;
             }
+            Assert.AreEqual(modifiedItemTypeOrderList[3].Item.DesignID, tbi.ItemType.DesignID); //Check if dropped ItemType is inserted at the right location
         }
 
         /// <summary>
@@ -408,6 +424,7 @@ namespace UnitTestTreatPraktik
                 ToolboxItem tbsi = tbsiList.Find(x => x.ItemType.DesignID.Equals("198"));
                 ObservableCollection<GroupTypeOrder> gtoList = wvm.PageList[14].GroupTypeOrders; // Page 15
                 GroupType gt = gtoList[1].Group;
+                gtvm.Group = gt;
                 ItemTypeOrder dropTargetItemTypeOrder = gt.ItemOrder[4];
                 gtvm.GroupTypeOrderCollection = gtoList;
                 gtvm.Group = gt;
@@ -432,6 +449,7 @@ namespace UnitTestTreatPraktik
             ObservableCollection<GroupTypeOrder> gtoList = wvm.PageList[14].GroupTypeOrders; // page 15
             ObservableCollection<GroupTypeOrder> unmodifiedgtoList = DeepCopyGroupTypeOrderList(gtoList);
             GroupTypeOrder targetGroupTypeOrder = gtoList[2];
+            gtvm.Group = targetGroupTypeOrder.Group;
             gtvm.GroupTypeOrderCollection = gtoList;
             gtvm.AdjustGroupOrder();
             gtvm.InsertGroup(targetGroupTypeOrder, tbg.Group);
@@ -454,6 +472,7 @@ namespace UnitTestTreatPraktik
         {
             ifvm.PopulateToolbox();
             GroupType gt = wvm.PageList[14].GroupTypeOrders[0].Group; // Page 15
+            gtvm.Group = gt;
             List<ToolboxItem> tbiList = ifvm.DesignItemsView.Cast<ToolboxItem>().ToList();
             ToolboxItem tbi = tbiList.Find(x => x.ItemType.DesignID.Equals("38")); //ItemType-Name: Temperatur
             List<ToolboxItem> tbsiList = sfvm.SpecialItemsView.Cast<ToolboxItem>().ToList();
@@ -478,6 +497,7 @@ namespace UnitTestTreatPraktik
         {
             ifvm.PopulateToolbox();
             GroupType gt = wvm.PageList[14].GroupTypeOrders[0].Group; // Page 15
+            gtvm.Group = gt;
             List<ToolboxItem> tbiList = ifvm.DesignItemsView.Cast<ToolboxItem>().ToList();
             ToolboxItem tbi = tbiList.Find(x => x.ItemType.DesignID.Equals("38")); //ItemType-Name: Temperatur
             ItemTypeOrder dropTargetItemTypeOrder = new ItemTypeOrder()
@@ -507,6 +527,7 @@ namespace UnitTestTreatPraktik
         {
             ifvm.PopulateToolbox();
             GroupType gt = wvm.PageList[14].GroupTypeOrders[0].Group; // Page 15
+            gtvm.Group = gt;
             List<ToolboxItem> tbsiList = sfvm.SpecialItemsView.Cast<ToolboxItem>().ToList();
             ToolboxItem tbsi = tbsiList.Find(x => x.ItemType.DesignID.Equals("197"));
             ItemTypeOrder dropTargetItemTypeOrder = new ItemTypeOrder()
@@ -536,6 +557,7 @@ namespace UnitTestTreatPraktik
         {
             ObservableCollection<GroupTypeOrder> gtoList = wvm.PageList[14].GroupTypeOrders;
             GroupType gt = wvm.PageList[14].GroupTypeOrders[0].Group; // Page 15
+            gtvm.Group = gt;
             gtvm.GroupTypeOrderCollection = gtoList;
             ItemTypeOrder draggedItemTypeOrder = gt.ItemOrder[1];
             ItemTypeOrder targetItemTypeOrder = gt.ItemOrder[3];
@@ -553,6 +575,7 @@ namespace UnitTestTreatPraktik
         {
             ObservableCollection<GroupTypeOrder> gtoList = wvm.PageList[14].GroupTypeOrders; // Page 15
             GroupType gt = wvm.PageList[14].GroupTypeOrders[0].Group; // First on page 15
+            gtvm.Group = gt;
             gtvm.GroupTypeOrderCollection = gtoList;
             ItemTypeOrder targetItemTypeOrder = gt.ItemOrder[1];
             ItemTypeOrder draggedItemTypeOrder = gt.ItemOrder[3];
@@ -569,6 +592,7 @@ namespace UnitTestTreatPraktik
         {
             ObservableCollection<GroupTypeOrder> gtoList = wvm.PageList[14].GroupTypeOrders; // Page 15
             GroupType gt = wvm.PageList[14].GroupTypeOrders[1].Group; // Second group on page 15
+            gtvm.Group = gt;
             gtvm.GroupTypeOrderCollection = gtoList;
             ItemTypeOrder targetItemTypeOrder = gt.ItemOrder[4];
             ItemTypeOrder draggedItemTypeOrder = gt.ItemOrder[7];
@@ -587,6 +611,7 @@ namespace UnitTestTreatPraktik
         {
             ifvm.PopulateToolbox();
             GroupType gt = wvm.PageList[14].GroupTypeOrders[0].Group; // First group on page 15
+            gtvm.Group = gt;
             List<ToolboxItem> tbsiList = sfvm.SpecialItemsView.Cast<ToolboxItem>().ToList();
             ToolboxItem tbsi = tbsiList.Find(x => x.ItemType.DesignID.Equals("197"));
             ItemTypeOrder dropTargetItemTypeOrder = new ItemTypeOrder()
@@ -616,6 +641,7 @@ namespace UnitTestTreatPraktik
         {
             ifvm.PopulateToolbox();
             GroupType gt = wvm.PageList[14].GroupTypeOrders[0].Group; // First group on Page 15
+            gtvm.Group = gt;
             List<ToolboxItem> tbsiList = sfvm.SpecialItemsView.Cast<ToolboxItem>().ToList();
             ToolboxItem tbsi = tbsiList.Find(x => x.ItemType.DesignID.Equals("197"));
             ItemTypeOrder dropTargetItemTypeOrder = new ItemTypeOrder()
@@ -645,6 +671,7 @@ namespace UnitTestTreatPraktik
         {
             ObservableCollection<GroupTypeOrder> gtoList = wvm.PageList[14].GroupTypeOrders; // Page 15
             GroupType gt = wvm.PageList[14].GroupTypeOrders[0].Group;
+            gtvm.Group = gt;
             gtvm.GroupTypeOrderCollection = gtoList;
             ItemTypeOrder draggedItemTypeOrder = gt.ItemOrder[3];
             ItemTypeOrder targetItemTypeOrder = new ItemTypeOrder()

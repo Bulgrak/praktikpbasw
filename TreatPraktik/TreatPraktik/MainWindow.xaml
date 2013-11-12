@@ -15,10 +15,10 @@
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
-        <view:WorkspaceUserControl Grid.Row="1" Grid.Column="1" Grid.RowSpan="3" Margin="5, 0, 2, 0" />
-        <view:ToolboxStandardItemsUserControl Grid.Row="2" Grid.Column="0" Margin="2, 0, 0, 0" />
-        <view:ToolboxSpecialItemsUserControl Grid.Row="1" Grid.Column="0" Margin="2, 0, 0, 0" />
+        <view:WorkspaceUserControl x:Name="WsUserControl" Grid.Row="1" Grid.Column="1" Grid.RowSpan="3" Margin="5, 0, 2, 0" />
+        <view:ToolboxStandardItemsUserControl x:Name="TbItemsUsercontrol" Grid.Row="2" Grid.Column="0" Margin="2, 0, 0, 0" />
+        <view:ToolboxSpecialItemsUserControl x:Name="TbSpecialItemsUserControl"  Grid.Row="1" Grid.Column="0" Margin="2, 0, 0, 0" />
         <view:MenuUserControl Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Top" Width="Auto"/>
-        <view:ToolboxGroupsUserControl Grid.Row="3" Grid.Column="0" Margin="2, 0, 0, 5"/>
+        <view:ToolboxGroupsUserControl x:Name="TbGroupsUserControl" Grid.Row="3" Grid.Column="0" Margin="2, 0, 0, 5"/>
     </Grid>
 </Window>

@@ -26,7 +26,7 @@ namespace TreatPraktik.Model.WorkSheets
             SheetName = "ktExaminedGroup";
             ColumnNames = new List<string>();
             ExaminedGroupList = new List<ktExaminedGroup>();
-            Result = new List<ktExaminedGroup>();
+            
 
             DataOnSheetOk = true;
             ColumnHeadersOk = true;
@@ -38,6 +38,7 @@ namespace TreatPraktik.Model.WorkSheets
         /// </summary>
         public bool LoadExaminedGroup(Worksheet worksheet, SharedStringTable sharedString)
         {
+            Result = new List<ktExaminedGroup>();
             //Linq query to get the column headers on the sheet
             Row columnRow =
                (from row in worksheet.Descendants<Row>()
