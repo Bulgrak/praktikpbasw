@@ -13,14 +13,14 @@ using TreatPraktik.ViewModel;
 
 namespace TreatPraktik.Ressources.ExcelClasses
 {
-    class eQAGroups
+    class ECQAGroups
     {
         readonly WorkSheetQAGroup _qaGroups;
         readonly SharedRessources _sharedResources;
         readonly WorkspaceViewModel _workspaceVm;
 
 
-        public eQAGroups()
+        public ECQAGroups()
         {
 
             _qaGroups = WorkSheetQAGroup.Instance;
@@ -43,7 +43,7 @@ namespace TreatPraktik.Ressources.ExcelClasses
             Sheet sheet = new Sheet
             {
                 Id = spreadsheetDocument.WorkbookPart.GetIdOfPart(worksheetPart),
-                SheetId = 2U,
+                SheetId = 8U,
                 Name = _qaGroups.SheetName
             };
             sheets.Append(sheet);
@@ -86,7 +86,6 @@ namespace TreatPraktik.Ressources.ExcelClasses
 
             #endregion
 
-            #region insert the items from the temporary list into the ktUIOrder excel sheet
 
             int columnCount = 1;
             uint rowCount = 2;
@@ -112,8 +111,6 @@ namespace TreatPraktik.Ressources.ExcelClasses
 
                 rowCount++;
             }
-
-            #endregion
 
             worksheetPart.Worksheet.Save();
         }

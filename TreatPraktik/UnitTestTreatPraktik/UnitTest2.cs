@@ -129,7 +129,7 @@ namespace UnitTestTreatPraktik
         }
 
         /// <summary>
-        /// Test dropping a standard item on each item in a group.
+        /// Tests dropping a standard item on each item in a group.
         /// </summary>
         [TestMethod]
         public void DropToolboxStandardItemOnItem()
@@ -170,7 +170,7 @@ namespace UnitTestTreatPraktik
         }
 
         /// <summary>
-        /// Test dropping emptyfield from toolbox on each item in a group
+        /// Tests dropping emptyfield from toolbox on each item in a group
         /// </summary>
         [TestMethod]
         public void DropToolboxSpecialEmptyFieldOnItem()
@@ -287,7 +287,7 @@ namespace UnitTestTreatPraktik
         }
 
         /// <summary>
-        /// Test behaviour for dropping a NewLineItem on a item in a group
+        /// Tests behaviour for dropping a NewLineItem on a item in a group
         /// </summary>
         [TestMethod]
         public void DropToolboxSpecialNewLineItemOnItem()
@@ -320,7 +320,7 @@ namespace UnitTestTreatPraktik
         }
 
         /// <summary>
-        /// Test behaviour for dropping a group from toolbox on a page by dropzone (the area below the groups on a page)
+        /// Tests behaviour for dropping a group from toolbox on a page by dropzone (the area below the groups on a page)
         /// </summary>
         [TestMethod]
         public void DropToolBoxGroupOnPageByDropZone()
@@ -339,7 +339,7 @@ namespace UnitTestTreatPraktik
         }
 
         /// <summary>
-        /// Test behaviour for dropping a A:group on a B:group, where A.GroupOrder < B.GroupOrder
+        /// Tests behaviour for dropping a A:group on a B:group, where A.GroupOrder < B.GroupOrder
         /// </summary>
         [TestMethod]
         public void DropBetweenGroupsOnPageTestOne()
@@ -365,7 +365,7 @@ namespace UnitTestTreatPraktik
         }
 
         /// <summary>
-        /// Test behaviour for dropping a A:group on a B:group, where A.GroupOrder > B.GroupOrder
+        /// Tests behaviour for dropping a A:group on a B:group, where A.GroupOrder > B.GroupOrder
         /// </summary>
         [TestMethod]
         public void DropBetweenGroupsOnPageTestTwo()
@@ -413,7 +413,7 @@ namespace UnitTestTreatPraktik
         }
 
         /// <summary>
-        /// Test behaviour for dropping a NewLineItem on a row that already contains a NewLineItem
+        /// Tests behaviour for dropping a NewLineItem on a row that already contains a NewLineItem
         /// </summary>
         [TestMethod]
         public void DropOnRowContainingNewLineItem()
@@ -438,7 +438,7 @@ namespace UnitTestTreatPraktik
         }
 
         /// <summary>
-        /// Test behaviour for dropping a group from toolbox on a group
+        /// Tests behaviour for dropping a group from toolbox on a group
         /// </summary>
         [TestMethod]
         public void DropToolboxGroupOnGroup()
@@ -465,7 +465,7 @@ namespace UnitTestTreatPraktik
         }
 
         /// <summary>
-        /// Test behaviour for dropping a standard item from toolbox on a EmptyField
+        /// Tests behaviour for dropping a standard item from toolbox on a EmptyField
         /// </summary>
         [TestMethod]
         public void DropToolboxItemOnEmptyField()
@@ -490,7 +490,7 @@ namespace UnitTestTreatPraktik
         }
 
         /// <summary>
-        /// Test behaviour for dropping a standard item from toolbox on a null field
+        /// Tests behaviour for dropping a standard item from toolbox on a null field
         /// </summary>
         [TestMethod]
         public void DropToolboxItemOnNullField()
@@ -520,7 +520,7 @@ namespace UnitTestTreatPraktik
         }
 
         /// <summary>
-        /// Test behaviour for dropping a special item (in this case, EmptyField) on a null field
+        /// Tests behaviour for dropping a special item (in this case, EmptyField) on a null field
         /// </summary>
         [TestMethod]
         public void DropToolboxSpecialItemOnNullField()
@@ -550,7 +550,7 @@ namespace UnitTestTreatPraktik
         }
 
         /// <summary>
-        /// Test behaviour for dropping an standard item on a standard item in a group
+        /// Tests behaviour for dropping an standard item on a standard item in a group
         /// </summary>
         [TestMethod]
         public void DropBetweenStandardItemsLessThan()
@@ -568,7 +568,7 @@ namespace UnitTestTreatPraktik
 
 
         /// <summary>
-        /// Test behaviour for dropping an standard item on a standard item in a group
+        /// Tests behaviour for dropping an standard item on a standard item in a group
         /// </summary>
         [TestMethod]
         public void DropBetweenStandardItemsGT()
@@ -585,7 +585,7 @@ namespace UnitTestTreatPraktik
         }
 
         /// <summary>
-        /// Test behaviour for dropping an standard item on a NewLineItem in a group
+        /// Tests behaviour for dropping an standard item on a NewLineItem in a group
         /// </summary>
         [TestMethod]
         public void DropStandardItemOnNewLineItem()
@@ -604,7 +604,7 @@ namespace UnitTestTreatPraktik
         }
 
         /// <summary>
-        /// Test behaviour for dropping an EmptyField on a standard item in a group
+        /// Tests behaviour for dropping an EmptyField on a standard item in a group
         /// </summary>
         [TestMethod]
         public void DropEmptyFieldOnStandardItem()
@@ -634,7 +634,7 @@ namespace UnitTestTreatPraktik
         }
 
         /// <summary>
-        /// Test behaviour for dropping an EmptyField on a NewLineItem in a group
+        /// Tests behaviour for dropping an EmptyField on a NewLineItem in a group
         /// </summary>
         [TestMethod]
         public void DropEmptyFieldOnNewLineItem()
@@ -664,7 +664,7 @@ namespace UnitTestTreatPraktik
         }
 
         /// <summary>
-        /// Test behaviour for dropping an empty field on a null field in a group.
+        /// Tests behaviour for dropping an empty field on a null field in a group.
         /// </summary>
         [TestMethod]
         public void DropStandardItemOnNullField()

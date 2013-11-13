@@ -150,10 +150,12 @@ namespace TreatPraktik.Model.WorkSheets
                             design.DefaultValue = textArray[13];
                             design.NormalRangeMinimum = textArray[14];
                             design.NormalRangeMaximum = textArray[15];
-                            design.CopyEncounter = textArray[16];
-                            design.CopyEpisode = textArray[17];
-                            design.DataQualityScore = textArray[18];
-                            design.CopyFinalEncounter = textArray[19];
+                            design.RangeMinimum = textArray[16];
+                            design.RangeMaximum = textArray[17];
+                            design.CopyEncounter = textArray[18];
+                            design.CopyEpisode = textArray[19];
+                            design.DataQualityScore = textArray[20];
+                            design.CopyFinalEncounter = textArray[21];
                             Result.Add(design);
                         }
                         else

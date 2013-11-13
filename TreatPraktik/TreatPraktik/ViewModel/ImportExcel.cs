@@ -121,6 +121,10 @@ namespace TreatPraktik.ViewModel
                         _ktExaminedID = _workSheets.First(s => s.Name == this._workSheetktExaminedGroup.SheetName).Id;
                         _ktExaminedGroupSheet = (WorksheetPart)document.WorkbookPart.GetPartById(_ktExaminedID);
 
+                        //Reference to Excel Worksheet with ktUIDesign data.
+                        _ktUiDesignID = _workSheets.First(s => s.Name == this._workSheetUIDesign.SheetName).Id;
+                        _ktUiDesignSheet = (WorksheetPart)document.WorkbookPart.GetPartById(_ktUiDesignID);
+
                         ////Load ktExaminedGroup data to business object.
                         //this._workSheetktExaminedGroup.LoadExaminedGroup(_ktExaminedGroupSheet.Worksheet, _sharedStrings);
 
@@ -151,17 +155,49 @@ namespace TreatPraktik.ViewModel
                         _ktResourceTranslationSheet =
                             (WorksheetPart)document.WorkbookPart.GetPartById(_ktResourceTranslationID);
 
+                        //Reference to Excel Worksheet with ktUIFieldIncludedTypeSheet data.
+                        _ktUiFieldID = _workSheets.First(s => s.Name == this._workSheetktUIFieldIncludedType.SheetName).Id;
+                        _ktUiFieldIncludedTypeSheet = (WorksheetPart)document.WorkbookPart.GetPartById(_ktUiFieldID);
+
+                        //Load ktUIFieldIncludedType data to business object.
+                        this._workSheetktUIFieldIncludedType.LoadUIFieldIncludedType(_ktUiFieldIncludedTypeSheet.Worksheet, _sharedStrings);
+
+                        ////Reference to Excel Worksheet with ktResource data.
+                        _ktResourceTypeID = _workSheets.First(s => s.Name == this._workSheetktResourceType.SheetName).Id;
+                        _ktResourceTypeSheet = (WorksheetPart)document.WorkbookPart.GetPartById(_ktResourceTypeID);
+
+                        ////Load ktResource data to business object.
+                        this._workSheetktResourceType.LoadktResourceType(_ktResourceTypeSheet.Worksheet, _sharedStrings);
+
+                        ////Reference to Excel Worksheet with QAGroups data.
+                        _qaGroupsID = _workSheets.First(s => s.Name == this._workSheetQAGroups.SheetName).Id;
+                        _qaGroupsSheet = (WorksheetPart)document.WorkbookPart.GetPartById(_qaGroupsID);
+
+                        ////Load QAGroups data to business object.
+                        this._workSheetQAGroups.LoadQAGroups(_qaGroupsSheet.Worksheet, _sharedStrings);
+
+                        ////Reference to Excel Worksheet with QAGroups data.
+                        _qAktUiDesignID = _workSheets.First(s => s.Name == this._workSheetQAktUIDesign.SheetName).Id;
+                        _qAktUiDesignSheet = (WorksheetPart)document.WorkbookPart.GetPartById(_qAktUiDesignID);
+
+                        ////Load QAGroups data to business object.
+                        this._workSheetQAktUIDesign.LoadQAktUIDesign(_qAktUiDesignSheet.Worksheet, _sharedStrings);
+
                         ////Load ktResouceTranslation data to business object.
                         //this._workSheetktResourceTranslation.LoadktResourceTranslation(_ktResourceTranslationSheet.Worksheet,
                             //_sharedStrings);
 
+
+
                         if (this._workSheetktExaminedGroup.LoadExaminedGroup(_ktExaminedGroupSheet.Worksheet, _sharedStrings) &&
+                            this._workSheetUIDesign.LoadUIDesign(_ktUiDesignSheet.Worksheet, _sharedStrings) &&
                             this._workSheetktUIGroupOrder.LoadUIGroupOrder(_ktUiGroupOrderSheet.Worksheet, _sharedStrings) &&
                             this._workSheetktResources.LoadktResources(_ktResourcesSheet.Worksheet, _sharedStrings) &&
                             this._workSheetktResourceTranslation.LoadktResourceTranslation(_ktResourceTranslationSheet.Worksheet, _sharedStrings) &&
                             this._workSheetktUIOrder.LoadUIOrder(_ktUiOrderSheet.Worksheet, _sharedStrings)
                             )
                         {
+                            _workSheetUIDesign.AcceptChanges();
                             _workSheetktExaminedGroup.AcceptChanges();
                             _workSheetktUIGroupOrder.AcceptChanges();
                             _workSheetktResources.AcceptChanges();
@@ -188,6 +224,7 @@ namespace TreatPraktik.ViewModel
             }
 
             if (!_workSheetktExaminedGroup.ColumnHeadersOk ||
+                !_workSheetUIDesign.ColumnHeadersOk ||
                 !_workSheetktUIGroupOrder.ColumnHeadersOk ||
                 !_workSheetktResources.ColumnHeadersOk ||
                 !_workSheetktResourceTranslation.ColumnHeadersOk ||
@@ -200,6 +237,7 @@ namespace TreatPraktik.ViewModel
             }
 
             if (!_workSheetktExaminedGroup.DataOnSheetOk ||
+                !_workSheetUIDesign.DataOnSheetOk ||
                 !_workSheetktUIGroupOrder.DataOnSheetOk ||
                 !_workSheetktResources.DataOnSheetOk ||
                 !_workSheetktResourceTranslation.DataOnSheetOk ||

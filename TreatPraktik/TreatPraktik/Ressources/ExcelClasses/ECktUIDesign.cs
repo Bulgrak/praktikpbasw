@@ -10,13 +10,13 @@ using TreatPraktik.ViewModel;
 
 namespace TreatPraktik.Ressources.ExcelClasses
 {
-    class UIDesign
+    class ECktUIDesign
     {
         readonly WorkSheetktUIDesign _uiDesign;
         readonly SharedRessources _sharedResources;
         readonly WorkspaceViewModel _workspaceVm;
 
-        public UIDesign()
+        public ECktUIDesign()
         {
             _uiDesign = WorkSheetktUIDesign.Instance;
             _sharedResources = SharedRessources.Instance;
@@ -38,7 +38,7 @@ namespace TreatPraktik.Ressources.ExcelClasses
             Sheet sheet = new Sheet
             {
                 Id = spreadsheetDocument.WorkbookPart.GetIdOfPart(worksheetPart),
-                SheetId = 1U,
+                SheetId = 6U,
                 Name = _uiDesign.SheetName
             };
             sheets.Append(sheet);
@@ -208,7 +208,7 @@ namespace TreatPraktik.Ressources.ExcelClasses
 
             foreach (ktUIDesign uiDesign in _uiDesign.ktUIDesignList)
             {
-                if (columnCount >= 22)
+                if (columnCount >= 4)
                 {
                     columnCount = 1;
                 }
@@ -245,8 +245,8 @@ namespace TreatPraktik.Ressources.ExcelClasses
                     _sharedResources.InsertCellInWorksheet(
                         _sharedResources.Number2String(columnCount, true),
                         rowCount, worksheetPart);
-                cell4.CellValue = new CellValue(text4.ToString(CultureInfo.InvariantCulture));
-                cell4.DataType = CellValues.Number;
+                cell4.CellValue = new CellValue(text4);
+                cell4.DataType = CellValues.String;
                 columnCount++;
 
                 string text5 = uiDesign.ResxID;
@@ -254,16 +254,17 @@ namespace TreatPraktik.Ressources.ExcelClasses
                     _sharedResources.InsertCellInWorksheet(
                         _sharedResources.Number2String(columnCount, true),
                         rowCount, worksheetPart);
-                cell5.CellValue = new CellValue(text5.ToString(CultureInfo.InvariantCulture));
+                cell5.CellValue = new CellValue(text5);
                 cell5.DataType = CellValues.String;
                 columnCount++;
 
+                //
                 string text6 = uiDesign.ReadOnlyPolicy;
                 Cell cell6 =
                     _sharedResources.InsertCellInWorksheet(
                         _sharedResources.Number2String(columnCount, true),
                         rowCount, worksheetPart);
-                cell6.CellValue = new CellValue(text6.ToString(CultureInfo.InvariantCulture));
+                cell6.CellValue = new CellValue(text6);
                 cell6.DataType = CellValues.Number;
                 columnCount++;
 
@@ -272,7 +273,7 @@ namespace TreatPraktik.Ressources.ExcelClasses
                     _sharedResources.InsertCellInWorksheet(
                         _sharedResources.Number2String(columnCount, true),
                         rowCount, worksheetPart);
-                cell7.CellValue = new CellValue(text7.ToString(CultureInfo.InvariantCulture));
+                cell7.CellValue = new CellValue(text7);
                 cell7.DataType = CellValues.Number;
                 columnCount++;
 
@@ -281,299 +282,140 @@ namespace TreatPraktik.Ressources.ExcelClasses
                     _sharedResources.InsertCellInWorksheet(
                         _sharedResources.Number2String(columnCount, true),
                         rowCount, worksheetPart);
-                cell8.CellValue = new CellValue(text8.ToString(CultureInfo.InvariantCulture));
+                cell8.CellValue = new CellValue(text8);
                 cell8.DataType = CellValues.Number;
+                columnCount++;
 
+                //
                 string text9 = uiDesign.RequiredID;
                 Cell cell9 =
                     _sharedResources.InsertCellInWorksheet(
                         _sharedResources.Number2String(columnCount, true),
                         rowCount, worksheetPart);
-                cell9.CellValue = new CellValue(text9.ToString(CultureInfo.InvariantCulture));
+                cell9.CellValue = new CellValue(text9);
                 cell9.DataType = CellValues.Number;
+                columnCount++;
 
                 string text10 = uiDesign.GUIUnitShortName;
                 Cell cell10 =
                     _sharedResources.InsertCellInWorksheet(
                         _sharedResources.Number2String(columnCount, true),
                         rowCount, worksheetPart);
-                cell10.CellValue = new CellValue(text10.ToString(CultureInfo.InvariantCulture));
-                cell10.DataType = CellValues.Number;
+                cell10.CellValue = new CellValue(text10);
+                cell10.DataType = CellValues.String;
+                columnCount++;
 
                 string text11 = uiDesign.DatabaseUnitName;
                 Cell cell11 =
                     _sharedResources.InsertCellInWorksheet(
                         _sharedResources.Number2String(columnCount, true),
                         rowCount, worksheetPart);
-                cell11.CellValue = new CellValue(text11.ToString(CultureInfo.InvariantCulture));
-                cell11.DataType = CellValues.Number;
+                cell11.CellValue = new CellValue(text11);
+                cell11.DataType = CellValues.String;
+                columnCount++;
 
                 string text12 = uiDesign.LabkaUnitName;
                 Cell cell12 =
                     _sharedResources.InsertCellInWorksheet(
                         _sharedResources.Number2String(columnCount, true),
                         rowCount, worksheetPart);
-                cell12.CellValue = new CellValue(text12.ToString(CultureInfo.InvariantCulture));
-                cell12.DataType = CellValues.Number;
+                cell12.CellValue = new CellValue(text12);
+                cell12.DataType = CellValues.String;
+                columnCount++;
 
                 string text13 = uiDesign.DatabaseToUIConversion;
                 Cell cell13 =
                     _sharedResources.InsertCellInWorksheet(
                         _sharedResources.Number2String(columnCount, true),
                         rowCount, worksheetPart);
-                cell13.CellValue = new CellValue(text13.ToString(CultureInfo.InvariantCulture));
-                cell13.DataType = CellValues.Number;
+                cell13.CellValue = new CellValue(text13);
+                cell13.DataType = text13 == "NULL" ? CellValues.String : CellValues.Number;
+                columnCount++;
 
                 string text14 = uiDesign.DefaultValue;
                 Cell cell14 =
                     _sharedResources.InsertCellInWorksheet(
                         _sharedResources.Number2String(columnCount, true),
                         rowCount, worksheetPart);
-                cell14.CellValue = new CellValue(text14.ToString(CultureInfo.InvariantCulture));
-                cell14.DataType = CellValues.Number;
+                cell14.CellValue = new CellValue(text14);
+                cell14.DataType = text14 == "NULL" ? CellValues.String : CellValues.Number;
+                columnCount++;
 
+                //
                 string text15 = uiDesign.NormalRangeMinimum;
                 Cell cell15 =
                     _sharedResources.InsertCellInWorksheet(
                         _sharedResources.Number2String(columnCount, true),
                         rowCount, worksheetPart);
-                cell15.CellValue = new CellValue(text15.ToString(CultureInfo.InvariantCulture));
-                cell15.DataType = CellValues.Number;
+                cell15.CellValue = new CellValue(text15);
+                cell15.DataType = text15 == "NULL" ? CellValues.String : CellValues.Number;
+                columnCount++;
 
                 string text16 = uiDesign.NormalRangeMaximum;
                 Cell cell16 =
                     _sharedResources.InsertCellInWorksheet(
                         _sharedResources.Number2String(columnCount, true),
                         rowCount, worksheetPart);
-                cell16.CellValue = new CellValue(text16.ToString(CultureInfo.InvariantCulture));
-                cell16.DataType = CellValues.Number;
+                cell16.CellValue = new CellValue(text16);
+                cell16.DataType = text16 == "NULL" ? CellValues.String : CellValues.Number;
+                columnCount++;
 
-                string text17 = uiDesign.RangeMinimum;
+                string text17 = uiDesign.RangeMinimum ?? "NULL";
                 Cell cell17 =
                     _sharedResources.InsertCellInWorksheet(
                         _sharedResources.Number2String(columnCount, true),
                         rowCount, worksheetPart);
-                cell17.CellValue = new CellValue(text17.ToString(CultureInfo.InvariantCulture));
-                cell17.DataType = CellValues.Number;
+                cell17.CellValue = new CellValue(text17);
+                cell17.DataType = text17 == "NULL" ? CellValues.String : CellValues.Number;
+                columnCount++;
 
-                string text18 = uiDesign.RangeMaximum;
+                //
+                string text18 = uiDesign.RangeMaximum ?? "NULL";
                 Cell cell18 =
                     _sharedResources.InsertCellInWorksheet(
                         _sharedResources.Number2String(columnCount, true),
                         rowCount, worksheetPart);
-                cell18.CellValue = new CellValue(text18.ToString(CultureInfo.InvariantCulture));
-                cell18.DataType = CellValues.Number;
+                cell18.CellValue = new CellValue(text18);
+                cell18.DataType = text18 == "NULL" ? CellValues.String : CellValues.Number;
+                columnCount++;
 
                 string text19 = uiDesign.CopyEncounter;
                 Cell cell19 =
                     _sharedResources.InsertCellInWorksheet(
                         _sharedResources.Number2String(columnCount, true),
                         rowCount, worksheetPart);
-                cell19.CellValue = new CellValue(text19.ToString(CultureInfo.InvariantCulture));
+                cell19.CellValue = new CellValue(text19);
                 cell19.DataType = CellValues.Number;
+                columnCount++;
 
                 string text20 = uiDesign.CopyEpisode;
                 Cell cell20 =
                     _sharedResources.InsertCellInWorksheet(
                         _sharedResources.Number2String(columnCount, true),
                         rowCount, worksheetPart);
-                cell20.CellValue = new CellValue(text20.ToString(CultureInfo.InvariantCulture));
+                cell20.CellValue = new CellValue(text20);
                 cell20.DataType = CellValues.Number;
+                columnCount++;
 
                 string text21 = uiDesign.DataQualityScore;
                 Cell cell21 =
                     _sharedResources.InsertCellInWorksheet(
                         _sharedResources.Number2String(columnCount, true),
                         rowCount, worksheetPart);
-                cell21.CellValue = new CellValue(text21.ToString(CultureInfo.InvariantCulture));
+                cell21.CellValue = new CellValue(text21);
                 cell21.DataType = CellValues.Number;
+                columnCount++;
 
                 string text22 = uiDesign.CopyFinalEncounter;
                 Cell cell22 =
                     _sharedResources.InsertCellInWorksheet(
                         _sharedResources.Number2String(columnCount, true),
                         rowCount, worksheetPart);
-                cell22.CellValue = new CellValue(text22.ToString(CultureInfo.InvariantCulture));
+                cell22.CellValue = new CellValue(text22);
                 cell22.DataType = CellValues.Number;
+                columnCount++;
 
                 rowCount++;
-            }
-
-            #endregion
-
-            #region Insert new ktUIExaminedGroup items into excel
-
-            foreach (ktUIDesign uiDesign in _uiDesign.ktUIDesignList)
-            {
-
-                        if (columnCount >= 22)
-                        {
-                            columnCount = 1;
-                        }
-
-                        string text1 = uiDesign.DesignID;
-                        Cell cell1 =
-                            _sharedResources.InsertCellInWorksheet(_sharedResources.Number2String(columnCount, true),
-                                rowCount, worksheetPart);
-                        cell1.CellValue = new CellValue(text1);
-                        cell1.DataType = CellValues.Number;
-                        columnCount++;
-
-                        string text2 = uiDesign.DatabaseTableName;
-                        Cell cell2 =
-                            _sharedResources.InsertCellInWorksheet(_sharedResources.Number2String(columnCount, true),
-                                rowCount, worksheetPart);
-                        cell2.CellValue = new CellValue(text2);
-                        cell2.DataType = CellValues.String;
-                        columnCount++;
-
-                        string text3 = uiDesign.DatabaseFieldName;
-                        Cell cell3 =
-                            _sharedResources.InsertCellInWorksheet(_sharedResources.Number2String(columnCount, true),
-                                rowCount, worksheetPart);
-                        cell3.CellValue = new CellValue(text3);
-                        cell3.DataType = CellValues.String;
-                        columnCount++;
-
-                        string text4 = uiDesign.CodeTableName;
-                        Cell cell4 =
-                            _sharedResources.InsertCellInWorksheet(_sharedResources.Number2String(columnCount, true),
-                                rowCount, worksheetPart);
-                        cell4.CellValue = new CellValue(text4.ToString(CultureInfo.InvariantCulture));
-                        cell4.DataType = CellValues.String;
-                        columnCount++;
-
-                        string text5 = uiDesign.ResxID;
-                        Cell cell5 =
-                            _sharedResources.InsertCellInWorksheet(_sharedResources.Number2String(columnCount, true),
-                                rowCount, worksheetPart);
-                        cell5.CellValue = new CellValue(text5.ToString(CultureInfo.InvariantCulture));
-                        cell5.DataType = CellValues.String;
-                        columnCount++;
-
-                        string text6 = uiDesign.ReadOnlyPolicy;
-                        Cell cell6 =
-                            _sharedResources.InsertCellInWorksheet(_sharedResources.Number2String(columnCount, true),
-                                rowCount, worksheetPart);
-                        cell6.CellValue = new CellValue(text6.ToString(CultureInfo.InvariantCulture));
-                        cell6.DataType = CellValues.Number;
-                        columnCount++;
-
-                        string text7 = uiDesign.InputDataType;
-                        Cell cell7 =
-                            _sharedResources.InsertCellInWorksheet(_sharedResources.Number2String(columnCount, true),
-                                rowCount, worksheetPart);
-                        cell7.CellValue = new CellValue(text7.ToString(CultureInfo.InvariantCulture));
-                        cell7.DataType = CellValues.Number;
-                        columnCount++;
-
-                        string text8 = uiDesign.MortyParameter;
-                        Cell cell8 =
-                            _sharedResources.InsertCellInWorksheet(_sharedResources.Number2String(columnCount, true),
-                                rowCount, worksheetPart);
-                        cell8.CellValue = new CellValue(text8.ToString(CultureInfo.InvariantCulture));
-                        cell8.DataType = CellValues.Number;
-
-                        string text9 = uiDesign.RequiredID;
-                        Cell cell9 =
-                            _sharedResources.InsertCellInWorksheet(_sharedResources.Number2String(columnCount, true),
-                                rowCount, worksheetPart);
-                        cell9.CellValue = new CellValue(text9.ToString(CultureInfo.InvariantCulture));
-                        cell9.DataType = CellValues.Number;
-
-                        string text10 = uiDesign.GUIUnitShortName;
-                        Cell cell10 =
-                            _sharedResources.InsertCellInWorksheet(_sharedResources.Number2String(columnCount, true),
-                                rowCount, worksheetPart);
-                        cell10.CellValue = new CellValue(text10.ToString(CultureInfo.InvariantCulture));
-                        cell10.DataType = CellValues.String;
-
-                        string text11 = uiDesign.DatabaseUnitName;
-                        Cell cell11 =
-                            _sharedResources.InsertCellInWorksheet(_sharedResources.Number2String(columnCount, true),
-                                rowCount, worksheetPart);
-                        cell11.CellValue = new CellValue(text11.ToString(CultureInfo.InvariantCulture));
-                        cell11.DataType = CellValues.String;
-
-                        string text12 = uiDesign.LabkaUnitName;
-                        Cell cell12 =
-                            _sharedResources.InsertCellInWorksheet(_sharedResources.Number2String(columnCount, true),
-                                rowCount, worksheetPart);
-                        cell12.CellValue = new CellValue(text12.ToString(CultureInfo.InvariantCulture));
-                        cell12.DataType = CellValues.String;
-
-                        string text13 = uiDesign.DatabaseToUIConversion;
-                        Cell cell13 =
-                            _sharedResources.InsertCellInWorksheet(_sharedResources.Number2String(columnCount, true),
-                                rowCount, worksheetPart);
-                        cell13.CellValue = new CellValue(text13.ToString(CultureInfo.InvariantCulture));
-                        cell13.DataType = CellValues.String;
-
-                        string text14 = uiDesign.DefaultValue;
-                        Cell cell14 =
-                            _sharedResources.InsertCellInWorksheet(_sharedResources.Number2String(columnCount, true),
-                                rowCount, worksheetPart);
-                        cell14.CellValue = new CellValue(text14.ToString(CultureInfo.InvariantCulture));
-                        cell14.DataType = CellValues.String;
-
-                        string text15 = uiDesign.NormalRangeMinimum;
-                        Cell cell15 =
-                            _sharedResources.InsertCellInWorksheet(_sharedResources.Number2String(columnCount, true),
-                                rowCount, worksheetPart);
-                        cell15.CellValue = new CellValue(text15.ToString(CultureInfo.InvariantCulture));
-                        cell15.DataType = CellValues.String;
-
-                        string text16 = uiDesign.NormalRangeMaximum;
-                        Cell cell16 =
-                            _sharedResources.InsertCellInWorksheet(_sharedResources.Number2String(columnCount, true),
-                                rowCount, worksheetPart);
-                        cell16.CellValue = new CellValue(text16.ToString(CultureInfo.InvariantCulture));
-                        cell16.DataType = CellValues.String;
-
-                        string text17 = uiDesign.RangeMinimum;
-                        Cell cell17 =
-                            _sharedResources.InsertCellInWorksheet(_sharedResources.Number2String(columnCount, true),
-                                rowCount, worksheetPart);
-                        cell17.CellValue = new CellValue(text17.ToString(CultureInfo.InvariantCulture));
-                        cell17.DataType = CellValues.String;
-
-                        string text18 = uiDesign.RangeMaximum;
-                        Cell cell18 =
-                            _sharedResources.InsertCellInWorksheet(_sharedResources.Number2String(columnCount, true),
-                                rowCount, worksheetPart);
-                        cell18.CellValue = new CellValue(text18.ToString(CultureInfo.InvariantCulture));
-                        cell18.DataType = CellValues.String;
-
-                        string text19 = uiDesign.CopyEncounter;
-                        Cell cell19 =
-                            _sharedResources.InsertCellInWorksheet(_sharedResources.Number2String(columnCount, true),
-                                rowCount, worksheetPart);
-                        cell19.CellValue = new CellValue(text19.ToString(CultureInfo.InvariantCulture));
-                        cell19.DataType = CellValues.Number;
-
-                        string text20 = uiDesign.CopyEpisode;
-                        Cell cell20 =
-                            _sharedResources.InsertCellInWorksheet(_sharedResources.Number2String(columnCount, true),
-                                rowCount, worksheetPart);
-                        cell20.CellValue = new CellValue(text20.ToString(CultureInfo.InvariantCulture));
-                        cell20.DataType = CellValues.Number;
-
-                        string text21 = uiDesign.DataQualityScore;
-                        Cell cell21 =
-                            _sharedResources.InsertCellInWorksheet(_sharedResources.Number2String(columnCount, true),
-                                rowCount, worksheetPart);
-                        cell21.CellValue = new CellValue(text21.ToString(CultureInfo.InvariantCulture));
-                        cell21.DataType = CellValues.Number;
-
-                        string text22 = uiDesign.CopyFinalEncounter;
-                        Cell cell22 =
-                            _sharedResources.InsertCellInWorksheet(_sharedResources.Number2String(columnCount, true),
-                                rowCount, worksheetPart);
-                        cell22.CellValue = new CellValue(text22.ToString(CultureInfo.InvariantCulture));
-                        cell22.DataType = CellValues.Number;
-
-                        rowCount++;
-  
             }
 
             #endregion

@@ -11,11 +11,17 @@ namespace TreatPraktik.ViewModel
     {
         private static ExportExcel _instance;
 
-        ExaminedGroup _examinedGroup;
-        Order _order;
-        GroupOrder _groupOrder;
-        Resources _resources;
-        ResourceTranslation _rTranslation;
+        private ExaminedGroup _examinedGroup;
+        private Order _order;
+        private GroupOrder _groupOrder;
+        private Resources _resources;
+        private ResourceTranslation _rTranslation;
+        private ECktUIDesign _uiDesign;
+        private ECQAGroups _qaGroups;
+        private ECQAktUIDesign _qAktUiDesign;
+        private ResourceType _resourceType;
+        private ECktUIPageType _pageType;
+        private ECktUIFieldIncludedType _fieldIncludedType;
 
         private WorkspaceViewModel _wvm;
 
@@ -35,6 +41,12 @@ namespace TreatPraktik.ViewModel
             _groupOrder = new GroupOrder();
             _resources = new Resources();
             _rTranslation = new ResourceTranslation();
+            _uiDesign = new ECktUIDesign();
+            _qaGroups = new ECQAGroups();
+            _qAktUiDesign = new ECQAktUIDesign();
+            _resourceType = new ResourceType();
+             _pageType = new ECktUIPageType();
+            _fieldIncludedType = new ECktUIFieldIncludedType();
 
             try
             {
@@ -58,6 +70,13 @@ namespace TreatPraktik.ViewModel
                 _groupOrder.CreateSheet(sheets, spreadsheetDocument, workbookpart);
                 _resources.CreateSheet(sheets, spreadsheetDocument, workbookpart);
                 _rTranslation.CreateSheet(sheets, spreadsheetDocument, workbookpart);
+                _uiDesign.CreateSheet(sheets, spreadsheetDocument, workbookpart);
+            _qaGroups.CreateSheet(sheets, spreadsheetDocument, workbookpart);
+            _qAktUiDesign.CreateSheet(sheets, spreadsheetDocument, workbookpart);
+            _resourceType.CreateSheet(sheets, spreadsheetDocument, workbookpart);
+            _pageType.CreateSheet(sheets, spreadsheetDocument, workbookpart);
+            _fieldIncludedType.CreateSheet(sheets, spreadsheetDocument, workbookpart);
+            
                 
 
                 workbookpart.Workbook.Save();

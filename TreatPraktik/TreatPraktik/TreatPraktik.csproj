@@ -74,11 +74,13 @@
     <Compile Include="Model\ToolboxGroup.cs" />
     <Compile Include="Model\WorkspaceObjects\GroupTypeOrder.cs" />
     <Compile Include="Model\WorkspaceObjects\ItemTypeOrder.cs" />
-    <Compile Include="Ressources\ExcelClasses\eQAGroups.cs" />
-    <Compile Include="Ressources\ExcelClasses\eQAktUIDesign.cs" />
+    <Compile Include="Ressources\ExcelClasses\ECktUIFieldIncludedType.cs" />
+    <Compile Include="Ressources\ExcelClasses\ECktUIPageType.cs" />
+    <Compile Include="Ressources\ExcelClasses\ECQAGroups.cs" />
+    <Compile Include="Ressources\ExcelClasses\ECQAktUIDesign.cs" />
     <Compile Include="Ressources\ExcelClasses\ResourceTranslation.cs" />
     <Compile Include="Ressources\ExcelClasses\ResourceType.cs" />
-    <Compile Include="Ressources\ExcelClasses\UIDesign.cs" />
+    <Compile Include="Ressources\ExcelClasses\ECktUIDesign.cs" />
     <Compile Include="ViewModel\ToolboxGroupsViewModel.cs" />
     <Compile Include="ViewModel\GroupTableContainerViewModel.cs" />
     <Compile Include="ViewModel\LanguageViewModel.cs" />

@@ -105,14 +105,15 @@ namespace TreatPraktik.Model.WorkspaceObjects
                     {
                         case "1": 
                             Header = EnglishTranslationText;
-                            ToolTip = EnglishTranslationToolTip != "" ? EnglishTranslationText : "n/a";
+                            ToolTip = EnglishTranslationToolTip != "" ? EnglishTranslationToolTip : "n/a";
                             break;
                         case "2": 
                             Header = DanishTranslationText;
-                            ToolTip = DanishTranslationToolTip != "" ? DanishTranslationText : "n/a";
+                            ToolTip = DanishTranslationToolTip != "" ? DanishTranslationToolTip : "n/a";
                             break;
                         default: 
-                            Header = EnglishTranslationText != "" ? EnglishTranslationText : "n/a"; 
+                            Header = EnglishTranslationText != "" ? EnglishTranslationText : "n/a";
+                            ToolTip = EnglishTranslationToolTip != "" ? EnglishTranslationToolTip : "n/a";
                             break;
                     }
                 }
