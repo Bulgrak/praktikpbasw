@@ -150,6 +150,7 @@
     <Compile Include="View\ToolboxSpecialItemsUserControl.xaml.cs">
       <DependentUpon>ToolboxSpecialItemsUserControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\WaitCursor.cs" />
     <Compile Include="View\WorkspaceUserControl.xaml.cs">
       <DependentUpon>WorkspaceUserControl.xaml</DependentUpon>
     </Compile>
