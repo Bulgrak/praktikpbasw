@@ -61,16 +61,23 @@ namespace TreatPraktik.View
 
         private void ImportExcel_Click(object sender, RoutedEventArgs e)
         {
-            Microsoft.Win32.OpenFileDialog openFile = new Microsoft.Win32.OpenFileDialog();
-            openFile.DefaultExt = ".xlsx";
-            openFile.Filter = "Excel file (.xlsx)|*.xlsx";
-
-            if (openFile.ShowDialog() == true)
+            try
             {
+                Microsoft.Win32.OpenFileDialog openFile = new Microsoft.Win32.OpenFileDialog();
+                openFile.DefaultExt = ".xlsx";
+                openFile.Filter = "Excel file (.xlsx)|*.xlsx";
 
-                _workspaceVM.LoadNewConfigurations(openFile.FileName);
-                //_workspaceVM.LoadWorkspace(openFile.FileName);
+                if (openFile.ShowDialog() == true)
+                {
 
+                    _workspaceVM.LoadNewConfigurations(openFile.FileName);
+                    //_workspaceVM.LoadWorkspace(openFile.FileName);
+
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
 

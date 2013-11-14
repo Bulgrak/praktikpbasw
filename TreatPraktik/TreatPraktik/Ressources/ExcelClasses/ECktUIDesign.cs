@@ -208,10 +208,10 @@ namespace TreatPraktik.Ressources.ExcelClasses
 
             foreach (ktUIDesign uiDesign in _uiDesign.ktUIDesignList)
             {
-                if (columnCount >= 4)
-                {
+                //if (columnCount >= 22)
+                //{
                     columnCount = 1;
-                }
+                //}
 
                 string text1 = uiDesign.DesignID;
                 Cell cell1 =
