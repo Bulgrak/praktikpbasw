@@ -158,7 +158,7 @@ namespace TreatPraktik.Ressources.ExcelClasses
                     cell3.DataType = CellValues.Number;
                     columnCount++;
 
-                    string text4 = null;
+                    string text4 = "255";   //Dummy value - Not used for anything, but cannot be null
                     Cell cell4 = _sharedResources.InsertCellInWorksheet(_sharedResources.Number2String(columnCount, true), rowCount, worksheetPart);
                     cell4.CellValue = new CellValue(text4);
                     cell4.DataType = CellValues.Number;

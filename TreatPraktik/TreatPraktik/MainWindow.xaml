@@ -3,7 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:view="clr-namespace:TreatPraktik.View" 
         x:Class="TreatPraktik.MainWindow"
-        Title="MainWindow" Height="622.103" Width="1040.845">
+        Title="Treat Configuration Tool" Height="622.103" Width="1040.845"
+        Icon="Ressources\treat.ico">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="315"></ColumnDefinition>
