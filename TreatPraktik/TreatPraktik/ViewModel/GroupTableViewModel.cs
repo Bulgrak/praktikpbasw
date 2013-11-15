@@ -115,20 +115,25 @@ namespace TreatPraktik.ViewModel
                 GroupTypeOrder gtoItem = GroupTypeOrderCollection[j];
                 if (gtoItem.GroupTypeID.Equals(gto.GroupTypeID))
                 {
-                    bool remove = true;
-                    int i = 0;
-                    while (i < departmentList.Count && remove)
-                    {
-                        if (gtoItem.DepartmentID.Equals(departmentList[i]))
-                        {
-                            remove = false;
-                        }
-                        i++;
-                    }
+                    //bool remove = true;
+                    //int i = 0;
+                    //while (i < departmentList.Count && remove)
+                    //{
+                    //    if (gtoItem.DepartmentID.Equals(departmentList[i]))
+                    //    {
+                    //        remove = false;
+                    //    }
+                    //    i++;
+                    //}
 
-                    if (remove)
+                    //if (remove)
+                    //{
+                    //    GroupTypeOrderCollection.Remove(gtoItem);
+                    //}
+                    if (!departmentList.Any(x => x.Equals(gtoItem.DepartmentID)))
                     {
                         GroupTypeOrderCollection.Remove(gtoItem);
+                        j--;
                     }
                 }
                 j++;
