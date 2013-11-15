@@ -9,30 +9,30 @@
             <MenuItem Header="File">
                 <MenuItem Header="Import configuration from file" Click="ImportExcel_Click">
                     <MenuItem.Icon>
-                        <Image Source="/Ressources\import.ico" />
+                        <Image Source="/Ressources\import.ico" Width="16" Height="16" />
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Header="Export to Excel" Click="ExportExcel_Click">
                     <MenuItem.Icon>
-                        <Image Source="/Ressources\export.ico" />
+                        <Image Source="/Ressources\export.ico" Width="16" Height="16" />
                     </MenuItem.Icon>
                 </MenuItem>
                 <Separator />
                 <MenuItem Header="Exit" Click="Exit_Click">
                     <MenuItem.Icon>
-                        <Image Source="/Ressources\exit.ico" />
+                        <Image Source="/Ressources\exit.ico" Width="16" Height="16" />
                     </MenuItem.Icon>
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="Language" HorizontalAlignment="Right" FlowDirection="LeftToRight">
                 <MenuItem Header="English" Click="English_Click">
                     <MenuItem.Icon>
-                        <Image Source="/Ressources/Uk_icon.png" />
+                        <Image Source="/Ressources/Uk_icon.png" Width="16" Height="13" />
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Header="Dansk" Click="Danish_Click">
                     <MenuItem.Icon>
-                        <Image Source="/Ressources/Dk-icon.png" />
+                        <Image Source="/Ressources/Dk-icon.png" Width="16" Height="13" />
                     </MenuItem.Icon>
                 </MenuItem>
             </MenuItem>
